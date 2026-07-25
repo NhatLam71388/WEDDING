@@ -11,7 +11,7 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/assets/decor/dove-flight.webp"),
     access("dist/client/assets/photos/LBS02087-mobile-640.webp"),
     access("dist/client/assets/photos/LBS02087-mobile-841.webp"),
-    access("dist/client/assets/audio/wedding-01-francisco-alvear.mp3"),
+    access("dist/client/assets/audio/nhac.mp3"),
     access("dist/client/assets/photos/LBS02643-640.webp"),
     access("dist/client/assets/photos/LBS01523_1-640.webp"),
     access("dist/client/assets/photos/LBS01781-640.webp"),
@@ -19,16 +19,12 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/assets/photos/LBS02261-1280.webp"),
     access("dist/client/assets/photos/LBS02201-640.webp"),
     access("dist/.openai/hosting.json"),
-    ...[
-      "LBS01835",
-      "LBS01852",
-      "LBS01887",
-      "LBS01919",
-      "LBS01931",
-    ].flatMap((basename) => [
-      access(`dist/client/assets/photos/${basename}-640.webp`),
-      access(`dist/client/assets/photos/${basename}-1280.webp`),
-    ]),
+    ...["LBS01835", "LBS01852", "LBS01887", "LBS01919", "LBS01931"].flatMap(
+      (basename) => [
+        access(`dist/client/assets/photos/${basename}-640.webp`),
+        access(`dist/client/assets/photos/${basename}-1280.webp`),
+      ],
+    ),
   ]);
 
   const [
@@ -53,8 +49,8 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     readFile("dist/client/assets/photos/LBS02087-mobile-640.webp"),
     readFile("assets/photos/LBS02087-mobile-841.webp"),
     readFile("dist/client/assets/photos/LBS02087-mobile-841.webp"),
-    readFile("assets/audio/wedding-01-francisco-alvear.mp3"),
-    readFile("dist/client/assets/audio/wedding-01-francisco-alvear.mp3"),
+    readFile("assets/audio/nhac.mp3"),
+    readFile("dist/client/assets/audio/nhac.mp3"),
     readFile("assets/photos/LBS02261-640.webp"),
     readFile("dist/client/assets/photos/LBS02261-640.webp"),
     readFile("assets/photos/LBS02261-1280.webp"),
@@ -77,10 +73,7 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.match(invitation, /\bintro-open-arrow\b/i);
   assert.match(invitation, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
   assert.match(invitation, /2026-08-07T11:00:00\+07:00/);
-  assert.match(
-    invitation,
-    /\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3/,
-  );
+  assert.match(invitation, /\.\/assets\/audio\/nhac\.mp3/);
   assert.match(invitation, /data-screen-label="04 Featured album"/);
   for (const basename of [
     "LBS02643",
@@ -98,12 +91,6 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.deepEqual(builtMobile640, sourceMobile640);
   assert.deepEqual(builtMobile841, sourceMobile841);
   assert.deepEqual(builtMusic, sourceMusic);
-  assert.deepEqual(
-    builtHandholding640,
-    sourceHandholding640,
-  );
-  assert.deepEqual(
-    builtHandholding1280,
-    sourceHandholding1280,
-  );
+  assert.deepEqual(builtHandholding640, sourceHandholding640);
+  assert.deepEqual(builtHandholding1280, sourceHandholding1280);
 });

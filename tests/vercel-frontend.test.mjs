@@ -29,8 +29,8 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     readFile(".site-public/assets/photos/LBS02087-mobile-640.webp"),
     readFile("assets/photos/LBS02087-mobile-841.webp"),
     readFile(".site-public/assets/photos/LBS02087-mobile-841.webp"),
-    readFile("assets/audio/wedding-01-francisco-alvear.mp3"),
-    readFile(".site-public/assets/audio/wedding-01-francisco-alvear.mp3"),
+    readFile("assets/audio/nhac.mp3"),
+    readFile(".site-public/assets/audio/nhac.mp3"),
     readFile("assets/photos/LBS02261-640.webp"),
     readFile(".site-public/assets/photos/LBS02261-640.webp"),
     readFile("assets/photos/LBS02261-1280.webp"),
@@ -49,10 +49,7 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     invitation,
     /host\.endsWith\('\.vercel\.app'\)[\s\S]*?ngo-nam-nhat-mai-wedding\.vanhung71388\.chatgpt\.site/,
   );
-  assert.equal(
-    (invitation.match(/fetch\(this\.apiUrl\(/g) ?? []).length,
-    3,
-  );
+  assert.equal((invitation.match(/fetch\(this\.apiUrl\(/g) ?? []).length, 3);
   assert.match(publicInvitation, /\bdata-introdove="1"/);
   assert.match(
     publicInvitation,
@@ -64,10 +61,7 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
   assert.match(publicInvitation, /\bintro-open-arrow\b/i);
   assert.match(publicInvitation, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
   assert.match(publicInvitation, /2026-08-07T11:00:00\+07:00/);
-  assert.match(
-    publicInvitation,
-    /\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3/,
-  );
+  assert.match(publicInvitation, /\.\/assets\/audio\/nhac\.mp3/);
   assert.match(publicInvitation, /data-screen-label="04 Featured album"/);
   for (const basename of [
     "LBS02643",
@@ -85,12 +79,6 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
   assert.deepEqual(publicMobile640, sourceMobile640);
   assert.deepEqual(publicMobile841, sourceMobile841);
   assert.deepEqual(publicMusic, sourceMusic);
-  assert.deepEqual(
-    publicHandholding640,
-    sourceHandholding640,
-  );
-  assert.deepEqual(
-    publicHandholding1280,
-    sourceHandholding1280,
-  );
+  assert.deepEqual(publicHandholding640, sourceHandholding640);
+  assert.deepEqual(publicHandholding1280, sourceHandholding1280);
 });

@@ -3,7 +3,7 @@ import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
 const INVITATION_PATH = "Thiep Cuoi 57 v2.dc.html";
-const MUSIC_PATH = "./assets/audio/wedding-01-francisco-alvear.mp3";
+const MUSIC_PATH = "./assets/audio/nhac.mp3";
 
 async function loadInvitation() {
   const html = await readFile(INVITATION_PATH, "utf8");
@@ -175,11 +175,11 @@ test("bride-family celebration is the canonical invitation date", async () => {
 
 test("music control has a real default track and a safe bottom-left position", async () => {
   const { html } = await loadInvitation();
-  await access("assets/audio/wedding-01-francisco-alvear.mp3");
+  await access("assets/audio/nhac.mp3");
 
   assert.match(
     html,
-    /&quot;musicSrc&quot;:[\s\S]*?&quot;default&quot;:&quot;\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3&quot;/,
+    /&quot;musicSrc&quot;:[\s\S]*?&quot;default&quot;:&quot;\.\/assets\/audio\/nhac\.mp3&quot;/,
   );
 
   const button = html.match(
