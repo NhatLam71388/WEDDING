@@ -6381,9 +6381,17 @@
         }
 
         apiUrl(path) {
-          const host = typeof window !== 'undefined' && window.location ? window.location.hostname : '';
-          const usesHostedBackend = host.endsWith('.vercel.app');
-          return (usesHostedBackend ? 'https://ngo-nam-nhat-mai-wedding.vanhung71388.chatgpt.site' : '') + path;
+          const location = typeof window !== 'undefined' ? window.location : null;
+          const host = location ? location.hostname.toLowerCase() : '';
+          const isLocal =
+            !location ||
+            location.protocol === 'file:' ||
+            host === 'localhost' ||
+            host === '127.0.0.1' ||
+            host === '[::1]';
+          const productionApi =
+            'https://ngo-nam-nhat-mai-wedding-api.vanhung71388.workers.dev';
+          return (isLocal ? '' : productionApi) + path;
         }
 
         async submitRsvp() {

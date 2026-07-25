@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "ngo-nam-nhat-mai-wedding-api",
+  "main": "./worker/api.ts",
+  "compatibility_date": "2026-07-25",
+  "compatibility_flags": ["nodejs_compat"],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "ngo-nam-nhat-mai-wedding",
+      "database_id": "f39ee856-3898-4ae4-986a-05cb63d34854",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "observability": {
+    "enabled": true
+  }
+}

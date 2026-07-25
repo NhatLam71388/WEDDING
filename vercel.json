@@ -8,12 +8,12 @@
   "redirects": [
     {
       "source": "/admin",
-      "destination": "https://ngo-nam-nhat-mai-wedding.vanhung71388.chatgpt.site/admin",
+      "destination": "https://ngo-nam-nhat-mai-wedding-api.vanhung71388.workers.dev/admin",
       "permanent": false
     },
     {
       "source": "/admin/:path*",
-      "destination": "https://ngo-nam-nhat-mai-wedding.vanhung71388.chatgpt.site/admin/:path*",
+      "destination": "https://ngo-nam-nhat-mai-wedding-api.vanhung71388.workers.dev/admin/:path*",
       "permanent": false
     }
   ],

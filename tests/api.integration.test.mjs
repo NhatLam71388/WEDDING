@@ -28,7 +28,7 @@ function adminPost(miniflare, body) {
 test("live APIs paginate, persist RSVP identity, moderate, and reject oversized input", async () => {
   await mkdir(".wrangler", { recursive: true });
   await build({
-    entryPoints: ["tests/api-worker.ts"],
+    entryPoints: ["worker/api.ts"],
     outfile: ".wrangler/api-test-worker.mjs",
     bundle: true,
     format: "esm",

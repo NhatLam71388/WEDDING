@@ -46,11 +46,15 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     source: "/",
     destination: "/invitation.html",
   });
-  assert.match(config.redirects[0].destination, /chatgpt\.site\/admin$/);
+  assert.equal(
+    config.redirects[0].destination,
+    "https://ngo-nam-nhat-mai-wedding-api.vanhung71388.workers.dev/admin",
+  );
   assert.match(
     invitation,
-    /host\.endsWith\('\.vercel\.app'\)[\s\S]*?ngo-nam-nhat-mai-wedding\.vanhung71388\.chatgpt\.site/,
+    /isLocal[\s\S]*?ngo-nam-nhat-mai-wedding-api\.vanhung71388\.workers\.dev/,
   );
+  assert.doesNotMatch(invitation, /chatgpt\.site/);
   assert.equal((invitation.match(/fetch\(this\.apiUrl\(/g) ?? []).length, 3);
   assert.match(publicInvitation, /\bdata-introdove="1"/);
   assert.match(
