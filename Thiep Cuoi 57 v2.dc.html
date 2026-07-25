@@ -48,12 +48,15 @@ h2,h3{font-family:var(--font-editorial)!important}
 .scroll-progress{position:fixed;z-index:180;top:0;left:max(0px,calc(50% - 260px));width:min(100%,520px);height:3px;background:rgba(255,250,243,.18);pointer-events:none}
 .scroll-progress span{display:block;width:100%;height:100%;background:linear-gradient(90deg,#c99591,#d9bd9f,#a67f64);transform:scaleX(0);transform-origin:left center;will-change:transform}
 .hero-script{font-family:var(--font-hand)!important;font-size:24px!important;font-weight:500!important;line-height:1.15!important;color:#a67f64!important}
-.hero-name{font-family:var(--font-script)!important;font-size:60px!important;font-style:normal!important;font-weight:400!important;line-height:.94!important;letter-spacing:.01em!important;color:#3a2b23!important;text-rendering:optimizeLegibility;text-shadow:0 1px 0 rgba(255,255,255,.5)}
-.hero-photo{position:absolute;top:248px;left:18px;right:18px;bottom:18px;overflow:hidden;border-radius:260px 260px 18px 18px;box-shadow:0 20px 48px rgba(54,38,28,.18)}
-.hero-photo:before{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(238,233,227,.34) 0%,rgba(238,233,227,0) 25%,rgba(39,30,25,.08) 65%,rgba(39,30,25,.28) 100%);pointer-events:none}
-.hero-photo:after{content:"";position:absolute;z-index:3;inset:10px;border:1px solid rgba(255,250,244,.64);border-radius:250px 250px 12px 12px;pointer-events:none}
-.hero-photo image-slot{display:block;width:100%;height:100%;transform:scale(1.025)}
-.hero-photo-layer{position:absolute;top:248px;left:18px;right:18px;bottom:18px;border-radius:260px 260px 18px 18px}
+.hero-name{font-family:var(--font-script)!important;font-size:58px!important;font-style:normal!important;font-weight:400!important;line-height:.92!important;letter-spacing:.01em!important;color:#3a2b23!important;text-rendering:optimizeLegibility;text-shadow:0 1px 0 rgba(255,255,255,.55)}
+.hero-photo{position:absolute;inset:0;overflow:hidden;background:#e1e0df}
+.hero-photo:before{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(248,243,236,.08) 0%,rgba(248,243,236,0) 55%,rgba(39,30,25,.28) 100%);pointer-events:none}
+.hero-photo:after{content:"";position:absolute;z-index:3;inset:12px;border:1px solid rgba(255,250,244,.56);pointer-events:none}
+.hero-full-image{display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+.hero-photo-layer{position:absolute;inset:0}
+.hero-copy{position:absolute;z-index:5;top:72px;left:36%;right:22px;text-align:right;pointer-events:none}
+.hero-connector{justify-content:flex-end!important;padding-right:12px}
+.hero-date-card{display:inline-flex;align-items:center;justify-content:center;min-height:36px;padding:0 16px;border:1px solid rgba(97,73,59,.18);border-radius:4px;background:rgba(255,250,243,.88);box-shadow:0 8px 22px rgba(54,38,28,.12);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#3a2b23!important}
 .intro-names{font-family:var(--font-script)!important;font-size:64px!important;font-style:normal!important;font-weight:400!important;line-height:1!important;letter-spacing:.01em;text-rendering:optimizeLegibility}
 .closing-script{font-family:var(--font-script)!important;font-size:50px!important;font-weight:400!important;line-height:1.15!important}
 .footer-script{font-family:var(--font-script)!important;font-size:34px!important;font-weight:400!important;line-height:1!important}
@@ -80,18 +83,28 @@ h2,h3{font-family:var(--font-editorial)!important}
 .invite-nav a:active{transform:scale(.97)}
 .invite-nav a.is-active{background:#3a2b23;color:#fffaf4}
 .family-section{background:linear-gradient(180deg,#f2e6d9 0%,#f7eee5 100%)!important;padding-top:86px!important;overflow:hidden}
-.family-card{position:relative;padding:34px 18px 32px;border:1px solid rgba(82,62,50,.14);border-radius:150px 150px 24px 24px;background:rgba(255,250,243,.55);box-shadow:0 18px 48px rgba(54,38,28,.06)}
-.family-card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(166,127,100,.14);border-radius:142px 142px 18px 18px;pointer-events:none}
+.family-card{position:relative;padding:38px 18px 34px;border:1px solid rgba(82,62,50,.14);border-radius:0;background:rgba(255,250,243,.62);box-shadow:0 18px 48px rgba(54,38,28,.06);filter:drop-shadow(0 12px 22px rgba(54,38,28,.055));clip-path:polygon(20px 0,calc(100% - 20px) 0,100% 20px,100% calc(100% - 20px),calc(100% - 20px) 100%,20px 100%,0 calc(100% - 20px),0 20px)}
+.family-card:before{content:"";position:absolute;inset:9px;border:1px solid rgba(166,127,100,.17);pointer-events:none}
+.family-card:after{content:"FAMILY · 2026";position:absolute;right:22px;top:13px;font:500 7px/1 var(--font-body);letter-spacing:.2em;color:rgba(166,127,100,.72)}
 .family-grid{display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:start}
 .family-divider{width:1px;height:118px;background:linear-gradient(180deg,rgba(82,62,50,0),rgba(82,62,50,.3),rgba(82,62,50,0));margin:10px auto 0;position:relative}
 .date-seal{position:absolute;right:34px;bottom:62px;z-index:5;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;text-align:center;background:#fffaf3;color:#61493b;border:1px solid rgba(82,62,50,.18);box-shadow:0 10px 28px rgba(54,38,28,.16);font:500 9px/1.45 'Be Vietnam Pro',sans-serif;letter-spacing:.12em;text-transform:uppercase}
 .date-seal:before{content:"";position:absolute;inset:-7px;border:1px dashed rgba(166,127,100,.45);border-radius:50%;animation:orbit 20s linear infinite}
 .story-caption{position:absolute;z-index:5;left:13px;bottom:126px;rotate:-8deg;font:500 21px/1 var(--font-hand);color:#a67f64;text-shadow:0 1px 0 #fffaf3;white-space:nowrap}
-.event-card{position:relative;min-height:448px;border-radius:230px 230px 24px 24px;overflow:hidden;display:grid;place-items:center;background:#3a2b23;isolation:isolate;box-shadow:0 16px 42px rgba(54,38,28,.14);transition:transform 450ms cubic-bezier(.22,1,.36,1),box-shadow 450ms ease}
-.event-frame{border-radius:220px 220px 17px 17px!important}
+.event-card{position:relative;min-height:448px;overflow:hidden;display:grid;place-items:center;background:#3a2b23;isolation:isolate;box-shadow:0 16px 42px rgba(54,38,28,.14);transition:transform 450ms cubic-bezier(.22,1,.36,1),box-shadow 450ms ease}
+.event-card--bride{display:flex;flex-direction:column;border-radius:24px 112px 24px 24px;background:#fffaf3;color:#2d241f}
+.event-card--groom{border-radius:24px;filter:drop-shadow(0 14px 22px rgba(54,38,28,.14));clip-path:polygon(0 0,100% 0,100% calc(100% - 42px),calc(100% - 42px) 100%,0 100%)}
+.event-frame{border-radius:16px!important}
 .event-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.035);transition:transform 1.2s cubic-bezier(.22,1,.36,1),filter 700ms ease}
 .event-photo--bride{object-position:50% 46%}
 .event-photo--groom{object-position:50% 43%}
+.event-card--bride .event-photo{position:relative;inset:auto;flex:none;width:100%;height:220px;object-position:50% 56%;transform:scale(1.015)}
+.event-card--bride .event-shade{display:none}
+.event-card--bride .event-frame{z-index:5;border-color:rgba(82,62,50,.18)!important}
+.event-card--bride .event-content{z-index:2;flex:1;width:100%;padding:30px 28px 38px!important;color:#2d241f!important}
+.event-card--bride .event-chip{border-color:rgba(166,127,100,.28);background:#f3e8db;color:#8a6752}
+.event-card--bride .event-divider{background:rgba(97,73,59,.28)!important}
+.event-card--bride .event-map{border-color:rgba(82,62,50,.28)!important;background:#f8f3ec;color:#61493b!important}
 .event-chip{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:rgba(255,250,244,.14);border:1px solid rgba(255,250,244,.3);font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase}
 .choice-card{display:flex;align-items:center;gap:12px;min-height:52px;padding:12px 14px;border:1px solid rgba(82,62,50,.16);border-radius:14px;background:#fffaf3;cursor:pointer;font:300 13px/1.45 'Be Vietnam Pro',sans-serif;color:#2d241f;transition:border-color 220ms ease,background-color 220ms ease,transform 180ms ease}
 .choice-card:has(input:checked){border-color:#a67f64;background:#f8efe4}
@@ -102,8 +115,8 @@ h2,h3{font-family:var(--font-editorial)!important}
 .primary-action:hover{background:#3b2d26!important;box-shadow:0 10px 24px rgba(39,30,25,.16)}
 .secondary-action:hover{background:#f3e8db!important}
 .editorial-story{position:relative;padding:0 24px 34px;min-height:620px}
-.editorial-main{width:78%;aspect-ratio:2/3;border-radius:180px 180px 16px 16px;overflow:hidden;box-shadow:0 18px 46px rgba(54,38,28,.13)}
-.editorial-inset{position:absolute;right:20px;bottom:0;width:48%;aspect-ratio:2/3;border:9px solid #f8f3ec;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(54,38,28,.16);z-index:3}
+.editorial-main{width:78%;aspect-ratio:2/3;border-radius:44% 56% 48% 52% / 32% 38% 62% 68%;overflow:hidden;box-shadow:0 18px 46px rgba(54,38,28,.13)}
+.editorial-inset{position:absolute;right:20px;bottom:0;width:48%;aspect-ratio:2/3;border:9px solid #f8f3ec;border-radius:3px;rotate:2.5deg;overflow:hidden;box-shadow:0 18px 40px rgba(54,38,28,.16);z-index:3}
 .editorial-main img,.editorial-inset img{width:100%;height:100%;display:block;object-fit:cover}
 .love-marquee{overflow:hidden;border-top:1px solid rgba(82,62,50,.12);border-bottom:1px solid rgba(82,62,50,.12);background:#2d241f;color:#ead7c6}
 .love-marquee div{width:max-content;padding:13px 0;font:500 9px/1 var(--font-body);letter-spacing:.28em;text-transform:uppercase;animation:marquee 22s linear infinite}
@@ -116,10 +129,10 @@ h2,h3{font-family:var(--font-editorial)!important}
 .curated-card{position:absolute;margin:0;overflow:hidden;background:#e8ddd2;box-shadow:0 18px 46px rgba(54,38,28,.15);isolation:isolate}
 .curated-card:after{content:"";position:absolute;inset:8px;border:1px solid rgba(255,250,244,.7);pointer-events:none}
 .curated-card img{display:block;width:100%;height:100%;object-fit:cover;will-change:transform}
-.curated-wide{left:0;right:56px;top:0;aspect-ratio:4/3;border-radius:190px 18px 18px 18px}
+.curated-wide{left:0;right:56px;top:0;aspect-ratio:4/3;border-radius:4px;rotate:-1deg}
 .curated-wide img{object-position:50% 58%}
-.curated-tall{z-index:2;right:0;top:210px;width:47%;aspect-ratio:2/3;border:8px solid #fffaf3;border-radius:120px 120px 16px 16px;rotate:2.5deg}
-.curated-tall:after{inset:5px;border-radius:110px 110px 10px 10px}
+.curated-tall{z-index:2;right:0;top:210px;width:47%;aspect-ratio:2/3;border:8px solid #fffaf3;border-radius:18px 18px 92px 18px;rotate:2.5deg}
+.curated-tall:after{inset:5px;border-radius:12px 12px 82px 12px}
 .curated-tall img{object-position:51% 43%}
 .curated-round{z-index:3;left:12px;bottom:0;width:46%;aspect-ratio:1;border:9px solid #fffaf3;border-radius:50%;rotate:-3deg}
 .curated-round:after{inset:5px;border-radius:50%}
@@ -127,8 +140,9 @@ h2,h3{font-family:var(--font-editorial)!important}
 .curated-note{position:absolute;z-index:4;left:40%;bottom:35px;width:120px;rotate:-6deg;font:500 21px/1.15 var(--font-hand);color:#a67f64;text-align:center}
 .album-action{display:flex;align-items:center;justify-content:center;gap:10px;min-width:220px;height:50px;margin:34px auto 0;padding:0 24px;border:1px solid rgba(82,62,50,.28);border-radius:999px;background:#fffaf3;color:#61493b;font:500 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 .countdown-section{background:radial-gradient(circle at 50% 0%,#4b382e 0%,#271e19 54%,#201713 100%)!important}
-.countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:30px}
-.countdown-unit{padding:18px 4px 16px;border:1px solid rgba(255,250,244,.14);border-radius:60px 60px 14px 14px;background:rgba(255,250,244,.045);text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:30px}
+.countdown-unit{padding:12px 4px 10px;border:0;border-radius:0;background:transparent;text-align:center;box-shadow:none}
+.countdown-unit:not(:last-child){border-right:1px solid rgba(255,250,244,.17)}
 .rsvp-section{position:relative;overflow:hidden}
 .rsvp-card{position:relative;background:rgba(255,250,243,.86)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
 .rsvp-section:before{content:"08";position:absolute;right:-12px;top:18px;font:400 154px/.8 var(--font-editorial);color:rgba(166,127,100,.07);pointer-events:none}
@@ -145,12 +159,17 @@ h2,h3{font-family:var(--font-editorial)!important}
 }
 @media(max-width:389px){
   .family-grid{grid-template-columns:1fr;gap:32px}
+  .family-card{clip-path:polygon(14px 0,calc(100% - 14px) 0,100% 14px,100% calc(100% - 14px),calc(100% - 14px) 100%,14px 100%,0 calc(100% - 14px),0 14px)}
   .family-divider{width:54px;height:1px;margin:0 auto;background:linear-gradient(90deg,rgba(82,62,50,0),rgba(82,62,50,.3),rgba(82,62,50,0))}
   .date-seal{right:26px;bottom:54px}
   .editorial-story{min-height:560px}
-  .hero-name{font-size:56px!important}
-  .hero-photo{top:238px;left:12px;right:12px;bottom:12px}
-  .hero-photo-layer{top:238px;left:12px;right:12px;bottom:12px}
+  .editorial-inset{rotate:1.5deg}
+  .hero-name{font-size:53px!important}
+  .hero-copy{top:70px;left:32%;right:16px}
+  .hero-script{font-size:21px!important}
+  .hero-connector{padding-right:8px}
+  .event-card--bride{border-radius:20px 72px 20px 20px}
+  .event-card--groom{clip-path:polygon(0 0,100% 0,100% calc(100% - 30px),calc(100% - 30px) 100%,0 100%)}
   .intro-names{font-size:58px!important}
   .invite-nav{width:calc(100% - 24px)}
   .invite-nav a{font-size:8px;letter-spacing:.08em}
@@ -178,9 +197,9 @@ h2,h3{font-family:var(--font-editorial)!important}
 </button>
 
 <section data-screen-label="01 Hero" style="position:relative;height:100svh;min-height:700px;overflow:hidden;background:#eee9e3">
-<div data-parallax="hero" class="hero-photo">
-<div data-heroanim="1" style="position:absolute;inset:0;animation:kb 6s ease-out both;animation-play-state:paused">
-<image-slot id="tc57v3-hero" shape="rect" fit="cover" src="./assets/photos/LBS01690-1280.webp" placeholder="Ảnh hero cặp đôi"></image-slot>
+<div class="hero-photo">
+<div data-heroanim="1" style="position:absolute;inset:0;animation:hFade 1.2s 160ms ease-out both;animation-play-state:paused">
+<img class="hero-full-image" src="./assets/photos/LBS01690-1280.webp" srcset="./assets/photos/LBS01690-640.webp 640w, ./assets/photos/LBS01690-1280.webp 1280w" sizes="(max-width:520px) 100vw, 520px" alt="Toàn cảnh cô dâu Nhật Mai và chú rể Ngô Nam" decoding="async">
 </div>
 </div>
 <div class="hero-photo-layer" style="pointer-events:none;background:linear-gradient(180deg,rgba(255,250,243,.08) 0%,rgba(255,250,243,0) 42%,rgba(39,30,25,.3) 100%)"></div>
@@ -190,11 +209,11 @@ h2,h3{font-family:var(--font-editorial)!important}
 <div data-heroanim="1" style="font:400 9.5px/1.9 'Be Vietnam Pro',sans-serif;letter-spacing:.3em;color:#61493b;opacity:.82;animation:hFade 800ms 260ms ease-out both;animation-play-state:paused">SAVE THE DATE</div>
 </div>
 
-<div style="position:absolute;top:60px;left:0;right:0;text-align:center;padding:0 24px;pointer-events:none">
+<div class="hero-copy">
 <div data-heroanim="1" class="hero-script" style="animation:hFade 900ms 500ms ease-out both;animation-play-state:paused">Ngày chúng mình về chung một nhà</div>
 <h1 style="margin:8px 0 0;color:#2d241f">
 <span data-heroanim="1" class="hero-name" style="display:block;animation:hIn 1.3s 720ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused">Ngô Nam</span>
-<span data-heroanim="1" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:5px 0 6px;animation:hFade 900ms 1s ease-out both;animation-play-state:paused">
+<span data-heroanim="1" class="hero-connector" style="display:flex;align-items:center;justify-content:center;gap:10px;margin:5px 0 6px;animation:hFade 900ms 1s ease-out both;animation-play-state:paused">
 <span style="height:1px;width:34px;background:rgba(97,73,59,.32);display:block"></span>
 <span style="font:500 17px/1 'Dancing Script',cursive;color:#a67f64">và</span>
 <span style="height:1px;width:34px;background:rgba(97,73,59,.32);display:block"></span>
@@ -204,7 +223,7 @@ h2,h3{font-family:var(--font-editorial)!important}
 </div>
 
 <div style="position:absolute;bottom:34px;left:0;right:0;text-align:center">
-<div data-heroanim="1" style="font:500 13px/1 'Playfair Display',serif;letter-spacing:.16em;color:#fffaf4;animation:hDate 1s 1.5s ease-out both;animation-play-state:paused">THỨ BẢY · 08.08.2026</div>
+<div data-heroanim="1" class="hero-date-card" style="font:500 11px/1 'Playfair Display',serif;letter-spacing:.16em;color:#fffaf4;animation:hDate 1s 1.5s ease-out both;animation-play-state:paused">THỨ BẢY · 08.08.2026</div>
 <a data-heroanim="1" href="#events" aria-label="Xem thông tin lễ cưới" style="margin-top:16px;display:inline-flex;flex-direction:column;align-items:center;gap:8px;color:#fffaf4;font:500 8.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.18em;text-transform:uppercase;animation:hFade 900ms 1.9s ease-out both;animation-play-state:paused">
 Xem thông tin
 <span style="display:inline-block;width:1px;height:28px;background:linear-gradient(180deg,rgba(255,250,244,.85),rgba(255,250,244,0));animation:bob 2.6s ease-in-out infinite"></span>
@@ -297,33 +316,33 @@ Xem thông tin
 <p style="margin:14px auto 36px;max-width:340px;font:300 12.5px/1.75 'Be Vietnam Pro',sans-serif;color:#78685e">Sự hiện diện của bạn và gia đình là niềm vui lớn nhất trong ngày đặc biệt của chúng mình.</p>
 </div>
 <div style="display:flex;flex-direction:column;gap:22px">
-<article data-rv="left" class="event-card">
+<article data-rv="left" class="event-card event-card--bride">
 <img class="event-photo event-photo--bride" src="./assets/photos/LBS02087-640.webp" srcset="./assets/photos/LBS02087-640.webp 640w, ./assets/photos/LBS02087-1280.webp 1280w" sizes="(max-width:520px) 92vw, 472px" alt="Cô dâu chú rể bên hoa trong thiệp nhà gái" loading="lazy" decoding="async">
-<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.24),rgba(30,20,16,.7));pointer-events:none"></div>
+<div class="event-shade" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.24),rgba(30,20,16,.7));pointer-events:none"></div>
 <div class="event-frame" style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
-<div style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
+<div class="event-content" style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
 <div class="event-chip">Tiệc cưới nhà gái</div>
 <div style="margin-top:22px;font:italic 400 36px/1.1 'Playfair Display',serif">07.08.2026</div>
 <div style="margin-top:10px;font:400 13px/1.6 'Be Vietnam Pro',sans-serif;letter-spacing:.08em">Thứ sáu · 11:00</div>
 <div style="margin-top:8px;font:300 10.5px/1.65 'Be Vietnam Pro',sans-serif;opacity:.78">Nhằm ngày 25 tháng 06 năm Bính Ngọ</div>
-<div style="width:36px;height:1px;background:rgba(255,250,244,.55);margin:22px auto"></div>
+<div class="event-divider" style="width:36px;height:1px;background:rgba(255,250,244,.55);margin:22px auto"></div>
 <div style="font:400 17px/1.55 'Playfair Display',serif">Tư gia nhà gái</div>
 <div style="margin-top:7px;font:300 12px/1.75 'Be Vietnam Pro',sans-serif;opacity:.86">Thôn 13, Xã Ea Wer, Tỉnh Đắk Lắk</div>
-<a href="https://www.google.com/maps/search/?api=1&query=Th%C3%B4n%2013%2C%20X%C3%A3%20Ea%20Wer%2C%20%C4%90%E1%BA%AFk%20L%E1%BA%AFk" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;margin-top:24px;border:1px solid rgba(255,250,244,.7);border-radius:999px;color:#fffaf4;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase">Xem chỉ đường</a>
+<a class="event-map" href="https://www.google.com/maps/search/?api=1&query=Th%C3%B4n%2013%2C%20X%C3%A3%20Ea%20Wer%2C%20%C4%90%E1%BA%AFk%20L%E1%BA%AFk" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;margin-top:24px;border:1px solid rgba(255,250,244,.7);border-radius:999px;color:#fffaf4;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase">Xem chỉ đường</a>
 </div>
 </article>
-<article data-rv="right" class="event-card">
+<article data-rv="right" class="event-card event-card--groom">
 <img class="event-photo event-photo--groom" src="./assets/photos/LBS02178-640.webp" srcset="./assets/photos/LBS02178-640.webp 640w, ./assets/photos/LBS02178-1280.webp 1280w" sizes="(max-width:520px) 92vw, 472px" alt="Cô dâu chú rể bên hoa trong thiệp nhà trai" loading="lazy" decoding="async">
-<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.22),rgba(30,20,16,.7));pointer-events:none"></div>
+<div class="event-shade" style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.22),rgba(30,20,16,.7));pointer-events:none"></div>
 <div class="event-frame" style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
-<div style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
+<div class="event-content" style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
 <div class="event-chip">Lễ thành hôn · Nhà trai</div>
 <div style="margin-top:22px;font:italic 400 36px/1.1 'Playfair Display',serif">08.08.2026</div>
 <div style="margin-top:10px;font:400 13px/1.6 'Be Vietnam Pro',sans-serif;letter-spacing:.08em">Thứ bảy · 11:00</div>
-<div style="width:36px;height:1px;background:rgba(255,250,244,.55);margin:22px auto"></div>
+<div class="event-divider" style="width:36px;height:1px;background:rgba(255,250,244,.55);margin:22px auto"></div>
 <div style="font:400 17px/1.55 'Playfair Display',serif">Tư gia nhà trai</div>
 <div style="margin-top:7px;font:300 12px/1.75 'Be Vietnam Pro',sans-serif;opacity:.86">Thôn 12, Xã Ea Wer, Tỉnh Đắk Lắk</div>
-<a href="https://www.google.com/maps/search/?api=1&query=Th%C3%B4n%2012%2C%20X%C3%A3%20Ea%20Wer%2C%20%C4%90%E1%BA%AFk%20L%E1%BA%AFk" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;margin-top:24px;border:1px solid rgba(255,250,244,.7);border-radius:999px;color:#fffaf4;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase">Xem chỉ đường</a>
+<a class="event-map" href="https://www.google.com/maps/search/?api=1&query=Th%C3%B4n%2012%2C%20X%C3%A3%20Ea%20Wer%2C%20%C4%90%E1%BA%AFk%20L%E1%BA%AFk" target="_blank" rel="noreferrer" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;margin-top:24px;border:1px solid rgba(255,250,244,.7);border-radius:999px;color:#fffaf4;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase">Xem chỉ đường</a>
 </div>
 </article>
 </div>
