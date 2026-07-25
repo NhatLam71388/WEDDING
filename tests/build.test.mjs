@@ -19,6 +19,16 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/assets/photos/LBS02261-1280.webp"),
     access("dist/client/assets/photos/LBS02201-640.webp"),
     access("dist/.openai/hosting.json"),
+    ...[
+      "LBS01835",
+      "LBS01852",
+      "LBS01887",
+      "LBS01919",
+      "LBS01931",
+    ].flatMap((basename) => [
+      access(`dist/client/assets/photos/${basename}-640.webp`),
+      access(`dist/client/assets/photos/${basename}-1280.webp`),
+    ]),
   ]);
 
   const [

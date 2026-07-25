@@ -288,12 +288,41 @@ h2,h3{font-family:var(--font-editorial)!important}
 .gallery-header{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(248,243,236,.94);border-bottom:1px solid rgba(82,62,50,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 12px 34px}
 .gallery-grid figure{margin:0;aspect-ratio:2/3;border-radius:10px;overflow:hidden;background:#e8ddd2}
-.gallery-grid figure:nth-child(6n+1){grid-column:1/-1;aspect-ratio:3/2}
+.gallery-grid figure[data-gallery-layout="wide"]{grid-column:1/-1;aspect-ratio:3/2}
+.gallery-thumb{position:relative;display:block;width:100%;height:100%;padding:0;border:0;border-radius:inherit;overflow:hidden;background:#e8ddd2;cursor:zoom-in}
 .gallery-grid img{display:block;width:100%;height:100%;object-fit:cover}
+.gallery-thumb img{transition:transform 520ms cubic-bezier(.22,1,.36,1),filter 320ms ease}
+.gallery-thumb:after{content:"↗";position:absolute;right:8px;bottom:8px;display:grid;place-items:center;width:30px;height:30px;border:1px solid rgba(255,250,243,.72);border-radius:50%;background:rgba(39,30,25,.54);color:#fffaf3;font:400 14px/1 var(--font-editorial);box-shadow:0 7px 20px rgba(28,18,14,.2);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px);pointer-events:none}
+.gallery-thumb:focus-visible{outline:2px solid var(--clay);outline-offset:-4px}
+.gallery-lightbox{position:fixed;z-index:8;inset:0;display:grid;place-items:center;overflow:hidden;background:rgba(24,15,12,.96);color:#fffaf3;animation:ovIn 260ms ease-out both;isolation:isolate}
+.gallery-lightbox__backdrop{position:absolute;z-index:0;inset:0;background:radial-gradient(circle at 50% 44%,rgba(209,173,143,.12),transparent 46%),linear-gradient(180deg,rgba(38,25,20,.18),rgba(17,10,8,.48));cursor:zoom-out}
+.gallery-lightbox__topbar{position:absolute;z-index:4;top:0;left:0;right:0;display:flex;align-items:center;justify-content:space-between;gap:18px;padding:max(14px,env(safe-area-inset-top)) max(14px,calc((100vw - 1180px)/2));background:linear-gradient(180deg,rgba(18,11,9,.82),transparent);pointer-events:none}
+.gallery-lightbox__counter{display:flex;flex-direction:column;gap:5px;min-width:84px;color:#fffaf3;text-shadow:0 2px 12px rgba(0,0,0,.32);pointer-events:auto}
+.gallery-lightbox__counter small{font:500 7.5px/1 var(--font-body);letter-spacing:.24em;text-transform:uppercase;color:#d9bda5}
+.gallery-lightbox__counter strong{font:italic 400 17px/1 var(--font-editorial)}
+.gallery-lightbox__close,.gallery-lightbox__nav{display:grid;place-items:center;width:48px;height:48px;padding:0;border:1px solid rgba(255,250,243,.38);border-radius:50%;background:rgba(255,250,243,.11);color:#fffaf3;box-shadow:0 9px 24px rgba(0,0,0,.18);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer}
+.gallery-lightbox__close{font:300 27px/1 var(--font-body);pointer-events:auto}
+.gallery-lightbox__nav{position:absolute;z-index:4;top:50%;translate:0 -50%;font:300 34px/1 var(--font-editorial)}
+.gallery-lightbox__nav--previous{left:max(9px,env(safe-area-inset-left))}
+.gallery-lightbox__nav--next{right:max(9px,env(safe-area-inset-right))}
+.gallery-lightbox__stage{position:relative;z-index:1;display:grid;place-items:center;width:100%;height:100%;padding:max(76px,calc(env(safe-area-inset-top) + 66px)) clamp(62px,8vw,112px) max(62px,calc(env(safe-area-inset-bottom) + 52px));touch-action:pan-y pinch-zoom;user-select:none;-webkit-user-select:none;pointer-events:none}
+.gallery-lightbox__figure{display:grid;place-items:center;max-width:100%;max-height:100%;margin:0;pointer-events:auto}
+.gallery-lightbox__image{display:block;width:auto;height:auto;max-width:100%;max-height:calc(100svh - 146px);object-fit:contain;object-position:center;border-radius:4px;box-shadow:0 24px 70px rgba(0,0,0,.42);-webkit-user-drag:none}
+.gallery-lightbox__hint{position:absolute;z-index:3;left:50%;bottom:max(14px,calc(env(safe-area-inset-bottom) + 8px));translate:-50% 0;font:500 7px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:rgba(255,250,243,.62);white-space:nowrap;pointer-events:none}
 @media(hover:hover){
   .event-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px rgba(54,38,28,.2)}
   .event-card:hover .event-photo{transform:scale(1.085)}
   .story-frame:hover,.featured-frame:hover{translate:0 -5px;box-shadow:0 25px 56px rgba(54,38,28,.2)}
+  .gallery-thumb:hover img{transform:scale(1.035);filter:saturate(1.04)}
+  .gallery-lightbox__close:hover,.gallery-lightbox__nav:hover{background:rgba(255,250,243,.2);transform:translateY(-1px)}
+}
+@media(max-width:620px){
+  .gallery-lightbox__topbar{padding-left:14px;padding-right:14px}
+  .gallery-lightbox__stage{padding:76px 12px max(76px,calc(env(safe-area-inset-bottom) + 66px))}
+  .gallery-lightbox__nav{top:auto;bottom:max(12px,env(safe-area-inset-bottom));width:44px;height:44px;translate:0;font-size:31px}
+  .gallery-lightbox__nav--previous{left:calc(50% - 53px)}
+  .gallery-lightbox__nav--next{right:calc(50% - 53px)}
+  .gallery-lightbox__hint{display:none}
 }
 @media(max-width:620px) and (orientation:portrait){
   .intro-stage{width:100vw;background:linear-gradient(180deg,#d1ced4 0 56%,#d9cec6 100%)}
@@ -519,7 +548,7 @@ Xem thông tin
 </figure>
 </div>
 </div>
-<button type="button" class="secondary-action album-action" onClick="{{ openGallery }}">Mở album đầy đủ <span style="font-size:12px">25 ảnh</span></button>
+<button type="button" class="secondary-action album-action" onClick="{{ openGallery }}">Mở album đầy đủ <span style="font-size:12px">{{ galleryCount }} ảnh</span></button>
 </section>
 
 <section data-screen-label="05 Quote" style="background:#f3e8db;padding:66px 28px;text-align:center;position:relative;overflow:hidden">
@@ -734,20 +763,44 @@ Xem thông tin
 
 <sc-if value="{{ galleryOpen }}" hint-placeholder-val="{{ false }}">
 <div role="dialog" aria-modal="true" aria-label="Album ảnh cưới của Ngô Nam và Nhật Mai" data-galleryroot="1" style="position:fixed;inset:0;z-index:140;display:flex;justify-content:center;background:#221a15">
-<div class="gallery-sheet">
+<div class="gallery-sheet" data-gallery-sheet="1">
 <div class="gallery-header">
 <div>
 <div style="font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.22em;text-transform:uppercase;color:#a67f64">Nam &amp; Mai · 2026</div>
-<div style="margin-top:7px;font:italic 400 21px/1 'Playfair Display',serif;color:#2d241f">Toàn bộ album · 25 ảnh</div>
+<div style="margin-top:7px;font:italic 400 21px/1 'Playfair Display',serif;color:#2d241f">Toàn bộ album · {{ galleryCount }} ảnh</div>
 </div>
 <button onClick="{{ closeGallery }}" aria-label="Đóng album ảnh" style="width:42px;height:42px;border:1px solid rgba(82,62,50,.2);border-radius:50%;background:#fffaf3;color:#61493b;font:300 22px/1 'Be Vietnam Pro',sans-serif;cursor:pointer">×</button>
 </div>
 <div class="gallery-grid">
-<sc-for list="{{ galleryPhotos }}" as="photo" hint-placeholder-count="8">
-<figure><img src="{{ photo.src }}" alt="{{ photo.alt }}" loading="lazy" decoding="async"></figure>
+<sc-for list="{{ galleryPhotos }}" as="photo" hint-placeholder-count="10">
+<figure data-gallery-layout="{{ photo.layout }}">
+<button type="button" class="gallery-thumb" data-gallery-layout="{{ photo.layout }}" data-gallery-index="{{ photo.index }}" onClick="{{ openGalleryPhoto }}" aria-label="{{ photo.openLabel }}">
+<img src="{{ photo.src }}" alt="{{ photo.alt }}" loading="lazy" decoding="async">
+</button>
+</figure>
 </sc-for>
 </div>
 </div>
+<sc-if value="{{ galleryPhotoOpen }}" hint-placeholder-val="{{ false }}">
+<div class="gallery-lightbox" data-galleryviewer="1" aria-label="Ảnh cưới phóng lớn">
+<div class="gallery-lightbox__backdrop" onClick="{{ closeGalleryPhoto }}" aria-hidden="true"></div>
+<div class="gallery-lightbox__topbar">
+<div class="gallery-lightbox__counter" role="status" aria-live="polite" aria-atomic="true">
+<small>Album Ngô Nam &amp; Nhật Mai</small>
+<strong>{{ galleryPhotoPosition }}</strong>
+</div>
+<button type="button" class="gallery-lightbox__close" data-galleryviewer-close="1" onClick="{{ closeGalleryPhoto }}" aria-label="Đóng ảnh phóng lớn">×</button>
+</div>
+<button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--previous" onClick="{{ previousGalleryPhoto }}" aria-label="Xem ảnh trước">‹</button>
+<div class="gallery-lightbox__stage" onPointerDown="{{ beginGallerySwipe }}" onPointerUp="{{ endGallerySwipe }}" onPointerCancel="{{ cancelGallerySwipe }}">
+<figure class="gallery-lightbox__figure">
+<img class="gallery-lightbox__image" src="{{ galleryPhotoSrc }}" alt="{{ galleryPhotoAlt }}" width="{{ galleryPhotoWidth }}" height="{{ galleryPhotoHeight }}" loading="eager" decoding="async" draggable="false">
+</figure>
+</div>
+<button type="button" class="gallery-lightbox__nav gallery-lightbox__nav--next" onClick="{{ nextGalleryPhoto }}" aria-label="Xem ảnh tiếp theo">›</button>
+<div class="gallery-lightbox__hint" aria-hidden="true">Vuốt ngang hoặc dùng phím ← →</div>
+</div>
+</sc-if>
 </div>
 </sc-if>
 
@@ -825,15 +878,27 @@ Xem thông tin
 const EASE = 'cubic-bezier(.22,1,.36,1)';
 const HIDE = { up: 'translateY(22px)', left: 'translateX(-22px)', right: 'translateX(22px)', scale: 'scale(.92)' };
 const DEFAULT_MUSIC_SRC = './assets/audio/wedding-01-francisco-alvear.mp3';
-const GALLERY_PHOTOS = [
+const GALLERY_SWIPE_THRESHOLD = 50;
+const GALLERY_PHOTO_NAMES = [
   'LBS01523_1','LBS01554_1','LBS01613','LBS01634','LBS01643',
   'LBS01674','LBS01681','LBS01690','LBS01726','LBS01781',
+  'LBS01835','LBS01852','LBS01887','LBS01919','LBS01931',
   'LBS02087','LBS02121','LBS02178','LBS02201','LBS02261',
   'LBS02274','LBS02333','LBS02361','LBS02386','LBS02456',
   'LBS02474','LBS02492','LBS02533','LBS02576','LBS02643'
-].map((name, index) => ({
+];
+const GALLERY_LANDSCAPE_PHOTOS = new Set(['LBS02201','LBS02261','LBS02274']);
+const GALLERY_WIDE_TILES = new Set(['LBS02201','LBS02261','LBS02274','LBS02386']);
+const GALLERY_PHOTOS = GALLERY_PHOTO_NAMES.map((name, index) => ({
+  basename: name,
+  index: index,
   src: './assets/photos/' + name + '-640.webp',
-  alt: 'Ảnh cưới Ngô Nam và Nhật Mai ' + String(index + 1).padStart(2, '0')
+  fullSrc: './assets/photos/' + name + '-1280.webp',
+  layout: GALLERY_WIDE_TILES.has(name) ? 'wide' : 'portrait',
+  width: 1280,
+  height: GALLERY_LANDSCAPE_PHOTOS.has(name) ? 854 : 1920,
+  alt: 'Ảnh cưới Ngô Nam và Nhật Mai ' + String(index + 1).padStart(2, '0'),
+  openLabel: 'Mở ảnh cưới số ' + String(index + 1) + ' ở chế độ xem đầy đủ'
 }));
 
 class Component extends DCLogic {
@@ -843,7 +908,8 @@ class Component extends DCLogic {
     married: false,
     fName: '', fCount: '1', attend: 'yes', side: 'groom', rsvpWebsite: '',
     rsvpBusy: false, rsvpSent: false, rsvpError: '',
-    galleryOpen: false, giftOpen: false, giftTab: 'groom', copied: false,
+    galleryOpen: false, galleryPhotoOpen: false, galleryPhotoIndex: 0,
+    giftOpen: false, giftTab: 'groom', copied: false,
     wName: '', wText: '', wishWebsite: '',
     wishBusy: false, wishSent: false, wishError: '',
     wishes: [], messagesLoaded: false, messagesError: ''
@@ -862,6 +928,11 @@ class Component extends DCLogic {
     this._introWasOn = Boolean(this.state.introOn);
     this._wasGift = false;
     this._wasGallery = false;
+    this._wasGalleryPhoto = false;
+    this.galleryTrigger = null;
+    this.galleryPhotoFocusTarget = null;
+    this.gallerySwipe = null;
+    this.preloadedGalleryIndex = -1;
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.prepareReveal();
     this.setupClock();
@@ -884,9 +955,39 @@ class Component extends DCLogic {
         if (openButton) openButton.focus({ preventScroll: true });
         return;
       }
-      if (e.key !== 'Escape') return;
-      if (this.state.galleryOpen) this.setState({ galleryOpen: false });
-      else if (this.state.giftOpen) this.setState({ giftOpen: false });
+      if (this.state.galleryPhotoOpen) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this.closeGalleryPhoto();
+          return;
+        }
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault();
+          this.moveGalleryPhoto(-1);
+          return;
+        }
+        if (e.key === 'ArrowRight') {
+          e.preventDefault();
+          this.moveGalleryPhoto(1);
+          return;
+        }
+        if (e.key === 'Tab') {
+          this.trapDialogFocus(e, '[data-galleryviewer]');
+          return;
+        }
+      }
+      if (this.state.galleryOpen) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          this.closeGallery();
+          return;
+        }
+        if (e.key === 'Tab') {
+          this.trapDialogFocus(e, '[data-galleryroot]');
+          return;
+        }
+      }
+      if (e.key === 'Escape' && this.state.giftOpen) this.setState({ giftOpen: false });
     };
     document.addEventListener('keydown', this.onKey);
     this.loadMessages();
@@ -920,6 +1021,8 @@ class Component extends DCLogic {
     document.removeEventListener('focusin', this.onFieldFocus);
     document.removeEventListener('focusout', this.onFieldBlur);
     this.setIntroBackgroundInert(false);
+    this.setGalleryBackgroundInert(false);
+    this.setGallerySheetInert(false);
     document.body.style.overflow = this._bodyOverflowBeforeMount || '';
     if (this.audio) {
       if (this.onAudioPlay && this.audio.removeEventListener) this.audio.removeEventListener('play', this.onAudioPlay);
@@ -943,9 +1046,28 @@ class Component extends DCLogic {
       if (b) b.focus();
     }
     const wasGallery = this._wasGallery;
+    if (this.state.galleryOpen !== wasGallery) {
+      this.setGalleryBackgroundInert(Boolean(this.state.galleryOpen));
+    }
     if (this.state.galleryOpen && !wasGallery) {
       const close = document.querySelector('[data-galleryroot] button');
       if (close) close.focus();
+    } else if (!this.state.galleryOpen && wasGallery && this.galleryTrigger && this.galleryTrigger.focus) {
+      this.galleryTrigger.focus({ preventScroll: true });
+    }
+    const wasGalleryPhoto = this._wasGalleryPhoto;
+    if (this.state.galleryPhotoOpen !== wasGalleryPhoto) {
+      this.setGallerySheetInert(Boolean(this.state.galleryPhotoOpen));
+    }
+    if (this.state.galleryPhotoOpen && !wasGalleryPhoto) {
+      const closePhoto = document.querySelector('[data-galleryviewer-close]');
+      if (closePhoto) closePhoto.focus({ preventScroll: true });
+    } else if (!this.state.galleryPhotoOpen && wasGalleryPhoto && this.state.galleryOpen && this.galleryPhotoFocusTarget && this.galleryPhotoFocusTarget.focus) {
+      this.galleryPhotoFocusTarget.focus({ preventScroll: true });
+    }
+    if (this.state.galleryPhotoOpen && this.preloadedGalleryIndex !== this.state.galleryPhotoIndex) {
+      this.preloadedGalleryIndex = this.state.galleryPhotoIndex;
+      this.preloadGalleryNeighbors(this.state.galleryPhotoIndex);
     }
     const modalOpen = this.state.giftOpen || this.state.galleryOpen;
     const scrollLocked = this.state.introOn || modalOpen;
@@ -954,6 +1076,7 @@ class Component extends DCLogic {
     }
     this._wasGift = this.state.giftOpen;
     this._wasGallery = this.state.galleryOpen;
+    this._wasGalleryPhoto = this.state.galleryPhotoOpen;
     this._scrollWasLocked = scrollLocked;
     this._introWasOn = this.state.introOn;
   }
@@ -992,6 +1115,138 @@ class Component extends DCLogic {
         element.removeAttribute('data-intro-inert');
       }
     });
+  }
+
+  setGalleryBackgroundInert(on) {
+    if (!document.querySelector) return;
+    const shell = document.querySelector('[data-invite-shell]');
+    const galleryRoot = document.querySelector('[data-galleryroot]');
+    if (!shell || !shell.children) return;
+    Array.from(shell.children).forEach((element) => {
+      if (galleryRoot && (element === galleryRoot || (element.contains && element.contains(galleryRoot)))) return;
+      if (on && !element.hasAttribute('inert')) {
+        element.setAttribute('inert', '');
+        element.setAttribute('data-gallery-inert', '1');
+      } else if (!on && element.hasAttribute('data-gallery-inert')) {
+        element.removeAttribute('inert');
+        element.removeAttribute('data-gallery-inert');
+      }
+    });
+  }
+
+  setGallerySheetInert(on) {
+    if (!document.querySelector) return;
+    const sheet = document.querySelector('[data-gallery-sheet]');
+    if (!sheet) return;
+    if (on) {
+      sheet.setAttribute('inert', '');
+      sheet.setAttribute('aria-hidden', 'true');
+    } else {
+      sheet.removeAttribute('inert');
+      sheet.removeAttribute('aria-hidden');
+    }
+  }
+
+  trapDialogFocus(event, selector) {
+    if (!document.querySelector) return false;
+    const root = document.querySelector(selector);
+    if (!root || !root.querySelectorAll) return false;
+    const focusable = Array.from(root.querySelectorAll('button:not([disabled]),a[href],input:not([disabled]),textarea:not([disabled]),select:not([disabled]),[tabindex]:not([tabindex="-1"])'))
+      .filter((element) => element.getAttribute('aria-hidden') !== 'true');
+    if (!focusable.length) return false;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || !root.contains(active))) {
+      event.preventDefault();
+      last.focus();
+      return true;
+    }
+    if (!event.shiftKey && (active === last || !root.contains(active))) {
+      event.preventDefault();
+      first.focus();
+      return true;
+    }
+    return false;
+  }
+
+  normalizeGalleryIndex(index) {
+    const count = GALLERY_PHOTOS.length;
+    const numeric = Number.isFinite(Number(index)) ? Number(index) : 0;
+    return ((numeric % count) + count) % count;
+  }
+
+  openGallery() {
+    if (typeof document !== 'undefined' && document.activeElement && document.activeElement.focus) {
+      this.galleryTrigger = document.activeElement;
+    }
+    this.setState({ galleryOpen: true, galleryPhotoOpen: false });
+  }
+
+  closeGallery() {
+    this.gallerySwipe = null;
+    this.setState({ galleryOpen: false, galleryPhotoOpen: false });
+  }
+
+  openGalleryPhoto(eventOrIndex) {
+    const target = eventOrIndex && eventOrIndex.currentTarget ? eventOrIndex.currentTarget : null;
+    const rawIndex = typeof eventOrIndex === 'number'
+      ? eventOrIndex
+      : Number(target && target.getAttribute ? target.getAttribute('data-gallery-index') : 0);
+    if (!Number.isFinite(rawIndex)) return;
+    this.galleryPhotoFocusTarget = target && target.focus ? target : null;
+    this.gallerySwipe = null;
+    this.setState({
+      galleryPhotoOpen: true,
+      galleryPhotoIndex: this.normalizeGalleryIndex(rawIndex)
+    });
+  }
+
+  closeGalleryPhoto() {
+    this.gallerySwipe = null;
+    this.setState({ galleryPhotoOpen: false });
+  }
+
+  moveGalleryPhoto(delta) {
+    this.gallerySwipe = null;
+    this.setState((previous) => ({
+      galleryPhotoIndex: this.normalizeGalleryIndex(previous.galleryPhotoIndex + delta)
+    }));
+  }
+
+  preloadGalleryNeighbors(index) {
+    if (typeof Image === 'undefined') return;
+    [-1, 1].forEach((delta) => {
+      const photo = GALLERY_PHOTOS[this.normalizeGalleryIndex(index + delta)];
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.src = photo.fullSrc;
+    });
+  }
+
+  beginGallerySwipe(event) {
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
+    this.gallerySwipe = {
+      x: event.clientX,
+      y: event.clientY,
+      time: Date.now()
+    };
+  }
+
+  endGallerySwipe(event) {
+    if (!this.gallerySwipe) return;
+    const start = this.gallerySwipe;
+    this.gallerySwipe = null;
+    const dx = event.clientX - start.x;
+    const dy = event.clientY - start.y;
+    const elapsed = Date.now() - start.time;
+    if (elapsed <= 700 && Math.abs(dx) >= GALLERY_SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy) * 1.25) {
+      this.moveGalleryPhoto(dx < 0 ? 1 : -1);
+    }
+  }
+
+  cancelGallerySwipe() {
+    this.gallerySwipe = null;
   }
 
   openInvite() {
@@ -1551,6 +1806,8 @@ class Component extends DCLogic {
     const s = this.state;
     const groom = s.giftTab === 'groom';
     const ring = (on) => (on ? 'inset 0 0 0 3.5px #fffaf3, inset 0 0 0 12px #a67f64' : 'none');
+    const galleryPhotoIndex = this.normalizeGalleryIndex(s.galleryPhotoIndex);
+    const galleryPhoto = GALLERY_PHOTOS[galleryPhotoIndex];
     return {
       introOn: s.introOn,
       openInvite: () => this.openInvite(),
@@ -1577,9 +1834,23 @@ class Component extends DCLogic {
       onRsvp: () => this.submitRsvp(),
 
       galleryOpen: s.galleryOpen,
+      galleryCount: GALLERY_PHOTOS.length,
       galleryPhotos: GALLERY_PHOTOS,
-      openGallery: () => this.setState({ galleryOpen: true }),
-      closeGallery: () => this.setState({ galleryOpen: false }),
+      openGallery: () => this.openGallery(),
+      closeGallery: () => this.closeGallery(),
+      galleryPhotoOpen: s.galleryPhotoOpen,
+      galleryPhotoSrc: galleryPhoto.fullSrc,
+      galleryPhotoAlt: galleryPhoto.alt,
+      galleryPhotoWidth: galleryPhoto.width,
+      galleryPhotoHeight: galleryPhoto.height,
+      galleryPhotoPosition: 'Ảnh ' + String(galleryPhotoIndex + 1) + ' / ' + String(GALLERY_PHOTOS.length),
+      openGalleryPhoto: (event) => this.openGalleryPhoto(event),
+      closeGalleryPhoto: () => this.closeGalleryPhoto(),
+      previousGalleryPhoto: () => this.moveGalleryPhoto(-1),
+      nextGalleryPhoto: () => this.moveGalleryPhoto(1),
+      beginGallerySwipe: (event) => this.beginGallerySwipe(event),
+      endGallerySwipe: (event) => this.endGallerySwipe(event),
+      cancelGallerySwipe: () => this.cancelGallerySwipe(),
 
       giftOpen: s.giftOpen,
       openGift: () => this.setState({ giftOpen: true }),
