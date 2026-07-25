@@ -59,6 +59,42 @@ function asNumber(value: unknown): number {
   return Number.isFinite(number) ? number : 0;
 }
 
+function isAdminId(value: unknown): value is string {
+  return typeof value === "string" && value.length >= 1 && value.length <= 100;
+}
+
+// Every admin mutation targets exactly one row, so they share the same shape:
+// run the statement, treat "no rows changed" as a 404 rather than a silent
+// success, and never leak the underlying database error to the client.
+async function runWrite({
+  statement,
+  bindings,
+  missing,
+  failure,
+  result,
+}: {
+  statement: string;
+  bindings: (string | number)[];
+  missing: string;
+  failure: string;
+  result: Record<string, unknown>;
+}): Promise<Response> {
+  try {
+    const outcome = await getRuntimeBindings()
+      .DB.prepare(statement)
+      .bind(...bindings)
+      .run();
+
+    if (Number(outcome.meta?.changes ?? 0) !== 1) {
+      return json({ error: missing }, 404);
+    }
+
+    return json({ success: true, ...result });
+  } catch {
+    return json({ error: failure }, 503);
+  }
+}
+
 async function authError(request: Request): Promise<Response | null> {
   try {
     const auth = await verifyAdminRequest(request);
@@ -257,36 +293,47 @@ export async function POST(request: Request): Promise<Response> {
     !payload ||
     typeof payload !== "object" ||
     !("action" in payload) ||
-    payload.action !== "set-message-visibility" ||
     !("id" in payload) ||
-    typeof payload.id !== "string" ||
-    payload.id.length < 1 ||
-    payload.id.length > 100 ||
-    !("visible" in payload) ||
-    typeof payload.visible !== "boolean"
+    !isAdminId(payload.id)
   ) {
     return json({ error: "Yêu cầu cập nhật không hợp lệ." }, 400);
   }
 
-  try {
-    const result = await getRuntimeBindings()
-      .DB.prepare("UPDATE messages SET is_visible = ? WHERE id = ?")
-      .bind(payload.visible ? 1 : 0, payload.id)
-      .run();
+  const { action, id } = payload;
 
-    if (Number(result.meta?.changes ?? 0) !== 1) {
-      return json({ error: "Không tìm thấy lời chúc cần cập nhật." }, 404);
+  if (action === "set-message-visibility") {
+    if (!("visible" in payload) || typeof payload.visible !== "boolean") {
+      return json({ error: "Yêu cầu cập nhật không hợp lệ." }, 400);
     }
 
-    return json({
-      success: true,
-      id: payload.id,
-      visible: payload.visible,
+    return runWrite({
+      statement: "UPDATE messages SET is_visible = ? WHERE id = ?",
+      bindings: [payload.visible ? 1 : 0, id],
+      missing: "Không tìm thấy lời chúc cần cập nhật.",
+      failure: "Không thể cập nhật lời chúc. Vui lòng thử lại sau.",
+      result: { id, visible: payload.visible },
     });
-  } catch {
-    return json(
-      { error: "Không thể cập nhật lời chúc. Vui lòng thử lại sau." },
-      503,
-    );
   }
+
+  if (action === "delete-message") {
+    return runWrite({
+      statement: "DELETE FROM messages WHERE id = ?",
+      bindings: [id],
+      missing: "Không tìm thấy lời chúc cần xoá.",
+      failure: "Không thể xoá lời chúc. Vui lòng thử lại sau.",
+      result: { id, deleted: true },
+    });
+  }
+
+  if (action === "delete-rsvp") {
+    return runWrite({
+      statement: "DELETE FROM rsvps WHERE id = ?",
+      bindings: [id],
+      missing: "Không tìm thấy xác nhận cần xoá.",
+      failure: "Không thể xoá xác nhận. Vui lòng thử lại sau.",
+      result: { id, deleted: true },
+    });
+  }
+
+  return json({ error: "Yêu cầu cập nhật không hợp lệ." }, 400);
 }

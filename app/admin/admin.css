@@ -644,9 +644,52 @@
   text-transform: uppercase;
 }
 
-.admin-table td:last-child {
+/* Keyed to a class rather than :last-child so adding an action column cannot
+   silently move this styling onto a different cell. */
+.admin-table td.admin-cell-time {
   color: var(--admin-muted);
   white-space: nowrap;
+}
+
+.admin-table td.admin-cell-action {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.admin-row-delete {
+  min-height: 32px;
+  padding: 0 14px;
+  border: 1px solid rgba(178, 74, 62, 0.32);
+  border-radius: 999px;
+  background: transparent;
+  color: #b24a3e;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 720;
+  white-space: nowrap;
+  transition: background 170ms ease, color 170ms ease, border-color 170ms ease;
+}
+
+.admin-row-delete:hover:not(:disabled) {
+  border-color: #b24a3e;
+  background: #b24a3e;
+  color: #fffaf4;
+}
+
+.admin-row-delete:focus-visible {
+  outline: 3px solid rgba(178, 74, 62, 0.3);
+  outline-offset: 3px;
+}
+
+.admin-row-delete:disabled {
+  cursor: wait;
+  opacity: 0.58;
+}
+
+.admin-message-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .admin-table tr:last-child td {
@@ -1045,8 +1088,14 @@
     gap: 8px;
   }
 
-  .admin-message-action {
+  /* The action buttons sit in their own wrapper, so the wrapper carries the
+     column placement; without this it would fall into the 39px avatar column. */
+  .admin-message-actions {
     grid-column: 2;
+    flex-wrap: wrap;
+  }
+
+  .admin-message-action {
     width: fit-content;
     min-width: auto;
     padding: 7px 11px;

@@ -85,6 +85,13 @@ function formatDate(value: number | string): string {
   }).format(date);
 }
 
+// toISOString() throws on an unparseable timestamp, which would take the whole
+// dashboard down with it. Omitting the attribute degrades gracefully instead.
+function isoDate(value: number | string): string | undefined {
+  const date = new Date(value);
+  return Number.isFinite(date.getTime()) ? date.toISOString() : undefined;
+}
+
 function StatCard({
   eyebrow,
   value,
@@ -110,7 +117,7 @@ export default function AdminDashboard() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [busyMessageId, setBusyMessageId] = useState("");
+  const [busyRowId, setBusyRowId] = useState("");
   const [exporting, setExporting] = useState<"" | "rsvps" | "messages">("");
 
   async function load(accessToken: string, quiet = false) {
@@ -158,6 +165,36 @@ export default function AdminDashboard() {
     setError("");
   }
 
+  // Every row action posts one command and then refetches, so the request,
+  // busy-state and error handling live in one place.
+  async function mutateRow(
+    rowId: string,
+    body: Record<string, unknown>,
+    fallbackError: string,
+  ) {
+    setBusyRowId(rowId);
+    setError("");
+    try {
+      const response = await fetch("/api/admin/dashboard", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessKey}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+
+      if (!response.ok) {
+        throw new ApiError(response.status, await readError(response));
+      }
+      await load(accessKey, true);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : fallbackError);
+    } finally {
+      setBusyRowId("");
+    }
+  }
+
   async function setMessageVisibility(message: AdminMessage) {
     if (
       message.visible &&
@@ -168,35 +205,52 @@ export default function AdminDashboard() {
       return;
     }
 
-    setBusyMessageId(message.id);
-    setError("");
-    try {
-      const response = await fetch("/api/admin/dashboard", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${accessKey}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          action: "set-message-visibility",
-          id: message.id,
-          visible: !message.visible,
-        }),
-      });
+    await mutateRow(
+      message.id,
+      {
+        action: "set-message-visibility",
+        id: message.id,
+        visible: !message.visible,
+      },
+      "Không thể cập nhật lời chúc.",
+    );
+  }
 
-      if (!response.ok) {
-        throw new ApiError(response.status, await readError(response));
-      }
-      await load(accessKey, true);
-    } catch (caught) {
-      setError(
-        caught instanceof Error
-          ? caught.message
-          : "Không thể cập nhật lời chúc.",
-      );
-    } finally {
-      setBusyMessageId("");
+  async function deleteMessage(message: AdminMessage) {
+    if (
+      !window.confirm(
+        `Xoá vĩnh viễn lời chúc của “${message.name}”?\n\n` +
+          "Lời chúc sẽ bị xoá khỏi hệ thống và không thể khôi phục. " +
+          "Nếu chỉ muốn tạm ẩn khỏi trang thiệp, hãy chọn “Ẩn lời chúc”.",
+      )
+    ) {
+      return;
     }
+
+    await mutateRow(
+      message.id,
+      { action: "delete-message", id: message.id },
+      "Không thể xoá lời chúc.",
+    );
+  }
+
+  async function deleteRsvp(rsvp: AdminRsvp) {
+    const side = rsvp.side === "groom" ? "nhà trai" : "nhà gái";
+    if (
+      !window.confirm(
+        `Xoá vĩnh viễn xác nhận của “${rsvp.name}” (${side}, ${rsvp.guestCount} khách)?\n\n` +
+          "Dòng này sẽ bị xoá khỏi hệ thống và không thể khôi phục. " +
+          "Số liệu thống kê sẽ được tính lại.",
+      )
+    ) {
+      return;
+    }
+
+    await mutateRow(
+      rsvp.id,
+      { action: "delete-rsvp", id: rsvp.id },
+      "Không thể xoá xác nhận.",
+    );
   }
 
   async function downloadCsv(type: "rsvps" | "messages") {
@@ -399,6 +453,7 @@ export default function AdminDashboard() {
                     <th>Phản hồi</th>
                     <th>Số khách</th>
                     <th>Thời gian</th>
+                    <th>Thao tác</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -420,7 +475,20 @@ export default function AdminDashboard() {
                         </span>
                       </td>
                       <td data-label="Số khách">{rsvp.guestCount}</td>
-                      <td data-label="Thời gian">{formatDate(rsvp.createdAt)}</td>
+                      <td data-label="Thời gian" className="admin-cell-time">
+                        {formatDate(rsvp.createdAt)}
+                      </td>
+                      <td data-label="Thao tác" className="admin-cell-action">
+                        <button
+                          className="admin-row-delete"
+                          type="button"
+                          onClick={() => void deleteRsvp(rsvp)}
+                          disabled={busyRowId === rsvp.id}
+                          aria-label={`Xoá xác nhận của ${rsvp.name}`}
+                        >
+                          {busyRowId === rsvp.id ? "Đang xoá…" : "Xoá"}
+                        </button>
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -467,7 +535,7 @@ export default function AdminDashboard() {
                     <div className="admin-message-meta">
                       <div>
                         <strong>{message.name}</strong>
-                        <time dateTime={new Date(message.createdAt).toISOString()}>
+                        <time dateTime={isoDate(message.createdAt)}>
                           {formatDate(message.createdAt)}
                         </time>
                       </div>
@@ -483,18 +551,29 @@ export default function AdminDashboard() {
                     </div>
                     <p>{message.body}</p>
                   </div>
-                  <button
-                    className="admin-message-action"
-                    type="button"
-                    onClick={() => void setMessageVisibility(message)}
-                    disabled={busyMessageId === message.id}
-                  >
-                    {busyMessageId === message.id
-                      ? "Đang lưu…"
-                      : message.visible
-                        ? "Ẩn lời chúc"
-                        : "Hiện lại"}
-                  </button>
+                  <div className="admin-message-actions">
+                    <button
+                      className="admin-message-action"
+                      type="button"
+                      onClick={() => void setMessageVisibility(message)}
+                      disabled={busyRowId === message.id}
+                    >
+                      {busyRowId === message.id
+                        ? "Đang lưu…"
+                        : message.visible
+                          ? "Ẩn lời chúc"
+                          : "Hiện lại"}
+                    </button>
+                    <button
+                      className="admin-row-delete"
+                      type="button"
+                      onClick={() => void deleteMessage(message)}
+                      disabled={busyRowId === message.id}
+                      aria-label={`Xoá lời chúc của ${message.name}`}
+                    >
+                      Xoá
+                    </button>
+                  </div>
                 </article>
               ))}
             </div>

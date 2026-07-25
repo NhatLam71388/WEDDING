@@ -42,8 +42,17 @@ function protectSpreadsheetCell(value: unknown): string {
   return `"${text.replaceAll('"', '""')}"`;
 }
 
+const DELIMITER = ",";
+
+// Excel splits a CSV using the list separator from the operating system locale,
+// which is ";" on Vietnamese (and most European) Windows installs. A
+// comma-delimited file therefore lands entirely in column A. The "sep=" line is
+// a spreadsheet directive that pins the delimiter regardless of locale, so the
+// export opens as real columns on any machine.
+const SEPARATOR_HINT = `sep=${DELIMITER}`;
+
 function csvRow(values: unknown[]): string {
-  return values.map(protectSpreadsheetCell).join(",");
+  return values.map(protectSpreadsheetCell).join(DELIMITER);
 }
 
 function dateForCsv(timestamp: number): string {
@@ -183,7 +192,7 @@ export async function GET(request: Request): Promise<Response> {
       filename = "loi-chuc.csv";
     }
 
-    return new Response(`\uFEFF${csv}`, {
+    return new Response(`\uFEFF${SEPARATOR_HINT}\r\n${csv}`, {
       status: 200,
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",

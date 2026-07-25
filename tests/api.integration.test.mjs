@@ -14,6 +14,17 @@ async function json(response) {
   return response.json();
 }
 
+function adminPost(miniflare, body) {
+  return miniflare.dispatchFetch("http://wedding.test/api/admin/dashboard", {
+    method: "POST",
+    headers: {
+      authorization: `Bearer ${ADMIN_TOKEN}`,
+      "content-type": "application/json",
+    },
+    body: JSON.stringify(body),
+  });
+}
+
 test("live APIs paginate, persist RSVP identity, moderate, and reject oversized input", async () => {
   await mkdir(".wrangler", { recursive: true });
   await build({
@@ -273,7 +284,11 @@ test("live APIs paginate, persist RSVP identity, moderate, and reject oversized 
     );
     assert.equal(response.status, 200);
     const csv = await response.text();
-    assert.equal(csv.split("\r\n").length, 2);
+    // Leading BOM + "sep=," directive, then the header row and one data row.
+    // response.text() strips the leading BOM per the Fetch spec, so only the
+    // "sep=," directive is observable here.
+    assert.match(csv, /^﻿?sep=,\r\n/);
+    assert.equal(csv.split("\r\n").length, 3);
     assert.match(csv, /Không tham dự/);
 
     response = await miniflare.dispatchFetch(
@@ -446,7 +461,8 @@ test("live APIs paginate, persist RSVP identity, moderate, and reject oversized 
     );
     assert.equal(response.status, 200);
     const identityCsv = await response.text();
-    assert.equal(identityCsv.split("\r\n").length, 4);
+    assert.match(identityCsv, /^﻿?sep=,\r\n/);
+    assert.equal(identityCsv.split("\r\n").length, 5);
     assert.equal(identityCsv.split(firstResponseId).length - 1, 1);
     assert.equal(identityCsv.split(secondResponseId).length - 1, 1);
 
@@ -486,6 +502,72 @@ test("live APIs paginate, persist RSVP identity, moderate, and reject oversized 
       },
     );
     assert.equal(response.status, 413);
+
+    // Deleting an RSVP removes exactly that row and recomputes the statistics.
+    response = await adminPost(miniflare, {
+      action: "delete-rsvp",
+      id: secondResponseId,
+    });
+    assert.equal(response.status, 200);
+    assert.deepEqual(await json(response), {
+      success: true,
+      id: secondResponseId,
+      deleted: true,
+    });
+
+    response = await adminPost(miniflare, {
+      action: "delete-rsvp",
+      id: secondResponseId,
+    });
+    assert.equal(response.status, 404);
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/dashboard",
+      { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
+    );
+    const afterRsvpDelete = await json(response);
+    assert.equal(afterRsvpDelete.rsvps.length, 2);
+    assert.ok(
+      !afterRsvpDelete.rsvps.some((item) => item.id === secondResponseId),
+    );
+    assert.equal(afterRsvpDelete.stats.rsvps.totalResponses, 2);
+    assert.equal(afterRsvpDelete.stats.rsvps.attendingGuests, 0);
+
+    // Deleting a wish removes it outright rather than just hiding it.
+    response = await adminPost(miniflare, {
+      action: "delete-message",
+      id: createdMessage.id,
+    });
+    assert.equal(response.status, 200);
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/dashboard",
+      { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
+    );
+    const afterMessageDelete = await json(response);
+    assert.equal(afterMessageDelete.messages.length, 0);
+    assert.equal(afterMessageDelete.stats.messages.total, 0);
+
+    // Unknown actions and malformed ids stay rejected.
+    response = await adminPost(miniflare, {
+      action: "drop-everything",
+      id: createdMessage.id,
+    });
+    assert.equal(response.status, 400);
+
+    response = await adminPost(miniflare, { action: "delete-rsvp", id: "" });
+    assert.equal(response.status, 400);
+
+    // Deletes still require the admin token.
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/dashboard",
+      {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ action: "delete-rsvp", id: firstResponseId }),
+      },
+    );
+    assert.equal(response.status, 401);
   } finally {
     await miniflare.dispose();
   }
