@@ -297,7 +297,8 @@
     // same left/top/width/height in frame-%, computed by _applyView(), so the
     // inside-mask crop and the outside-mask spill stay pixel-aligned.
     '.frame img{position:absolute;max-width:none;transform:translate(-50%,-50%);' +
-    '  -webkit-user-drag:none;user-select:none;touch-action:none}' +
+    '  -webkit-user-drag:none;user-select:none;touch-action:pan-y pinch-zoom}' +
+    ':host([data-reframe]) .frame img{touch-action:none}' +
     // Reframe mode (double-click): the full image spills past the mask. The
     // spill layer is sized to the IMAGE bounds so its corners are where the
     // resize handles belong. The ghost <img> inside is translucent; the real
@@ -684,8 +685,12 @@
       });
       // Wheel zoom stays available inside reframe mode as a trackpad nicety —
       // zooms toward the cursor (offset' = cursor·(1-k) + offset·k).
-      this.addEventListener('wheel', (e) => {
-        if (!this.hasAttribute('data-reframe')) return;
+      // The non-passive listener is attached only while an editable slot is
+      // actively being reframed, so public photos never delay or capture page
+      // scrolling.
+      this._wheelZoom = (e) => {
+        if (!this.hasAttribute('data-editable') ||
+            !this.hasAttribute('data-reframe')) return;
         e.preventDefault();
         const r = this.getBoundingClientRect();
         const cx = (e.clientX - r.left) / r.width * 100 - 50;
@@ -699,7 +704,7 @@
         this._view.y = cy * (1 - k) + this._view.y * k;
         this._clampView();
         this._applyView();
-      }, { passive: false });
+      };
     }
 
     connectedCallback() {
@@ -745,8 +750,10 @@
     }
 
     _enterReframe() {
-      if (this.hasAttribute('data-reframe')) return;
+      if (!this.hasAttribute('data-editable') ||
+          this.hasAttribute('data-reframe')) return;
       this.setAttribute('data-reframe', '');
+      this.addEventListener('wheel', this._wheelZoom, { passive: false });
       this._signalReframe(true);
       // Best-effort commit when the document unloads mid-reframe (a host
       // navigation racing the enter signal, a manual reload, tab close):
@@ -792,6 +799,7 @@
 
     _exitReframe(commit) {
       if (!this.hasAttribute('data-reframe')) return;
+      this.removeEventListener('wheel', this._wheelZoom);
       if (this._dragUp) this._dragUp();
       this.removeAttribute('data-reframe');
       this.removeAttribute('data-panning');

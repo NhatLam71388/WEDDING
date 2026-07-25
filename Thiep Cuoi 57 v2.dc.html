@@ -586,6 +586,9 @@ class Component extends DCLogic {
 
   componentDidMount() {
     this.unmounted = false;
+    this._wasGift = false;
+    this._wasGallery = false;
+    this._modalWasOpen = false;
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.setupReveal();
     this.setupClock();
@@ -626,21 +629,24 @@ class Component extends DCLogic {
     if (this.audio) { this.audio.pause(); this.audio = null; }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    const wasOpen = prevState ? prevState.giftOpen : this._wasGift;
+  componentDidUpdate() {
+    const wasOpen = this._wasGift;
     if (this.state.giftOpen && !wasOpen) {
       const b = document.querySelector('[data-giftroot] button');
       if (b) b.focus();
     }
-    const wasGallery = prevState ? prevState.galleryOpen : false;
+    const wasGallery = this._wasGallery;
     if (this.state.galleryOpen && !wasGallery) {
       const close = document.querySelector('[data-galleryroot] button');
       if (close) close.focus();
     }
     const modalOpen = this.state.giftOpen || this.state.galleryOpen;
-    const modalWasOpen = prevState ? (prevState.giftOpen || prevState.galleryOpen) : false;
-    if (modalOpen !== modalWasOpen) document.body.style.overflow = modalOpen ? 'hidden' : '';
+    if (modalOpen !== this._modalWasOpen) {
+      document.body.style.overflow = modalOpen ? 'hidden' : '';
+    }
     this._wasGift = this.state.giftOpen;
+    this._wasGallery = this.state.galleryOpen;
+    this._modalWasOpen = modalOpen;
   }
 
   /* ---------- intro (mở thiệp) ---------- */
