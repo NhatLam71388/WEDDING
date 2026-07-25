@@ -16,4 +16,6 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.match(invitation, /Nhật Mai/);
   assert.match(invitation, /\/api\/messages/);
   assert.match(invitation, /\/api\/rsvp/);
+  assert.match(invitation, /destination=12\.7941667%2C107\.9155833/);
+  assert.match(invitation, /destination=12\.7947442%2C107\.9132805/);
 });
