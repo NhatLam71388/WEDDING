@@ -57,18 +57,26 @@ export async function POST(request: Request): Promise<Response> {
       "rsvp",
     );
     const createdAt = Date.now();
+    const { responseId, ...response } = validated.value;
     const rsvp = {
-      id: createSafeUuid(),
-      ...validated.value,
+      id: responseId ?? createSafeUuid(),
+      ...response,
       ipHash,
       createdAt,
     };
 
-    const inserted = await getDatabase().insertRsvpWithinLimit(
-      rsvp,
-      createdAt - RSVP_RATE_WINDOW_MS,
-      RSVP_RATE_LIMIT,
-    );
+    const database = getDatabase();
+    const inserted = responseId
+      ? await database.upsertRsvpWithinLimit(
+          rsvp,
+          createdAt - RSVP_RATE_WINDOW_MS,
+          RSVP_RATE_LIMIT,
+        )
+      : await database.insertRsvpWithinLimit(
+          rsvp,
+          createdAt - RSVP_RATE_WINDOW_MS,
+          RSVP_RATE_LIMIT,
+        );
 
     if (!inserted) {
       return publicApiJson(
@@ -88,7 +96,7 @@ export async function POST(request: Request): Promise<Response> {
       {
         success: true,
         message: "Cảm ơn bạn đã xác nhận tham dự.",
-        rsvp: getDatabase().toPublicRsvp(rsvp),
+        rsvp: database.toPublicRsvp(rsvp),
       },
       201,
       "POST, OPTIONS",

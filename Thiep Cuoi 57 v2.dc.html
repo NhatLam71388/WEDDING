@@ -162,6 +162,7 @@ h2,h3{font-family:var(--font-editorial)!important}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
 @keyframes ovIn{from{opacity:0}to{opacity:1}}
 @keyframes spinner{to{transform:rotate(360deg)}}
+@keyframes wishArrive{from{opacity:0;transform:translateY(-10px) scale(.985);box-shadow:0 0 0 rgba(86,60,44,0)}to{opacity:1;transform:none;box-shadow:0 12px 30px rgba(86,60,44,.08)}}
 @keyframes twinkle{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.9;transform:scale(1)}}
 @keyframes bob{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(7px);opacity:1}}
 @keyframes floatSoft{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
@@ -214,6 +215,19 @@ h2,h3{font-family:var(--font-editorial)!important}
 .field-control:focus{box-shadow:0 0 0 4px rgba(166,127,100,.1)}
 .primary-action:hover{background:#3b2d26!important;box-shadow:0 10px 24px rgba(39,30,25,.16)}
 .secondary-action:hover{background:#f3e8db!important}
+.rsvp-feedback-slot{min-height:116px;padding-top:14px}
+.rsvp-success{display:flex;align-items:flex-start;gap:11px;padding:12px 13px;border:1px solid rgba(140,164,124,.28);border-radius:14px;background:rgba(140,164,124,.09);color:#4f6047}
+.rsvp-success-icon{flex:none;display:grid;place-items:center;width:27px;height:27px;border-radius:50%;background:#718665;color:#fffaf4;font:500 13px/1 var(--font-body);box-shadow:0 5px 14px rgba(91,113,80,.2)}
+.rsvp-another{margin:8px 0 0;padding:0;border:0;background:transparent;color:#846650;font:500 9px/1.4 var(--font-body);letter-spacing:.12em;text-transform:uppercase;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.wishes-list{position:relative}
+.wish-card{position:relative;padding:22px 12px 22px 2px;border-bottom:1px solid rgba(82,62,50,.14);transition:background-color 260ms ease,border-color 260ms ease,transform 260ms ease}
+.wish-card.is-mine{margin:8px -10px;padding:18px 12px;border:1px solid rgba(166,127,100,.28);border-radius:16px;background:linear-gradient(135deg,rgba(255,250,243,.96),rgba(242,225,210,.72));box-shadow:0 12px 30px rgba(86,60,44,.08);animation:wishArrive 850ms cubic-bezier(.22,1,.36,1) both}
+.wish-mine-badge{display:inline-flex;align-items:center;min-height:22px;margin-left:auto;padding:0 8px;border:1px solid rgba(166,127,100,.26);border-radius:999px;background:rgba(255,250,243,.72);font:500 7.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:#846650}
+.wish-pagination{display:flex;align-items:center;justify-content:center;gap:9px;flex-wrap:wrap;margin-top:22px}
+.wish-page-button{min-height:42px;padding:0 17px;border:1px solid rgba(97,73,59,.24);border-radius:999px;background:#fffaf3;color:#61493b;font:500 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.wish-page-button:hover{background:#f3e8db}
+.wish-page-button:disabled{cursor:wait;opacity:.62}
+.wish-page-button--quiet{border-color:transparent;background:transparent;text-decoration:underline;text-underline-offset:4px}
 .story-stage{position:relative;height:clamp(570px,122vw,640px);margin:0 18px}
 .story-stage:before{content:"";position:absolute;inset:32px 8px 46px;border:1px solid rgba(166,127,100,.16);border-radius:220px 220px 26px 26px;pointer-events:none}
 .story-stage:after{content:"N & M";position:absolute;z-index:0;right:8px;top:46%;font:italic 500 68px/1 var(--font-editorial);letter-spacing:-.06em;color:rgba(166,127,100,.08);pointer-events:none}
@@ -566,8 +580,8 @@ Xem thông tin
 </div>
 <div style="display:flex;flex-direction:column;gap:22px">
 <article data-rv="left" class="event-card">
-<img class="event-photo event-photo--bride" src="./assets/photos/LBS02087-640.webp" srcset="./assets/photos/LBS02087-640.webp 640w, ./assets/photos/LBS02087-1280.webp 1280w" sizes="(max-width:520px) 92vw, 472px" alt="Cô dâu chú rể bên hoa trong thiệp nhà gái" loading="lazy" decoding="async">
-<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.24),rgba(30,20,16,.7));pointer-events:none"></div>
+<img class="event-photo event-photo--bride" src="./assets/photos/LBS01919-640.webp" srcset="./assets/photos/LBS01919-640.webp 640w, ./assets/photos/LBS01919-1280.webp 1280w" sizes="(max-width:520px) 92vw, 472px" alt="Nhật Mai trong áo dài trắng nhìn Ngô Nam trong lễ phục" loading="lazy" decoding="async">
+<div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.32),rgba(30,20,16,.74));pointer-events:none"></div>
 <div class="event-frame" style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
 <div style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
 <div class="event-chip">Tiệc cưới nhà gái</div>
@@ -631,13 +645,6 @@ Xem thông tin
 
 <section id="rsvp" data-screen-label="08 RSVP" class="rsvp-section" style="background:#f3e8db;padding:76px 24px 80px;scroll-margin-top:72px">
 <div data-rv="scale" data-rv-dur="950ms" class="rsvp-card" style="background:#fffaf3;border:1px solid rgba(82,62,50,.18);border-radius:24px;padding:32px 22px 28px;box-shadow:0 12px 34px rgba(54,38,28,.08)">
-<sc-if value="{{ rsvpSent }}" hint-placeholder-val="{{ false }}">
-<div style="text-align:center;padding:26px 4px">
-<div style="font-size:30px;line-height:1;color:#d5474f;animation:beat 3s ease-in-out infinite">♡</div>
-<p style="margin:18px 0 0;font:italic 400 21px/1.6 'Playfair Display',serif;color:#2d241f">Cảm ơn bạn đã xác nhận.<br>Hẹn gặp bạn trong ngày vui của chúng mình!</p>
-</div>
-</sc-if>
-<sc-if value="{{ rsvpOpen }}" hint-placeholder-val="{{ true }}">
 <div>
 <div style="text-align:center;font:400 24px/1 'Dancing Script',cursive;color:#a67f64">Phản hồi lời mời</div>
 <h2 style="margin:12px 0 0;text-align:center;font:400 28px/1.25 'Playfair Display',serif;letter-spacing:.06em;text-transform:uppercase;color:#2d241f">Xác nhận tham dự</h2>
@@ -680,8 +687,27 @@ Xem thông tin
 </sc-if>
 {{ rsvpLabel }}
 </button>
+<div class="rsvp-feedback-slot" role="status" aria-live="polite" aria-atomic="true">
+<sc-if value="{{ rsvpSent }}" hint-placeholder-val="{{ false }}">
+<div class="rsvp-success">
+<span class="rsvp-success-icon" aria-hidden="true">✓</span>
+<div>
+<div style="font:500 11px/1.5 'Be Vietnam Pro',sans-serif;color:#4f6047">Đã lưu xác nhận của {{ fName }}.</div>
+<div style="margin-top:3px;font:300 10.5px/1.55 'Be Vietnam Pro',sans-serif;color:#66745f">Bạn có thể chỉnh lại thông tin rồi bấm “Cập nhật xác nhận”.</div>
+<button type="button" class="rsvp-another" onClick="{{ onNewRsvp }}">Xác nhận cho khách khác</button>
+</div>
 </div>
 </sc-if>
+<sc-if value="{{ rsvpCanSwitchGuest }}" hint-placeholder-val="{{ false }}">
+<div style="text-align:center;padding-top:8px">
+<button type="button" class="rsvp-another" onClick="{{ onNewRsvp }}">Đây là khách khác? Tạo xác nhận mới</button>
+</div>
+</sc-if>
+<sc-if value="{{ rsvpFresh }}" hint-placeholder-val="{{ true }}">
+<div style="padding:14px 8px 0;text-align:center;font:300 10.5px/1.65 'Be Vietnam Pro',sans-serif;color:#9b826f">Sau khi gửi, bạn vẫn có thể quay lại chỉnh sửa xác nhận trên thiết bị này.</div>
+</sc-if>
+</div>
+</div>
 </div>
 </section>
 
@@ -703,11 +729,14 @@ Xem thông tin
 </sc-if>
 {{ wishLabel }}
 </button>
+<sc-if value="{{ wishSent }}" hint-placeholder-val="{{ false }}">
+<div role="status" aria-live="polite" style="margin-top:12px;padding:10px 12px;border:1px solid rgba(140,164,124,.24);border-radius:12px;background:rgba(140,164,124,.08);font:400 11px/1.55 'Be Vietnam Pro',sans-serif;color:#56664e">Lời chúc của bạn đã được gửi và đang hiển thị ngay bên dưới.</div>
+</sc-if>
 </div>
-<div style="margin-top:42px">
+<div class="wishes-list" style="margin-top:42px">
 <div role="status" aria-live="polite" style="display:flex;align-items:center;gap:8px;margin-bottom:7px;font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9b826f">
 <span style="width:5px;height:5px;border-radius:50%;background:#8ca47c;box-shadow:0 0 0 3px rgba(140,164,124,.13);display:block"></span>
-Đang cập nhật trực tiếp
+{{ messagesSummary }}
 </div>
 <sc-if value="{{ messagesHasError }}" hint-placeholder-val="{{ false }}">
 <div role="status" style="padding:14px 0;font:300 11.5px/1.65 'Be Vietnam Pro',sans-serif;color:#8b6d5c">{{ messagesError }}</div>
@@ -716,14 +745,25 @@ Xem thông tin
 <div style="padding:22px 0;border-bottom:1px solid rgba(82,62,50,.14);font:italic 400 14px/1.7 'Playfair Display',serif;color:#78685e">Hãy là người đầu tiên gửi lời chúc đến cô dâu và chú rể.</div>
 </sc-if>
 <sc-for list="{{ wishes }}" as="w" hint-placeholder-count="3">
-<div style="padding:22px 2px;border-bottom:1px solid rgba(82,62,50,.14)">
+<div class="{{ w.cardClass }}" data-wish-id="{{ w.id }}">
 <div style="display:flex;align-items:center;gap:9px">
 <span style="width:4px;height:4px;background:#d1ad8f;transform:rotate(45deg);display:block"></span>
 <span style="font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a67f64">{{ w.name }}</span>
+<sc-if value="{{ w.isOwn }}" hint-placeholder-val="{{ false }}">
+<span class="wish-mine-badge">Lời chúc của bạn</span>
+</sc-if>
 </div>
 <p style="margin:12px 0 0;font:300 13.5px/1.8 'Be Vietnam Pro',sans-serif;color:#2d241f">{{ w.text }}</p>
 </div>
 </sc-for>
+<div class="wish-pagination">
+<sc-if value="{{ messagesHasMore }}" hint-placeholder-val="{{ false }}">
+<button type="button" class="wish-page-button" onClick="{{ onLoadMoreMessages }}" disabled="{{ messagesLoadingMore }}">{{ messagesMoreLabel }}</button>
+</sc-if>
+<sc-if value="{{ messagesCanCollapse }}" hint-placeholder-val="{{ false }}">
+<button type="button" class="wish-page-button wish-page-button--quiet" onClick="{{ onCollapseMessages }}">Thu gọn</button>
+</sc-if>
+</div>
 </div>
 </section>
 
@@ -878,6 +918,9 @@ Xem thông tin
 const EASE = 'cubic-bezier(.22,1,.36,1)';
 const HIDE = { up: 'translateY(22px)', left: 'translateX(-22px)', right: 'translateX(22px)', scale: 'scale(.92)' };
 const DEFAULT_MUSIC_SRC = './assets/audio/wedding-01-francisco-alvear.mp3';
+const MESSAGE_PAGE_SIZE = 12;
+const RSVP_RESPONSE_STORAGE_KEY = 'ngo-nam-nhat-mai:rsvp-response-id:v1';
+const WISH_STORAGE_KEY = 'ngo-nam-nhat-mai:last-wish-id:v1';
 const GALLERY_SWIPE_THRESHOLD = 50;
 const GALLERY_PHOTO_NAMES = [
   'LBS01523_1','LBS01554_1','LBS01613','LBS01634','LBS01643',
@@ -907,16 +950,29 @@ class Component extends DCLogic {
     cd1: { d: '00', h: '00', m: '00', s: '00' },
     married: false,
     fName: '', fCount: '1', attend: 'yes', side: 'groom', rsvpWebsite: '',
-    rsvpBusy: false, rsvpSent: false, rsvpError: '',
+    rsvpBusy: false, rsvpSent: false, rsvpSavedOnce: false, rsvpError: '',
     galleryOpen: false, galleryPhotoOpen: false, galleryPhotoIndex: 0,
     giftOpen: false, giftTab: 'groom', copied: false,
     wName: '', wText: '', wishWebsite: '',
     wishBusy: false, wishSent: false, wishError: '',
-    wishes: [], messagesLoaded: false, messagesError: ''
+    wishes: [], messagesLoaded: false, messagesError: '',
+    messagesNextCursor: '', messagesFirstPageCursor: '',
+    messagesHasMore: false, messagesFirstPageHasMore: false,
+    messagesLoadingMore: false, messagesPagesLoaded: 1,
+    lastSubmittedMessageId: ''
   };
 
   componentDidMount() {
     this.unmounted = false;
+    const storedRsvpResponseId = this.readStoredValue('localStorage', RSVP_RESPONSE_STORAGE_KEY);
+    this.rsvpResponseId = this.isRsvpResponseId(storedRsvpResponseId) ? storedRsvpResponseId : '';
+    this.lastSubmittedMessageId = this.readStoredValue('sessionStorage', WISH_STORAGE_KEY);
+    if (this.rsvpResponseId || this.lastSubmittedMessageId) {
+      this.setState({
+        rsvpSavedOnce: Boolean(this.rsvpResponseId),
+        lastSubmittedMessageId: this.lastSubmittedMessageId || ''
+      });
+    }
     this.introOpening = false;
     this.motionStarted = false;
     this.heroStarted = false;
@@ -997,7 +1053,7 @@ class Component extends DCLogic {
     document.addEventListener('visibilitychange', this.onVisibilityChange);
     this.messagesTimer = setInterval(() => {
       if (!document.hidden) this.loadMessages();
-    }, 10000);
+    }, 30000);
     if (!this.state.introOn) this.startInvitationMotion();
   }
 
@@ -1008,6 +1064,7 @@ class Component extends DCLogic {
     clearTimeout(this.introOpenTimer);
     clearTimeout(this.introFocusTimer);
     clearTimeout(this.petalTimer);
+    if (this.messagesAbortController) this.messagesAbortController.abort();
     if (this.revealTimers) {
       this.revealTimers.forEach((timer) => clearTimeout(timer));
       this.revealTimers.clear();
@@ -1662,6 +1719,100 @@ class Component extends DCLogic {
   }
 
   /* ---------- forms ---------- */
+  readStoredValue(storageName, key) {
+    try {
+      if (typeof window === 'undefined' || !window[storageName]) return '';
+      const value = window[storageName].getItem(key);
+      return typeof value === 'string' ? value : '';
+    } catch (error) {
+      return '';
+    }
+  }
+
+  writeStoredValue(storageName, key, value) {
+    try {
+      if (typeof window !== 'undefined' && window[storageName]) window[storageName].setItem(key, value);
+    } catch (error) {
+      /* Browser privacy settings may disable storage; in-memory identity still works. */
+    }
+  }
+
+  clearStoredValue(storageName, key) {
+    try {
+      if (typeof window !== 'undefined' && window[storageName]) window[storageName].removeItem(key);
+    } catch (error) {
+      /* No action needed when storage is unavailable. */
+    }
+  }
+
+  isRsvpResponseId(value) {
+    return typeof value === 'string' && /^rsvp_[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(value);
+  }
+
+  createClientUuid() {
+    if (typeof window === 'undefined' || !window.crypto) return '';
+    if (typeof window.crypto.randomUUID === 'function') return window.crypto.randomUUID();
+    if (typeof window.crypto.getRandomValues !== 'function') return '';
+    const bytes = new Uint8Array(16);
+    window.crypto.getRandomValues(bytes);
+    bytes[6] = (bytes[6] & 15) | 64;
+    bytes[8] = (bytes[8] & 63) | 128;
+    const hex = Array.prototype.map.call(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('');
+    return hex.slice(0, 8) + '-' + hex.slice(8, 12) + '-' + hex.slice(12, 16) + '-' + hex.slice(16, 20) + '-' + hex.slice(20);
+  }
+
+  ensureRsvpResponseId() {
+    if (this.isRsvpResponseId(this.rsvpResponseId)) return this.rsvpResponseId;
+    const uuid = this.createClientUuid();
+    if (!uuid) return '';
+    this.rsvpResponseId = 'rsvp_' + uuid;
+    this.writeStoredValue('localStorage', RSVP_RESPONSE_STORAGE_KEY, this.rsvpResponseId);
+    return this.rsvpResponseId;
+  }
+
+  startNewRsvp() {
+    this.rsvpResponseId = '';
+    this.clearStoredValue('localStorage', RSVP_RESPONSE_STORAGE_KEY);
+    this.setState({
+      fName: '', fCount: '1', attend: 'yes', side: 'groom', rsvpWebsite: '',
+      rsvpBusy: false, rsvpSent: false, rsvpSavedOnce: false, rsvpError: ''
+    });
+    setTimeout(() => {
+      const field = document.getElementById('v2-name');
+      if (field) field.focus({ preventScroll: true });
+    }, 0);
+  }
+
+  normalizeMessage(message) {
+    if (!message || typeof message.id !== 'string' || typeof message.body !== 'string' || !message.body.trim()) return null;
+    return {
+      id: message.id,
+      name: typeof message.name === 'string' && message.name.trim() ? message.name : 'Khách mời',
+      text: message.body,
+      createdAt: typeof message.createdAt === 'string' ? message.createdAt : ''
+    };
+  }
+
+  mergeMessages(first, second) {
+    const seen = new Set();
+    return first.concat(second).filter((message) => {
+      if (!message || !message.id || seen.has(message.id)) return false;
+      seen.add(message.id);
+      return true;
+    }).sort((left, right) => {
+      const byTime = String(right.createdAt || '').localeCompare(String(left.createdAt || ''));
+      return byTime || String(right.id).localeCompare(String(left.id));
+    });
+  }
+
+  decorateMessages(messages, ownId) {
+    const mine = ownId || this.lastSubmittedMessageId || '';
+    return messages.map((message) => Object.assign({}, message, {
+      isOwn: message.id === mine,
+      cardClass: message.id === mine ? 'wish-card is-mine' : 'wish-card'
+    }));
+  }
+
   apiUrl(path) {
     const host = typeof window !== 'undefined' && window.location ? window.location.hostname : '';
     const usesHostedBackend = host.endsWith('.vercel.app');
@@ -1687,20 +1838,34 @@ class Component extends DCLogic {
     this.rsvpSubmitting = true;
     this.setState({ rsvpBusy: true, rsvpError: '' });
     try {
+      const responseId = this.ensureRsvpResponseId();
+      const payload = {
+        name: name,
+        count: count,
+        attend: this.state.attend,
+        side: this.state.side,
+        website: this.state.rsvpWebsite
+      };
+      if (responseId) payload.responseId = responseId;
       const response = await fetch(this.apiUrl('/api/rsvp'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: name,
-          count: count,
-          attend: this.state.attend,
-          side: this.state.side,
-          website: this.state.rsvpWebsite
-        })
+        body: JSON.stringify(payload)
       });
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Không thể gửi xác nhận lúc này.');
-      if (!this.unmounted) this.setState({ rsvpBusy: false, rsvpSent: true, rsvpError: '' });
+      if (data.rsvp && this.isRsvpResponseId(data.rsvp.id)) {
+        this.rsvpResponseId = data.rsvp.id;
+        this.writeStoredValue('localStorage', RSVP_RESPONSE_STORAGE_KEY, data.rsvp.id);
+      }
+      if (!this.unmounted) {
+        this.setState({
+          rsvpBusy: false,
+          rsvpSent: true,
+          rsvpSavedOnce: true,
+          rsvpError: ''
+        });
+      }
     } catch (error) {
       if (!this.unmounted) {
         this.setState({
@@ -1713,36 +1878,90 @@ class Component extends DCLogic {
     }
   }
 
-  async loadMessages() {
-    if (this.messagesLoading) return;
+  async loadMessages(options) {
+    const append = Boolean(options && options.append);
+    const cursor = append ? this.state.messagesNextCursor : '';
+    if (append && (!cursor || this.state.messagesLoadingMore || this.messagesLoading)) return;
+    if (!append && this.messagesLoading) return;
+
+    if (this.messagesAbortController) this.messagesAbortController.abort();
+    const controller = typeof AbortController === 'function' ? new AbortController() : null;
+    this.messagesAbortController = controller;
+    const requestVersion = (this.messagesRequestVersion || 0) + 1;
+    this.messagesRequestVersion = requestVersion;
     this.messagesLoading = true;
+    if (append) this.setState({ messagesLoadingMore: true, messagesError: '' });
+
+    let path = '/api/messages?limit=' + MESSAGE_PAGE_SIZE;
+    if (append) path += '&cursor=' + encodeURIComponent(cursor);
+
     try {
-      const response = await fetch(this.apiUrl('/api/messages'), {
+      const requestOptions = {
         method: 'GET',
         headers: { 'Accept': 'application/json' },
         cache: 'no-store'
-      });
+      };
+      if (controller) requestOptions.signal = controller.signal;
+      const response = await fetch(this.apiUrl(path), requestOptions);
       const data = await response.json().catch(() => ({}));
       if (!response.ok) {
         throw new Error(typeof data.error === 'string' ? data.error : 'Không thể cập nhật lời chúc lúc này. Trang sẽ tự thử lại.');
       }
-      const messages = Array.isArray(data.messages) ? data.messages.map((message) => ({
-        id: message.id,
-        name: typeof message.name === 'string' && message.name.trim() ? message.name : 'Khách mời',
-        text: typeof message.body === 'string' ? message.body : '',
-        createdAt: message.createdAt
-      })).filter((message) => message.text.trim()) : [];
-      if (!this.unmounted) this.setState({ wishes: messages, messagesLoaded: true, messagesError: '' });
+      if (requestVersion !== this.messagesRequestVersion || this.unmounted) return;
+
+      const messages = Array.isArray(data.messages)
+        ? data.messages.map((message) => this.normalizeMessage(message)).filter(Boolean)
+        : [];
+      const nextCursor = typeof data.nextCursor === 'string' ? data.nextCursor : '';
+      const hasMore = Boolean(data.hasMore && nextCursor);
+
+      this.setState((previous) => {
+        const ownId = previous.lastSubmittedMessageId || this.lastSubmittedMessageId || '';
+        let merged;
+        if (append) {
+          merged = this.mergeMessages(previous.wishes, messages);
+        } else {
+          const older = previous.messagesPagesLoaded > 1 ? previous.wishes.slice(MESSAGE_PAGE_SIZE) : [];
+          const pinned = ownId ? previous.wishes.filter((message) => message.id === ownId) : [];
+          merged = this.mergeMessages(messages.concat(pinned), older);
+        }
+        return {
+          wishes: this.decorateMessages(merged, ownId),
+          messagesLoaded: true,
+          messagesError: '',
+          messagesLoadingMore: false,
+          messagesPagesLoaded: append ? previous.messagesPagesLoaded + 1 : previous.messagesPagesLoaded,
+          messagesFirstPageCursor: append ? previous.messagesFirstPageCursor : nextCursor,
+          messagesFirstPageHasMore: append ? previous.messagesFirstPageHasMore : hasMore,
+          messagesNextCursor: append || previous.messagesPagesLoaded === 1 ? nextCursor : previous.messagesNextCursor,
+          messagesHasMore: append || previous.messagesPagesLoaded === 1 ? hasMore : previous.messagesHasMore
+        };
+      });
     } catch (error) {
-      if (!this.unmounted) {
+      if (error && error.name === 'AbortError') return;
+      if (!this.unmounted && requestVersion === this.messagesRequestVersion) {
         this.setState({
           messagesLoaded: true,
+          messagesLoadingMore: false,
           messagesError: error && error.message ? error.message : 'Không thể cập nhật lời chúc lúc này. Trang sẽ tự thử lại.'
         });
       }
     } finally {
-      this.messagesLoading = false;
+      if (requestVersion === this.messagesRequestVersion) {
+        this.messagesLoading = false;
+        this.messagesAbortController = null;
+      }
     }
+  }
+
+  collapseMessages() {
+    this.setState((previous) => ({
+      wishes: previous.wishes.slice(0, MESSAGE_PAGE_SIZE),
+      messagesPagesLoaded: 1,
+      messagesNextCursor: previous.messagesFirstPageCursor,
+      messagesHasMore: previous.messagesFirstPageHasMore,
+      messagesLoadingMore: false
+    }));
   }
 
   async addWish() {
@@ -1754,6 +1973,12 @@ class Component extends DCLogic {
       return;
     }
     this.wishSubmitting = true;
+    this.messagesRequestVersion = (this.messagesRequestVersion || 0) + 1;
+    if (this.messagesAbortController) {
+      this.messagesAbortController.abort();
+      this.messagesAbortController = null;
+    }
+    this.messagesLoading = false;
     this.setState({ wishBusy: true, wishSent: false, wishError: '' });
     try {
       const response = await fetch(this.apiUrl('/api/messages'), {
@@ -1768,20 +1993,23 @@ class Component extends DCLogic {
       const data = await response.json().catch(() => ({}));
       if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Không thể gửi lời chúc lúc này.');
       if (!this.unmounted) {
-        const submitted = data.message && typeof data.message.body === 'string' ? {
-          id: data.message.id,
-          name: typeof data.message.name === 'string' && data.message.name.trim() ? data.message.name : name,
-          text: data.message.body,
-          createdAt: data.message.createdAt
-        } : null;
-        this.setState({
-          wName: '', wText: '', wishWebsite: '',
-          wishBusy: false, wishSent: true, wishError: '',
-          wishes: submitted
-            ? [submitted].concat(this.state.wishes.filter((message) => message.id !== submitted.id))
-            : this.state.wishes
-        });
-        this.loadMessages();
+        const submitted = this.normalizeMessage(data.message);
+        if (submitted) {
+          this.lastSubmittedMessageId = submitted.id;
+          this.writeStoredValue('sessionStorage', WISH_STORAGE_KEY, submitted.id);
+        }
+        this.setState((previous) => {
+          const ownId = submitted ? submitted.id : previous.lastSubmittedMessageId;
+          const merged = submitted
+            ? this.mergeMessages([submitted], previous.wishes)
+            : previous.wishes;
+          return {
+            wName: '', wText: '', wishWebsite: '',
+            wishBusy: false, wishSent: true, wishError: '',
+            lastSubmittedMessageId: ownId,
+            wishes: this.decorateMessages(merged, ownId)
+          };
+        }, () => this.loadMessages());
       }
     } catch (error) {
       if (!this.unmounted) {
@@ -1815,23 +2043,27 @@ class Component extends DCLogic {
       married: s.married, counting: !s.married,
       cd1d: this.digit(s.cd1.d), cd1h: this.digit(s.cd1.h), cd1m: this.digit(s.cd1.m), cd1s: this.digit(s.cd1.s),
 
-      rsvpSent: s.rsvpSent, rsvpOpen: !s.rsvpSent, rsvpBusy: s.rsvpBusy,
-      rsvpLabel: s.rsvpBusy ? 'Đang gửi...' : 'Gửi xác nhận',
+      rsvpSent: s.rsvpSent,
+      rsvpCanSwitchGuest: s.rsvpSavedOnce && !s.rsvpSent,
+      rsvpFresh: !s.rsvpSavedOnce && !s.rsvpSent,
+      rsvpBusy: s.rsvpBusy,
+      rsvpLabel: s.rsvpBusy ? 'Đang lưu...' : (s.rsvpSavedOnce ? 'Cập nhật xác nhận' : 'Gửi xác nhận'),
       rsvpHasError: !!s.rsvpError, rsvpError: s.rsvpError,
       fName: s.fName, fCount: s.fCount,
       attendYes: s.attend === 'yes', attendNo: s.attend === 'no',
       sideGroom: s.side === 'groom', sideBride: s.side === 'bride',
       ringYes: ring(s.attend === 'yes'), ringNo: ring(s.attend === 'no'),
       ringGroom: ring(s.side === 'groom'), ringBride: ring(s.side === 'bride'),
-      onName: (e) => this.setState({ fName: e.target.value, rsvpError: '' }),
-      onCount: (e) => this.setState({ fCount: e.target.value }),
+      onName: (e) => this.setState({ fName: e.target.value, rsvpSent: false, rsvpError: '' }),
+      onCount: (e) => this.setState({ fCount: e.target.value, rsvpSent: false }),
       rsvpWebsite: s.rsvpWebsite,
       onRsvpWebsite: (e) => this.setState({ rsvpWebsite: e.target.value }),
-      onAttendYes: () => this.setState({ attend: 'yes' }),
-      onAttendNo: () => this.setState({ attend: 'no' }),
-      onSideGroom: () => this.setState({ side: 'groom' }),
-      onSideBride: () => this.setState({ side: 'bride' }),
+      onAttendYes: () => this.setState({ attend: 'yes', rsvpSent: false }),
+      onAttendNo: () => this.setState({ attend: 'no', rsvpSent: false }),
+      onSideGroom: () => this.setState({ side: 'groom', rsvpSent: false }),
+      onSideBride: () => this.setState({ side: 'bride', rsvpSent: false }),
       onRsvp: () => this.submitRsvp(),
+      onNewRsvp: () => this.startNewRsvp(),
 
       galleryOpen: s.galleryOpen,
       galleryCount: GALLERY_PHOTOS.length,
@@ -1873,6 +2105,15 @@ class Component extends DCLogic {
       wishHasError: !!s.wishError, wishError: s.wishError,
       messagesHasError: !!s.messagesError, messagesError: s.messagesError,
       messagesEmpty: s.messagesLoaded && !s.messagesError && s.wishes.length === 0,
+      messagesSummary: s.messagesLoaded
+        ? 'Đang hiển thị ' + s.wishes.length + ' lời chúc'
+        : 'Đang tải lời chúc',
+      messagesHasMore: s.messagesHasMore,
+      messagesLoadingMore: s.messagesLoadingMore,
+      messagesMoreLabel: s.messagesLoadingMore ? 'Đang tải...' : 'Xem thêm 12 lời chúc',
+      messagesCanCollapse: s.messagesPagesLoaded > 1,
+      onLoadMoreMessages: () => this.loadMessages({ append: true }),
+      onCollapseMessages: () => this.collapseMessages(),
       onWName: (e) => this.setState({ wName: e.target.value, wishSent: false, wishError: '' }),
       onWText: (e) => this.setState({ wText: e.target.value, wishSent: false, wishError: '' }),
       onWishWebsite: (e) => this.setState({ wishWebsite: e.target.value }),

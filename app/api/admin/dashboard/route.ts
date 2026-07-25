@@ -105,20 +105,22 @@ export async function GET(request: Request): Promise<Response> {
           `WITH latest_rsvps AS (
              SELECT response.*
              FROM rsvps AS response
-             WHERE NOT EXISTS (
-               SELECT 1
-               FROM rsvps AS newer
-               WHERE newer.ip_hash = response.ip_hash
-                 AND lower(trim(newer.name)) = lower(trim(response.name))
-                 AND newer.side = response.side
-                 AND (
-                   newer.created_at > response.created_at
-                   OR (
-                     newer.created_at = response.created_at
-                     AND newer.id > response.id
-                   )
-                 )
-             )
+             WHERE substr(response.id, 1, 5) = 'rsvp_'
+                OR NOT EXISTS (
+                  SELECT 1
+                  FROM rsvps AS newer
+                  WHERE substr(newer.id, 1, 5) <> 'rsvp_'
+                    AND newer.ip_hash = response.ip_hash
+                    AND lower(trim(newer.name)) = lower(trim(response.name))
+                    AND newer.side = response.side
+                    AND (
+                      newer.created_at > response.created_at
+                      OR (
+                        newer.created_at = response.created_at
+                        AND newer.id > response.id
+                      )
+                    )
+                )
            )
            SELECT
              COUNT(*) AS total_responses,
@@ -150,20 +152,22 @@ export async function GET(request: Request): Promise<Response> {
           `WITH latest_rsvps AS (
              SELECT response.*
              FROM rsvps AS response
-             WHERE NOT EXISTS (
-               SELECT 1
-               FROM rsvps AS newer
-               WHERE newer.ip_hash = response.ip_hash
-                 AND lower(trim(newer.name)) = lower(trim(response.name))
-                 AND newer.side = response.side
-                 AND (
-                   newer.created_at > response.created_at
-                   OR (
-                     newer.created_at = response.created_at
-                     AND newer.id > response.id
-                   )
-                 )
-             )
+             WHERE substr(response.id, 1, 5) = 'rsvp_'
+                OR NOT EXISTS (
+                  SELECT 1
+                  FROM rsvps AS newer
+                  WHERE substr(newer.id, 1, 5) <> 'rsvp_'
+                    AND newer.ip_hash = response.ip_hash
+                    AND lower(trim(newer.name)) = lower(trim(response.name))
+                    AND newer.side = response.side
+                    AND (
+                      newer.created_at > response.created_at
+                      OR (
+                        newer.created_at = response.created_at
+                        AND newer.id > response.id
+                      )
+                    )
+                )
            )
            SELECT id, name, guest_count, attend, side, created_at
            FROM latest_rsvps

@@ -15,6 +15,17 @@ export interface PublicMessage {
   createdAt: string;
 }
 
+export interface MessageCursor {
+  createdAt: number;
+  id: string;
+}
+
+export interface PublicMessagePage {
+  messages: PublicMessage[];
+  nextCursor: MessageCursor | null;
+  hasMore: boolean;
+}
+
 export interface PublicRsvp {
   id: string;
   name: string;
@@ -69,25 +80,53 @@ function changedRows(result: D1Result<unknown>): number {
 export class WeddingDatabase {
   constructor(private readonly database: D1Database) {}
 
-  async listVisibleMessages(limit = 50): Promise<PublicMessage[]> {
-    const safeLimit = Math.max(1, Math.min(50, Math.trunc(limit)));
-    const result = await this.database
-      .prepare(
-        `SELECT id, name, body, created_at
-         FROM messages
-         WHERE is_visible = 1
-         ORDER BY created_at DESC, id DESC
-         LIMIT ?`,
-      )
-      .bind(safeLimit)
-      .all<MessageRow>();
+  async listVisibleMessages(
+    limit = 12,
+    cursor?: MessageCursor,
+  ): Promise<PublicMessagePage> {
+    const safeLimit = Math.max(1, Math.min(24, Math.trunc(limit)));
+    const fetchLimit = safeLimit + 1;
+    const statement = cursor
+      ? this.database
+          .prepare(
+            `SELECT id, name, body, created_at
+             FROM messages
+             WHERE is_visible = 1
+               AND (
+                 created_at < ?
+                 OR (created_at = ? AND id < ?)
+               )
+             ORDER BY created_at DESC, id DESC
+             LIMIT ?`,
+          )
+          .bind(cursor.createdAt, cursor.createdAt, cursor.id, fetchLimit)
+      : this.database
+          .prepare(
+            `SELECT id, name, body, created_at
+             FROM messages
+             WHERE is_visible = 1
+             ORDER BY created_at DESC, id DESC
+             LIMIT ?`,
+          )
+          .bind(fetchLimit);
+    const result = await statement.all<MessageRow>();
+    const hasMore = result.results.length > safeLimit;
+    const visibleRows = result.results.slice(0, safeLimit);
+    const lastRow = visibleRows.at(-1);
 
-    return result.results.map((row) => ({
-      id: row.id,
-      name: row.name,
-      body: row.body,
-      createdAt: toIsoDate(row.created_at),
-    }));
+    return {
+      messages: visibleRows.map((row) => ({
+        id: row.id,
+        name: row.name,
+        body: row.body,
+        createdAt: toIsoDate(row.created_at),
+      })),
+      nextCursor:
+        hasMore && lastRow
+          ? { createdAt: Number(lastRow.created_at), id: lastRow.id }
+          : null,
+      hasMore,
+    };
   }
 
   async insertMessageWithinLimit(
@@ -145,6 +184,49 @@ export class WeddingDatabase {
         input.side,
         input.ipHash,
         input.createdAt,
+        input.ipHash,
+        since,
+        limit,
+      )
+      .run();
+
+    return changedRows(result) === 1;
+  }
+
+  async upsertRsvpWithinLimit(
+    input: RsvpInsert,
+    since: number,
+    limit: number,
+  ): Promise<boolean> {
+    const result = await this.database
+      .prepare(
+        `INSERT INTO rsvps
+           (id, name, guest_count, attend, side, ip_hash, created_at)
+         SELECT ?, ?, ?, ?, ?, ?, ?
+         WHERE EXISTS (
+           SELECT 1 FROM rsvps WHERE id = ?
+         ) OR (
+           SELECT COUNT(*)
+           FROM rsvps
+           WHERE ip_hash = ? AND created_at >= ?
+         ) < ?
+         ON CONFLICT(id) DO UPDATE SET
+           name = excluded.name,
+           guest_count = excluded.guest_count,
+           attend = excluded.attend,
+           side = excluded.side,
+           ip_hash = excluded.ip_hash,
+           created_at = excluded.created_at`,
+      )
+      .bind(
+        input.id,
+        input.name,
+        input.count,
+        input.attend,
+        input.side,
+        input.ipHash,
+        input.createdAt,
+        input.id,
         input.ipHash,
         since,
         limit,

@@ -18,9 +18,11 @@ diện tĩnh, không thể gửi lời chúc hoặc RSVP.
 
 ## Backend
 
-- `GET /api/messages`: 12 lời chúc công khai mới nhất.
+- `GET /api/messages`: tải lời chúc công khai theo từng trang 12 mục bằng
+  `cursor` (tối đa 24 mục mỗi request).
 - `POST /api/messages`: gửi lời chúc.
-- `POST /api/rsvp`: gửi xác nhận tham dự.
+- `POST /api/rsvp`: gửi hoặc cập nhật xác nhận tham dự bằng mã phản hồi riêng
+  của thiết bị; họ tên không được dùng làm khóa duy nhất.
 - `/admin`: thống kê, quản lý lời chúc và xuất CSV.
 
 Dữ liệu được lưu trong Cloudflare D1 qua binding `DB`. Production cần hai biến

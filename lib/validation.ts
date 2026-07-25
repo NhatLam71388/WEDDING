@@ -2,6 +2,8 @@ export const MESSAGE_NAME_MAX_LENGTH = 60;
 export const MESSAGE_BODY_MAX_LENGTH = 400;
 export const RSVP_NAME_MAX_LENGTH = 60;
 export const RSVP_COUNT_MAX = 20;
+export const RSVP_RESPONSE_ID_PATTERN =
+  /^rsvp_[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 export type AttendChoice = "yes" | "no";
 export type GuestSide = "groom" | "bride";
@@ -16,6 +18,7 @@ export interface RsvpInput {
   count: number;
   attend: AttendChoice;
   side: GuestSide;
+  responseId?: string;
 }
 
 export type ValidationResult<T> =
@@ -191,6 +194,26 @@ export function validateRsvpInput(
     };
   }
 
+  let responseId: string | undefined;
+  if ("responseId" in payload) {
+    if (typeof payload.responseId !== "string") {
+      return {
+        ok: false,
+        error: "Mã xác nhận tham dự không hợp lệ.",
+        field: "responseId",
+      };
+    }
+
+    responseId = payload.responseId.trim().toLowerCase();
+    if (!RSVP_RESPONSE_ID_PATTERN.test(responseId)) {
+      return {
+        ok: false,
+        error: "Mã xác nhận tham dự không hợp lệ.",
+        field: "responseId",
+      };
+    }
+  }
+
   const parsedCount =
     typeof payload.count === "number"
       ? payload.count
@@ -229,6 +252,7 @@ export function validateRsvpInput(
       count: payload.attend === "no" ? 0 : parsedCount,
       attend: payload.attend,
       side: payload.side,
+      ...(responseId ? { responseId } : {}),
     },
   };
 }
