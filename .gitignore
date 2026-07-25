@@ -11,3 +11,18 @@
 Thumbs.db
 .vscode/
 .idea/
+
+# Sites / Vinext build output
+/node_modules/
+/dist/
+/.next/
+/.site-public/
+/.wrangler/
+/.open-next/
+/tmp/
+*.tsbuildinfo
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*

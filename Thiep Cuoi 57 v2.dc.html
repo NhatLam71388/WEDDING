@@ -375,7 +375,8 @@ Xem thông tin
 <h2 style="margin:12px 0 0;text-align:center;font:400 28px/1.25 'Playfair Display',serif;letter-spacing:.06em;text-transform:uppercase;color:#2d241f">Xác nhận tham dự</h2>
 <p style="margin:12px 0 28px;text-align:center;font:200 12.5px/1.8 'Be Vietnam Pro',sans-serif;color:#78685e">Sự hiện diện của bạn là niềm vui của chúng mình.</p>
 <label style="display:block;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a67f64" for="v2-name">Họ và tên</label>
-<input id="v2-name" class="field-control" value="{{ fName }}" onChange="{{ onName }}" aria-label="Họ và tên" aria-required="true" placeholder="Nhập tên của bạn" style="width:100%;height:48px;margin-top:9px;border:1px solid rgba(82,62,50,.2);padding:0 14px;font:400 14px/1 'Be Vietnam Pro',sans-serif;color:#2d241f">
+<input id="v2-name" class="field-control" value="{{ fName }}" onChange="{{ onName }}" maxlength="60" aria-label="Họ và tên" aria-required="true" placeholder="Nhập tên của bạn" style="width:100%;height:48px;margin-top:9px;border:1px solid rgba(82,62,50,.2);padding:0 14px;font:400 14px/1 'Be Vietnam Pro',sans-serif;color:#2d241f">
+<input type="text" name="website" value="{{ rsvpWebsite }}" onChange="{{ onRsvpWebsite }}" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none">
 <sc-if value="{{ rsvpHasError }}" hint-placeholder-val="{{ false }}">
 <div role="alert" style="margin-top:8px;font:400 11px/1.5 'Be Vietnam Pro',sans-serif;color:#a54a4f">{{ rsvpError }}</div>
 </sc-if>
@@ -392,7 +393,7 @@ Xem thông tin
 </div>
 <sc-if value="{{ attendYes }}" hint-placeholder-val="{{ true }}">
 <label style="display:block;margin-top:24px;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a67f64" for="v2-count">Số lượng người tham dự</label>
-<input id="v2-count" class="field-control" type="number" min="1" value="{{ fCount }}" onChange="{{ onCount }}" style="width:100%;height:48px;margin-top:9px;border:1px solid rgba(82,62,50,.2);padding:0 14px;font:400 14px/1 'Be Vietnam Pro',sans-serif;color:#2d241f">
+<input id="v2-count" class="field-control" type="number" min="1" max="20" step="1" inputmode="numeric" value="{{ fCount }}" onChange="{{ onCount }}" style="width:100%;height:48px;margin-top:9px;border:1px solid rgba(82,62,50,.2);padding:0 14px;font:400 14px/1 'Be Vietnam Pro',sans-serif;color:#2d241f">
 </sc-if>
 <div style="margin-top:24px;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a67f64">Bạn là khách mời của ai?</div>
 <div style="display:flex;gap:22px;margin-top:13px">
@@ -422,11 +423,30 @@ Xem thông tin
 <h2 style="margin:14px 0 0;font:400 31px/1.25 'Playfair Display',serif;letter-spacing:.06em;text-transform:uppercase;color:#2d241f">Gửi lời chúc</h2>
 </div>
 <div data-rv="up" data-rv-delay="160" style="margin-top:30px">
-<input class="field-control" value="{{ wName }}" onChange="{{ onWName }}" aria-label="Tên của bạn" placeholder="Tên của bạn" style="width:100%;height:46px;border:1px solid rgba(82,62,50,.2);padding:0 14px;font:400 13.5px/1 'Be Vietnam Pro',sans-serif;color:#2d241f">
-<textarea class="field-control" value="{{ wText }}" onChange="{{ onWText }}" aria-label="Lời chúc" placeholder="Viết lời chúc dành cho cô dâu chú rể..." style="width:100%;height:110px;margin-top:12px;border:1px solid rgba(82,62,50,.2);border-radius:16px!important;padding:14px;font:300 13.5px/1.75 'Be Vietnam Pro',sans-serif;color:#2d241f;resize:none"></textarea>
-<button class="primary-action" onClick="{{ onWish }}" style="width:100%;height:50px;margin-top:14px;border:none;border-radius:999px;background:#61493b;color:#fffaf4;font:500 11px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer">{{ wishLabel }}</button>
+<input class="field-control" value="{{ wName }}" onChange="{{ onWName }}" maxlength="60" aria-label="Tên của bạn" placeholder="Tên của bạn" style="width:100%;height:46px;border:1px solid rgba(82,62,50,.2);padding:0 14px;font:400 13.5px/1 'Be Vietnam Pro',sans-serif;color:#2d241f">
+<textarea class="field-control" value="{{ wText }}" onChange="{{ onWText }}" maxlength="400" aria-label="Lời chúc" aria-required="true" placeholder="Viết lời chúc dành cho cô dâu chú rể..." style="width:100%;height:110px;margin-top:12px;border:1px solid rgba(82,62,50,.2);border-radius:16px!important;padding:14px;font:300 13.5px/1.75 'Be Vietnam Pro',sans-serif;color:#2d241f;resize:none"></textarea>
+<input type="text" name="website" value="{{ wishWebsite }}" onChange="{{ onWishWebsite }}" autocomplete="off" tabindex="-1" aria-hidden="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;opacity:0;pointer-events:none">
+<sc-if value="{{ wishHasError }}" hint-placeholder-val="{{ false }}">
+<div role="alert" aria-live="assertive" style="margin-top:10px;font:400 11px/1.55 'Be Vietnam Pro',sans-serif;color:#a54a4f">{{ wishError }}</div>
+</sc-if>
+<button class="primary-action" onClick="{{ onWish }}" disabled="{{ wishBusy }}" style="width:100%;height:50px;margin-top:14px;border:none;border-radius:999px;background:#61493b;color:#fffaf4;font:500 11px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px">
+<sc-if value="{{ wishBusy }}" hint-placeholder-val="{{ false }}">
+<span style="width:13px;height:13px;border-radius:50%;border:1.5px solid rgba(255,250,244,.35);border-top-color:#fffaf4;animation:spinner .7s linear infinite;display:block"></span>
+</sc-if>
+{{ wishLabel }}
+</button>
 </div>
 <div style="margin-top:42px">
+<div role="status" aria-live="polite" style="display:flex;align-items:center;gap:8px;margin-bottom:7px;font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9b826f">
+<span style="width:5px;height:5px;border-radius:50%;background:#8ca47c;box-shadow:0 0 0 3px rgba(140,164,124,.13);display:block"></span>
+Đang cập nhật trực tiếp
+</div>
+<sc-if value="{{ messagesHasError }}" hint-placeholder-val="{{ false }}">
+<div role="status" style="padding:14px 0;font:300 11.5px/1.65 'Be Vietnam Pro',sans-serif;color:#8b6d5c">{{ messagesError }}</div>
+</sc-if>
+<sc-if value="{{ messagesEmpty }}" hint-placeholder-val="{{ false }}">
+<div style="padding:22px 0;border-bottom:1px solid rgba(82,62,50,.14);font:italic 400 14px/1.7 'Playfair Display',serif;color:#78685e">Hãy là người đầu tiên gửi lời chúc đến cô dâu và chú rể.</div>
+</sc-if>
 <sc-for list="{{ wishes }}" as="w" hint-placeholder-count="3">
 <div style="padding:22px 2px;border-bottom:1px solid rgba(82,62,50,.14)">
 <div style="display:flex;align-items:center;gap:9px">
@@ -556,18 +576,16 @@ class Component extends DCLogic {
     introOn: true, playing: false,
     cd1: { d: '00', h: '00', m: '00', s: '00' },
     married: false,
-    fName: '', fCount: '1', attend: 'yes', side: 'groom',
+    fName: '', fCount: '1', attend: 'yes', side: 'groom', rsvpWebsite: '',
     rsvpBusy: false, rsvpSent: false, rsvpError: '',
     galleryOpen: false, giftOpen: false, giftTab: 'groom', copied: false,
-    wName: '', wText: '', wishSent: false,
-    wishes: [
-      { name: 'Gia đình Anh Tuấn', text: 'Chúc hai bạn trăm năm hạnh phúc, sớm sinh quý tử!' },
-      { name: 'Thu Hà', text: 'Nhìn hai bạn là thấy tin vào tình yêu. Chúc mừng ngày vui nhé!' },
-      { name: 'Khách mời', text: 'Chúc cô dâu chú rể luôn nắm tay nhau thật chặt trên mọi chặng đường.' }
-    ]
+    wName: '', wText: '', wishWebsite: '',
+    wishBusy: false, wishSent: false, wishError: '',
+    wishes: [], messagesLoaded: false, messagesError: ''
   };
 
   componentDidMount() {
+    this.unmounted = false;
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.setupReveal();
     this.setupClock();
@@ -582,15 +600,26 @@ class Component extends DCLogic {
       else if (this.state.giftOpen) this.setState({ giftOpen: false });
     };
     document.addEventListener('keydown', this.onKey);
+    this.loadMessages();
+    this.onVisibilityChange = () => {
+      if (!document.hidden) this.loadMessages();
+    };
+    document.addEventListener('visibilitychange', this.onVisibilityChange);
+    this.messagesTimer = setInterval(() => {
+      if (!document.hidden) this.loadMessages();
+    }, 10000);
   }
 
   componentWillUnmount() {
+    this.unmounted = true;
     clearInterval(this.tick);
+    clearInterval(this.messagesTimer);
     if (this.io) this.io.disconnect();
     if (this.mapIo) this.mapIo.disconnect();
     if (this.navIo) this.navIo.disconnect();
     window.removeEventListener('scroll', this.onScroll);
     document.removeEventListener('keydown', this.onKey);
+    document.removeEventListener('visibilitychange', this.onVisibilityChange);
     document.removeEventListener('focusin', this.onFieldFocus);
     document.removeEventListener('focusout', this.onFieldBlur);
     document.body.style.overflow = '';
@@ -920,26 +949,131 @@ class Component extends DCLogic {
   }
 
   /* ---------- forms ---------- */
-  submitRsvp() {
-    if (this.state.rsvpBusy) return;
-    if (!this.state.fName.trim()) {
+  async submitRsvp() {
+    if (this.rsvpSubmitting || this.state.rsvpBusy) return;
+    const name = this.state.fName.trim();
+    if (!name) {
       this.setState({ rsvpError: 'Vui lòng nhập họ và tên để gửi xác nhận.' });
       const field = document.getElementById('v2-name');
       if (field) field.focus();
       return;
     }
+    const count = this.state.attend === 'yes' ? Number.parseInt(this.state.fCount, 10) : 0;
+    if (!Number.isFinite(count) || (count < 1 || count > 20) && this.state.attend === 'yes') {
+      this.setState({ rsvpError: 'Vui lòng nhập số người tham dự hợp lệ.' });
+      const countField = document.getElementById('v2-count');
+      if (countField) countField.focus();
+      return;
+    }
+    this.rsvpSubmitting = true;
     this.setState({ rsvpBusy: true, rsvpError: '' });
-    setTimeout(() => this.setState({ rsvpBusy: false, rsvpSent: true }), 1400);
+    try {
+      const response = await fetch('/api/rsvp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          count: count,
+          attend: this.state.attend,
+          side: this.state.side,
+          website: this.state.rsvpWebsite
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Không thể gửi xác nhận lúc này.');
+      if (!this.unmounted) this.setState({ rsvpBusy: false, rsvpSent: true, rsvpError: '' });
+    } catch (error) {
+      if (!this.unmounted) {
+        this.setState({
+          rsvpBusy: false,
+          rsvpError: error && error.message ? error.message : 'Không thể kết nối máy chủ. Vui lòng thử lại.'
+        });
+      }
+    } finally {
+      this.rsvpSubmitting = false;
+    }
   }
 
-  addWish() {
-    const text = this.state.wText.trim();
-    if (!text) return;
-    this.setState({
-      wishes: [{ name: this.state.wName.trim() || 'Khách mời', text: text }].concat(this.state.wishes),
-      wName: '', wText: '', wishSent: true
-    });
-    setTimeout(() => this.setState({ wishSent: false }), 1800);
+  async loadMessages() {
+    if (this.messagesLoading) return;
+    this.messagesLoading = true;
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'GET',
+        headers: { 'Accept': 'application/json' },
+        cache: 'no-store'
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        throw new Error(typeof data.error === 'string' ? data.error : 'Không thể cập nhật lời chúc lúc này. Trang sẽ tự thử lại.');
+      }
+      const messages = Array.isArray(data.messages) ? data.messages.map((message) => ({
+        id: message.id,
+        name: typeof message.name === 'string' && message.name.trim() ? message.name : 'Khách mời',
+        text: typeof message.body === 'string' ? message.body : '',
+        createdAt: message.createdAt
+      })).filter((message) => message.text.trim()) : [];
+      if (!this.unmounted) this.setState({ wishes: messages, messagesLoaded: true, messagesError: '' });
+    } catch (error) {
+      if (!this.unmounted) {
+        this.setState({
+          messagesLoaded: true,
+          messagesError: error && error.message ? error.message : 'Không thể cập nhật lời chúc lúc này. Trang sẽ tự thử lại.'
+        });
+      }
+    } finally {
+      this.messagesLoading = false;
+    }
+  }
+
+  async addWish() {
+    if (this.wishSubmitting || this.state.wishBusy) return;
+    const body = this.state.wText.trim();
+    const name = this.state.wName.trim() || 'Khách mời';
+    if (!body) {
+      this.setState({ wishError: 'Vui lòng viết lời chúc trước khi gửi.' });
+      return;
+    }
+    this.wishSubmitting = true;
+    this.setState({ wishBusy: true, wishSent: false, wishError: '' });
+    try {
+      const response = await fetch('/api/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: name,
+          body: body,
+          website: this.state.wishWebsite
+        })
+      });
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Không thể gửi lời chúc lúc này.');
+      if (!this.unmounted) {
+        const submitted = data.message && typeof data.message.body === 'string' ? {
+          id: data.message.id,
+          name: typeof data.message.name === 'string' && data.message.name.trim() ? data.message.name : name,
+          text: data.message.body,
+          createdAt: data.message.createdAt
+        } : null;
+        this.setState({
+          wName: '', wText: '', wishWebsite: '',
+          wishBusy: false, wishSent: true, wishError: '',
+          wishes: submitted
+            ? [submitted].concat(this.state.wishes.filter((message) => message.id !== submitted.id))
+            : this.state.wishes
+        });
+        this.loadMessages();
+      }
+    } catch (error) {
+      if (!this.unmounted) {
+        this.setState({
+          wishBusy: false,
+          wishError: error && error.message ? error.message : 'Không thể kết nối máy chủ. Vui lòng thử lại.'
+        });
+      }
+    } finally {
+      this.wishSubmitting = false;
+    }
   }
 
   copyAccount() {
@@ -970,6 +1104,8 @@ class Component extends DCLogic {
       ringGroom: ring(s.side === 'groom'), ringBride: ring(s.side === 'bride'),
       onName: (e) => this.setState({ fName: e.target.value, rsvpError: '' }),
       onCount: (e) => this.setState({ fCount: e.target.value }),
+      rsvpWebsite: s.rsvpWebsite,
+      onRsvpWebsite: (e) => this.setState({ rsvpWebsite: e.target.value }),
       onAttendYes: () => this.setState({ attend: 'yes' }),
       onAttendNo: () => this.setState({ attend: 'no' }),
       onSideGroom: () => this.setState({ side: 'groom' }),
@@ -997,9 +1133,14 @@ class Component extends DCLogic {
       copyAcct: () => this.copyAccount(),
 
       wishes: s.wishes, wName: s.wName, wText: s.wText,
-      wishLabel: s.wishSent ? 'Đã gửi lời chúc ♥' : 'Gửi lời chúc',
-      onWName: (e) => this.setState({ wName: e.target.value }),
-      onWText: (e) => this.setState({ wText: e.target.value }),
+      wishWebsite: s.wishWebsite, wishBusy: s.wishBusy,
+      wishLabel: s.wishBusy ? 'Đang gửi...' : (s.wishSent ? 'Đã gửi lời chúc ♥' : 'Gửi lời chúc'),
+      wishHasError: !!s.wishError, wishError: s.wishError,
+      messagesHasError: !!s.messagesError, messagesError: s.messagesError,
+      messagesEmpty: s.messagesLoaded && !s.messagesError && s.wishes.length === 0,
+      onWName: (e) => this.setState({ wName: e.target.value, wishSent: false, wishError: '' }),
+      onWText: (e) => this.setState({ wText: e.target.value, wishSent: false, wishError: '' }),
+      onWishWebsite: (e) => this.setState({ wishWebsite: e.target.value }),
       onWish: () => this.addWish()
     };
   }

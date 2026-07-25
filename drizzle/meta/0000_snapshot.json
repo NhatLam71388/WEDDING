@@ -1,0 +1,199 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "8d670c46-3b74-4356-a07e-52888eb02365",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "messages": {
+      "name": "messages",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "body": {
+          "name": "body",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "is_visible": {
+          "name": "is_visible",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "ip_hash": {
+          "name": "ip_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "messages_visible_created_idx": {
+          "name": "messages_visible_created_idx",
+          "columns": [
+            "is_visible",
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "messages_ip_created_idx": {
+          "name": "messages_ip_created_idx",
+          "columns": [
+            "ip_hash",
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "messages_name_length_check": {
+          "name": "messages_name_length_check",
+          "value": "length(\"messages\".\"name\") between 1 and 60"
+        },
+        "messages_body_length_check": {
+          "name": "messages_body_length_check",
+          "value": "length(\"messages\".\"body\") between 1 and 400"
+        },
+        "messages_ip_hash_length_check": {
+          "name": "messages_ip_hash_length_check",
+          "value": "length(\"messages\".\"ip_hash\") = 64"
+        }
+      }
+    },
+    "rsvps": {
+      "name": "rsvps",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "guest_count": {
+          "name": "guest_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "attend": {
+          "name": "attend",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "side": {
+          "name": "side",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ip_hash": {
+          "name": "ip_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "rsvps_ip_created_idx": {
+          "name": "rsvps_ip_created_idx",
+          "columns": [
+            "ip_hash",
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "rsvps_created_idx": {
+          "name": "rsvps_created_idx",
+          "columns": [
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "rsvps_name_length_check": {
+          "name": "rsvps_name_length_check",
+          "value": "length(\"rsvps\".\"name\") between 1 and 60"
+        },
+        "rsvps_count_check": {
+          "name": "rsvps_count_check",
+          "value": "\"rsvps\".\"guest_count\" between 0 and 20"
+        },
+        "rsvps_attend_check": {
+          "name": "rsvps_attend_check",
+          "value": "\"rsvps\".\"attend\" in ('yes', 'no')"
+        },
+        "rsvps_side_check": {
+          "name": "rsvps_side_check",
+          "value": "\"rsvps\".\"side\" in ('groom', 'bride')"
+        },
+        "rsvps_ip_hash_length_check": {
+          "name": "rsvps_ip_hash_length_check",
+          "value": "length(\"rsvps\".\"ip_hash\") = 64"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}
