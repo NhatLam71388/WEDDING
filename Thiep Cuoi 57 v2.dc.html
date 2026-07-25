@@ -11,12 +11,18 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="./assets/photos/LBS01690-1280.webp" type="image/webp">
-<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Dancing+Script:wght@400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Dancing+Script:wght@400;500;600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <script src="./image-slot.js"></script>
 <style>
+:root{
+  --font-body:'Be Vietnam Pro',system-ui,sans-serif;
+  --font-editorial:'Cormorant Garamond','Playfair Display',serif;
+  --font-script:'Great Vibes','Dancing Script',cursive;
+  --font-hand:'Dancing Script',cursive;
+}
 html,body{margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{background:#221a15;color:#2d241f;font-family:'Be Vietnam Pro',system-ui,sans-serif;-webkit-font-smoothing:antialiased;overflow-x:hidden;text-wrap:pretty}
+body{background:#221a15;color:#2d241f;font-family:var(--font-body);-webkit-font-smoothing:antialiased;overflow-x:hidden;text-wrap:pretty}
 *{box-sizing:border-box}
 a{color:#a67f64;text-decoration:none}
 a:hover{color:#61493b}
@@ -27,13 +33,16 @@ button{transition:transform 180ms ease,box-shadow 220ms ease,background-color 22
 button:active{transform:scale(.975)}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #a67f64;outline-offset:3px}
 ::selection{background:#e3cdb8;color:#2d241f}
-[style*="'Dancing Script'"]{font-family:'Dancing Script',cursive!important;font-weight:500!important}
-h2,h3{font-family:'Cormorant Garamond','Playfair Display',serif!important}
-.hero-script{font-family:'Dancing Script',cursive!important;font-size:25px!important;font-weight:500!important;line-height:1!important;color:#a67f64!important}
-.hero-name{font-family:'Cormorant Garamond','Playfair Display',serif!important;font-size:52px!important;font-style:italic!important;font-weight:500!important;line-height:.88!important;letter-spacing:-.01em!important;color:#3a2b23!important}
-.hero-photo{position:absolute;top:220px;left:0;right:0;bottom:-3%;overflow:hidden}
+[style*="'Dancing Script'"]{font-family:var(--font-hand)!important;font-weight:500!important}
+[style*="'Great Vibes'"]{font-family:var(--font-script)!important;font-weight:400!important}
+h2,h3{font-family:var(--font-editorial)!important}
+.hero-script{font-family:var(--font-hand)!important;font-size:24px!important;font-weight:500!important;line-height:1.15!important;color:#a67f64!important}
+.hero-name{font-family:var(--font-script)!important;font-size:60px!important;font-style:normal!important;font-weight:400!important;line-height:.94!important;letter-spacing:.01em!important;color:#3a2b23!important;text-rendering:optimizeLegibility}
+.hero-photo{position:absolute;top:242px;left:0;right:0;bottom:-3%;overflow:hidden}
 .hero-photo:before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:70px;background:linear-gradient(180deg,#eee9e3 0%,rgba(238,233,227,0) 100%);pointer-events:none}
-.intro-names{font-family:'Cormorant Garamond','Playfair Display',serif!important;font-size:50px!important;font-style:italic!important;font-weight:500!important;line-height:.92!important;letter-spacing:-.01em}
+.intro-names{font-family:var(--font-script)!important;font-size:64px!important;font-style:normal!important;font-weight:400!important;line-height:1!important;letter-spacing:.01em;text-rendering:optimizeLegibility}
+.closing-script{font-family:var(--font-script)!important;font-size:50px!important;font-weight:400!important;line-height:1.15!important}
+.footer-script{font-family:var(--font-script)!important;font-size:34px!important;font-weight:400!important;line-height:1!important}
 @keyframes kb{from{transform:scale(1.1)}to{transform:scale(1)}}
 @keyframes kbSlow{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.09) translate(1%,-1.5%)}}
 @keyframes hIn{from{opacity:0;transform:translateY(26px);filter:blur(7px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
@@ -104,8 +113,9 @@ h2,h3{font-family:'Cormorant Garamond','Playfair Display',serif!important}
   .family-divider{width:54px;height:1px;margin:0 auto;background:linear-gradient(90deg,rgba(82,62,50,0),rgba(82,62,50,.3),rgba(82,62,50,0))}
   .date-seal{right:26px;bottom:54px}
   .editorial-story{min-height:560px}
-  .hero-name{font-size:50px!important}
-  .hero-photo{top:210px}
+  .hero-name{font-size:56px!important}
+  .hero-photo{top:232px}
+  .intro-names{font-size:58px!important}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;animation-iteration-count:1!important}}
 </style>
@@ -125,14 +135,14 @@ h2,h3{font-family:'Cormorant Garamond','Playfair Display',serif!important}
 <image-slot id="tc57v3-hero" shape="rect" fit="cover" src="./assets/photos/LBS01690-1280.webp" placeholder="Ảnh hero cặp đôi"></image-slot>
 </div>
 </div>
-<div style="position:absolute;top:220px;left:0;right:0;bottom:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,250,243,.08) 0%,rgba(255,250,243,0) 42%,rgba(39,30,25,.32) 100%)"></div>
-<div data-sparkles="1" aria-hidden="true" style="position:absolute;top:220px;left:0;right:0;bottom:0;pointer-events:none"></div>
+<div style="position:absolute;top:242px;left:0;right:0;bottom:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,250,243,.08) 0%,rgba(255,250,243,0) 42%,rgba(39,30,25,.32) 100%)"></div>
+<div data-sparkles="1" aria-hidden="true" style="position:absolute;top:242px;left:0;right:0;bottom:0;pointer-events:none"></div>
 
 <div style="position:absolute;top:26px;left:0;right:0;text-align:center;pointer-events:none">
 <div data-heroanim="1" style="font:400 9.5px/1.9 'Be Vietnam Pro',sans-serif;letter-spacing:.3em;color:#61493b;opacity:.82;animation:hFade 800ms 260ms ease-out both;animation-play-state:paused">SAVE THE DATE</div>
 </div>
 
-<div style="position:absolute;top:64px;left:0;right:0;text-align:center;padding:0 24px;pointer-events:none">
+<div style="position:absolute;top:60px;left:0;right:0;text-align:center;padding:0 24px;pointer-events:none">
 <div data-heroanim="1" class="hero-script" style="animation:hFade 900ms 500ms ease-out both;animation-play-state:paused">Ngày chúng mình về chung một nhà</div>
 <h1 style="margin:8px 0 0;color:#2d241f">
 <span data-heroanim="1" class="hero-name" style="display:block;animation:hIn 1.3s 720ms cubic-bezier(.22,1,.36,1) both;animation-play-state:paused">Ngô Nam</span>
@@ -396,14 +406,14 @@ Xem thông tin
 <div style="position:relative;text-align:center;padding:100px 28px 70px;color:#fffaf4;align-self:end">
 <div data-rv="up" style="font:400 10px/1 'Playfair Display',serif;letter-spacing:.24em;opacity:.8">08 · 08 · 2026</div>
 <div data-rv="up" data-rv-delay="100" style="margin-top:20px;font:500 10px/1.8 'Be Vietnam Pro',sans-serif;letter-spacing:.22em;text-transform:uppercase">Cảm ơn bạn đã cùng sẻ chia</div>
-<div data-rv="up" data-rv-delay="180" style="margin-top:18px;font:500 42px/1.25 'Dancing Script',cursive">Niềm vui của chúng mình</div>
+<div data-rv="up" data-rv-delay="180" class="closing-script" style="margin-top:18px">Niềm vui của chúng mình</div>
 <div data-rv="linex" data-rv-delay="320" style="width:54px;height:1px;background:rgba(255,250,244,.55);margin:26px auto"></div>
 <div data-rv="up" data-rv-delay="440" style="font:italic 400 21px/1 'Playfair Display',serif;opacity:.92">Nam &amp; Mai</div>
 </div>
 </section>
 
 <footer style="background:#271e19;padding:38px 20px 42px;text-align:center">
-<div style="font:400 25px/1 'Dancing Script',cursive;color:#d1ad8f">Made with love</div>
+<div class="footer-script" style="color:#d1ad8f">Made with love</div>
 </footer>
 
 <button data-hearts="1" aria-label="Bắn tim chúc mừng" title="Bắn tim" style="position:fixed;bottom:max(16px,env(safe-area-inset-bottom));right:max(16px,calc(50% - 244px));z-index:90;width:46px;height:46px;padding:0;border:none;border-radius:50%;background:#61493b;color:#fffaf4;cursor:pointer;display:grid;place-items:center;box-shadow:0 8px 24px rgba(39,30,25,.24)">
