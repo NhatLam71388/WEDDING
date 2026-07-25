@@ -236,24 +236,32 @@ h2,h3{font-family:var(--font-editorial)!important}
 .album-index{font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#a67f64}
 .album-heading h2{margin:14px 0 0;font:italic 400 31px/1.3 'Playfair Display',serif;color:#2d241f}
 .album-heading p{max-width:360px;margin:14px auto 0;font:300 12px/1.75 'Be Vietnam Pro',sans-serif;color:#78685e}
-.featured-stage{position:relative;height:clamp(570px,121vw,630px);margin:38px 18px 0}
-.featured-stage:before{content:"";position:absolute;inset:24px -10px 36px 18px;border:1px solid rgba(166,127,100,.14);border-radius:24px 190px 24px 24px;pointer-events:none}
-.featured-frame{position:absolute;margin:0;overflow:hidden;background:#e8ddd2;box-shadow:0 20px 48px rgba(54,38,28,.16);isolation:isolate;transition:translate 420ms cubic-bezier(.22,1,.36,1),box-shadow 420ms ease}
+.featured-stage{position:relative;height:clamp(600px,128vw,680px);margin:38px 18px 0}
+.featured-stage:before{content:"";position:absolute;z-index:0;left:0;top:28px;width:68%;height:430px;border:1px solid rgba(166,127,100,.16);border-radius:190px 26px 26px 26px;pointer-events:none}
+.featured-frame{position:relative;margin:0;overflow:hidden;background:#e8ddd2;box-shadow:0 20px 48px rgba(54,38,28,.16);isolation:isolate;transition:translate 420ms cubic-bezier(.22,1,.36,1),box-shadow 420ms ease}
 .featured-frame:after{content:"";position:absolute;z-index:2;inset:8px;border:1px solid rgba(255,250,244,.72);border-radius:inherit;pointer-events:none}
 .featured-frame img{display:block;width:100%;height:100%}
-.featured-frame--landscape{z-index:1;left:0;right:0;top:0;aspect-ratio:3/2;border-radius:156px 18px 18px 18px}
-.featured-frame--landscape img{object-fit:cover;object-position:center}
-.featured-frame--twirl{z-index:3;right:0;top:42%;width:46%;aspect-ratio:2/3;border:8px solid var(--ivory);border-radius:15px;rotate:1.5deg;background:#e8e3e0}
+.featured-frame--twirl{position:absolute;z-index:2;left:4%;top:0;width:58%;max-width:280px;aspect-ratio:2/3;border:8px solid var(--ivory);border-radius:18px 150px 18px 18px;rotate:-1.2deg;background:#e8e3e0}
 .featured-frame--twirl:after{inset:5px;border-radius:9px}
 .full-subject img{object-fit:contain;object-position:center;background:#e8e3e0}
 .featured-label{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,250,243,.9);border:1px solid rgba(97,73,59,.14);color:var(--brown);font:500 7px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
-.featured-frame--landscape .featured-label{left:18px;bottom:17px;border-radius:2px 12px 12px 12px}
 .featured-frame--twirl .featured-label{right:10px;top:11px;border-radius:12px 2px 12px 12px}
-.featured-copy{position:absolute;z-index:4;left:10px;bottom:42px;width:42%;color:var(--clay);text-align:center;rotate:-5deg}
+.featured-copy{position:absolute;z-index:3;right:0;top:112px;width:37%;color:var(--clay);text-align:center;rotate:4deg}
+.featured-copy:before{content:"03";display:grid;place-items:center;width:42px;height:42px;margin:0 auto 14px;border:1px dashed rgba(166,127,100,.48);border-radius:50%;font:italic 500 12px/1 var(--font-editorial);color:var(--brown)}
 .featured-copy small{display:block;margin-bottom:6px;font:500 7px/1 var(--font-body);letter-spacing:.24em;text-transform:uppercase;color:var(--brown)}
-.featured-copy strong{display:block;font:500 24px/1.05 var(--font-hand)}
+.featured-copy strong{display:block;font:500 25px/1.05 var(--font-hand)}
 .featured-copy span{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;font:italic 500 10px/1 var(--font-editorial);letter-spacing:.08em;color:var(--brown)}
 .featured-copy span:before,.featured-copy span:after{content:"";width:20px;height:1px;background:rgba(166,127,100,.52)}
+.featured-handholding-pair{position:absolute;z-index:4;left:0;right:0;bottom:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding-top:44px}
+.featured-handholding-pair:before{content:"Cùng nắm tay · Hai khung hình, một hướng về nhau";position:absolute;left:0;top:0;width:100%;font:500 7px/1 var(--font-body);letter-spacing:.18em;text-align:center;text-transform:uppercase;color:var(--brown)}
+.featured-handholding-pair:after{content:"";position:absolute;left:50%;top:22px;width:1px;height:13px;background:linear-gradient(180deg,rgba(166,127,100,.1),rgba(166,127,100,.7));transform:translateX(-50%)}
+.featured-frame--handholding{aspect-ratio:3/2;border:6px solid var(--ivory);background:#d8d7dc}
+.featured-frame--handholding:first-of-type{border-radius:118px 14px 14px 14px}
+.featured-frame--handholding:last-of-type{border-radius:14px 14px 118px 14px}
+.featured-frame--handholding:after{inset:4px}
+.featured-frame--handholding img{object-fit:cover;object-position:center}
+.handholding-caption{position:absolute;z-index:3;left:10px;bottom:9px;padding:6px 8px;border:1px solid rgba(97,73,59,.12);border-radius:2px 10px 10px 10px;background:rgba(255,250,243,.88);color:var(--brown);font:500 6.5px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px)}
+.featured-frame--handholding:last-of-type .handholding-caption{left:auto;right:10px;border-radius:10px 2px 10px 10px}
 .album-action{display:flex;align-items:center;justify-content:center;gap:10px;min-width:220px;height:50px;margin:34px auto 0;padding:0 24px;border:1px solid rgba(82,62,50,.28);border-radius:999px;background:#fffaf3;color:#61493b;font:500 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 .countdown-section{background:radial-gradient(circle at 50% 0%,#4b382e 0%,#271e19 54%,#201713 100%)!important}
 .countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:30px}
@@ -296,10 +304,17 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-open-icon{width:32px;height:32px}
   .invite-nav{width:calc(100% - 24px)}
   .invite-nav a{font-size:8px;letter-spacing:.08em}
-  .featured-stage{height:570px;margin-left:12px;margin-right:12px}
-  .featured-frame--twirl{top:41%;width:52%}
-  .featured-copy{left:4px;bottom:32px;width:41%}
+  .featured-stage{height:clamp(500px,154vw,600px);margin-left:12px;margin-right:12px}
+  .featured-stage:before{left:-2px;width:72%;height:350px}
+  .featured-frame--twirl{left:0;width:62%;border-radius:16px 124px 16px 16px}
+  .featured-copy{right:-2px;top:92px;width:36%}
+  .featured-copy:before{width:36px;height:36px;margin-bottom:11px}
   .featured-copy strong{font-size:21px}
+  .featured-handholding-pair{gap:6px;padding-top:40px}
+  .featured-handholding-pair:before{font-size:6.2px;letter-spacing:.12em}
+  .featured-frame--handholding{border-width:5px}
+  .handholding-caption{left:7px;bottom:7px;padding:5px 6px;font-size:5.7px}
+  .featured-frame--handholding:last-of-type .handholding-caption{right:7px}
 }
 @media(max-width:440px),(max-height:720px){
   .intro-monogram{display:none}
@@ -453,19 +468,25 @@ Xem thông tin
 <section id="album" data-screen-label="04 Featured album" class="curated-section" style="scroll-margin-top:72px">
 <div data-rv="up" class="album-heading">
 <div class="album-index">Selected moments · 2026</div>
-<h2>Một vòng xoay, một cái nắm tay</h2>
-<p>Khoảnh khắc Nhật Mai xoay váy như công chúa và cả hai cùng nắm tay bước về phía ngày chung đôi.</p>
+<h2>Một vòng xoay, một đời nắm tay</h2>
+<p>Một khoảnh khắc dành cho nàng công chúa, và hai khung hình đặt cạnh nhau khi cả hai cùng nắm tay bước tiếp.</p>
 </div>
-<div class="featured-stage" aria-label="Hai khoảnh khắc xoay váy và nắm tay của Ngô Nam, Nhật Mai">
-<figure data-rv="clip" data-rv-dur="1200ms" class="featured-frame featured-frame--landscape">
-<img src="./assets/photos/LBS02201-640.webp" srcset="./assets/photos/LBS02201-640.webp 640w, ./assets/photos/LBS02201-1280.webp 1280w" sizes="(max-width:520px) 93vw, 484px" width="1280" height="854" alt="Ngô Nam và Nhật Mai nắm tay bên khu vườn hoa" loading="lazy" decoding="async">
-<figcaption class="featured-label">Hand in hand · 02</figcaption>
+<div class="featured-stage" aria-label="Khoảnh khắc xoay váy công chúa và hai ảnh nắm tay của Ngô Nam, Nhật Mai">
+<figure data-rv="clip" data-rv-dur="1200ms" class="featured-frame featured-frame--twirl full-subject">
+<img src="./assets/photos/LBS01781-640.webp" srcset="./assets/photos/LBS01781-640.webp 640w, ./assets/photos/LBS01781-1280.webp 1280w" sizes="(max-width:520px) 62vw, 280px" width="1280" height="1920" alt="Nhật Mai xoay váy công chúa dưới cánh tay Ngô Nam" loading="lazy" decoding="async">
+<figcaption class="featured-label">Princess moment</figcaption>
 </figure>
-<figure data-rv="right" data-rv-delay="260" class="featured-frame featured-frame--twirl full-subject">
-<img src="./assets/photos/LBS01781-640.webp" srcset="./assets/photos/LBS01781-640.webp 640w, ./assets/photos/LBS01781-1280.webp 1280w" sizes="(max-width:520px) 52vw, 223px" width="1280" height="1920" alt="Ngô Nam nâng tay Nhật Mai trong điệu xoay váy cưới công chúa" loading="lazy" decoding="async">
-<figcaption class="featured-label">Little dance · 01</figcaption>
+<div data-rv="right" data-rv-delay="220" class="featured-copy" aria-hidden="true"><small>Little dance</small><strong>Xoay một vòng</strong><span>nàng công chúa</span></div>
+<div data-rv="up" data-rv-delay="420" class="featured-handholding-pair" role="group" aria-label="Cùng nắm tay: hai khung hình của Ngô Nam và Nhật Mai">
+<figure class="featured-frame featured-frame--handholding">
+<img src="./assets/photos/LBS02261-640.webp" srcset="./assets/photos/LBS02261-640.webp 640w, ./assets/photos/LBS02261-1280.webp 1280w" sizes="(max-width:520px) 45vw, 237px" width="1280" height="854" alt="Ngô Nam và Nhật Mai nắm tay, nhìn nhau giữa phông nền studio" loading="lazy" decoding="async">
+<figcaption class="handholding-caption">01 · Nhìn về nhau</figcaption>
 </figure>
-<div data-rv="up" data-rv-delay="520" class="featured-copy" aria-hidden="true"><small>Take my hand</small><strong>Xoay một vòng</strong><span>you &amp; me</span></div>
+<figure class="featured-frame featured-frame--handholding">
+<img src="./assets/photos/LBS02201-640.webp" srcset="./assets/photos/LBS02201-640.webp 640w, ./assets/photos/LBS02201-1280.webp 1280w" sizes="(max-width:520px) 45vw, 237px" width="1280" height="854" alt="Ngô Nam và Nhật Mai nắm tay nhau bên vườn hoa cưới" loading="lazy" decoding="async">
+<figcaption class="handholding-caption">02 · Cùng bước bên nhau</figcaption>
+</figure>
+</div>
 </div>
 <button type="button" class="secondary-action album-action" onClick="{{ openGallery }}">Mở album đầy đủ <span style="font-size:12px">25 ảnh</span></button>
 </section>

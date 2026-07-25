@@ -15,6 +15,8 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/assets/photos/LBS02643-640.webp"),
     access("dist/client/assets/photos/LBS01523_1-640.webp"),
     access("dist/client/assets/photos/LBS01781-640.webp"),
+    access("dist/client/assets/photos/LBS02261-640.webp"),
+    access("dist/client/assets/photos/LBS02261-1280.webp"),
     access("dist/client/assets/photos/LBS02201-640.webp"),
     access("dist/.openai/hosting.json"),
   ]);
@@ -29,6 +31,10 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     builtMobile841,
     sourceMusic,
     builtMusic,
+    sourceHandholding640,
+    builtHandholding640,
+    sourceHandholding1280,
+    builtHandholding1280,
   ] = await Promise.all([
     readFile("dist/client/invitation.html", "utf8"),
     readFile("assets/decor/dove-flight.webp"),
@@ -39,6 +45,10 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     readFile("dist/client/assets/photos/LBS02087-mobile-841.webp"),
     readFile("assets/audio/wedding-01-francisco-alvear.mp3"),
     readFile("dist/client/assets/audio/wedding-01-francisco-alvear.mp3"),
+    readFile("assets/photos/LBS02261-640.webp"),
+    readFile("dist/client/assets/photos/LBS02261-640.webp"),
+    readFile("assets/photos/LBS02261-1280.webp"),
+    readFile("dist/client/assets/photos/LBS02261-1280.webp"),
   ]);
   assert.match(invitation, /Ngô Nam/);
   assert.match(invitation, /Nhật Mai/);
@@ -66,6 +76,7 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     "LBS02643",
     "LBS01523_1",
     "LBS01781",
+    "LBS02261",
     "LBS02201",
   ]) {
     assert.match(
@@ -77,4 +88,12 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.deepEqual(builtMobile640, sourceMobile640);
   assert.deepEqual(builtMobile841, sourceMobile841);
   assert.deepEqual(builtMusic, sourceMusic);
+  assert.deepEqual(
+    builtHandholding640,
+    sourceHandholding640,
+  );
+  assert.deepEqual(
+    builtHandholding1280,
+    sourceHandholding1280,
+  );
 });
