@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
+import { normalize, voidTag } from "./html-normalize.mjs";
+
 test("build contains the worker, invitation, assets, and hosting metadata", async () => {
   await Promise.all([
     access("dist/server/index.js"),
@@ -64,14 +66,22 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.match(invitation, /destination=12\.795142%2C107\.913681/);
   assert.match(
     invitation,
-    /<link rel="preload" as="image" href="\.\/assets\/decor\/dove-flight\.webp" type="image\/webp">/,
+    voidTag("link", {
+      rel: "preload",
+      as: "image",
+      href: "./assets/decor/dove-flight.webp",
+      type: "image/webp",
+    }),
   );
   assert.match(invitation, /\bdata-introdove="1"/);
   assert.match(invitation, /<picture\b[^>]*\bintro-picture\b/i);
   assert.match(invitation, /LBS02087-mobile-640\.webp\s+640w/i);
   assert.match(invitation, /LBS02087-mobile-841\.webp\s+841w/i);
   assert.match(invitation, /\bintro-open-arrow\b/i);
-  assert.match(invitation, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
+  assert.match(
+    normalize(invitation),
+    /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/,
+  );
   assert.match(invitation, /2026-08-07T11:00:00\+07:00/);
   assert.match(invitation, /\.\/assets\/audio\/nhac\.mp3/);
   assert.match(invitation, /data-screen-label="04 Featured album"/);

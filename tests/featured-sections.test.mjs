@@ -254,7 +254,7 @@ test("the two handholding landscapes form a stacked editorial story", async () =
     ".featured-frame--handholding-second",
   );
   assert.match(firstFrameRule, /\bborder-radius\s*:\s*112px\s+112px/i);
-  assert.match(secondFrameRule, /\brotate\s*:\s*\.65deg/i);
+  assert.match(secondFrameRule, /\brotate\s*:\s*0?\.65deg/i);
   assert.match(secondFrameRule, /\bwidth\s*:\s*100%/i);
   assert.doesNotMatch(
     secondFrameRule,

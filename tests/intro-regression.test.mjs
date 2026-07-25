@@ -1,4 +1,6 @@
 import assert from "node:assert/strict";
+
+import { LOGIC_SCRIPT_PATTERN, squeezeCss } from "./html-normalize.mjs";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
@@ -58,9 +60,7 @@ async function readWebpDimensions(path) {
 
 async function loadInvitation() {
   const html = await readFile("Thiep Cuoi 57 v2.dc.html", "utf8");
-  const match = html.match(
-    /<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
-  );
+  const match = html.match(LOGIC_SCRIPT_PATTERN);
   assert.ok(match, "invitation logic script should exist");
 
   const Logic = new Function(
@@ -386,8 +386,8 @@ test("intro preloads its artwork and exposes accessible interaction hooks", asyn
     /<button\b[^>]*data-intro-open="1"[^>]*type="button"[^>]*aria-label="Mở thiệp cưới"/,
   );
   assert.match(
-    html,
-    /@media\s*\(prefers-reduced-motion:reduce\)[\s\S]*?\.intro-dove-layer,.intro-dust\{display:none!important\}/,
+    squeezeCss(html),
+    /@media\(prefers-reduced-motion:reduce\)[\s\S]*?\.intro-dove-layer,\.intro-dust\{display:none!important/,
   );
 });
 

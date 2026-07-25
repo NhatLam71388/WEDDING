@@ -44,7 +44,7 @@ const WIDE_PHOTOS = new Set([
 
 function extractLogicScript(html) {
   const match = html.match(
-    /<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
+    /<script\b[^>]*\btype="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
   );
   assert.ok(match, "invitation logic script should exist");
   return match[1];

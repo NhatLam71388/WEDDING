@@ -5,7 +5,7 @@ import test from "node:test";
 test("closing gallery and gift always releases the page scroll lock", async () => {
   const html = await readFile("Thiep Cuoi 57 v2.dc.html", "utf8");
   const match = html.match(
-    /<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
+    /<script\b[^>]*\btype="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
   );
   assert.ok(match, "invitation logic script should exist");
 

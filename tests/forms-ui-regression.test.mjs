@@ -2,14 +2,18 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+import {
+  between,
+  LOGIC_SCRIPT_PATTERN,
+  normalize,
+} from "./html-normalize.mjs";
+
 const INVITATION_PATH = "Thiep Cuoi 57 v2.dc.html";
 const RESPONSE_ID = "rsvp_123e4567-e89b-42d3-a456-426614174000";
 
 async function loadInvitation() {
   const html = await readFile(INVITATION_PATH, "utf8");
-  const match = html.match(
-    /<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
-  );
+  const match = html.match(LOGIC_SCRIPT_PATTERN);
   assert.ok(match, "invitation logic script should exist");
   const Logic = new Function(
     "DCLogic",
@@ -22,13 +26,6 @@ async function loadInvitation() {
   return { html, Logic };
 }
 
-function between(source, start, end) {
-  const from = source.indexOf(start);
-  assert.notEqual(from, -1, `missing section start: ${start}`);
-  const to = source.indexOf(end, from + start.length);
-  assert.notEqual(to, -1, `missing section end: ${end}`);
-  return source.slice(from, to);
-}
 
 function installStateUpdates(invitation) {
   invitation.setState = (update, callback) => {
@@ -51,7 +48,7 @@ function memoryStorage() {
 test("RSVP keeps the form mounted and uses a device response id for updates", async () => {
   const { html, Logic } = await loadInvitation();
   const rsvp = between(
-    html,
+    normalize(html),
     '<section id="rsvp"',
     '<section data-screen-label="09 Wishes"',
   );
@@ -130,7 +127,7 @@ test("RSVP keeps the form mounted and uses a device response id for updates", as
 test("wishes paginate, remain compact, and visibly pin the submitted wish", async () => {
   const { html, Logic } = await loadInvitation();
   const wishes = between(
-    html,
+    normalize(html),
     '<section data-screen-label="09 Wishes"',
     '<section data-screen-label="10 Gift"',
   );
@@ -195,7 +192,7 @@ test("wishes paginate, remain compact, and visibly pin the submitted wish", asyn
 });
 
 test("bride event uses a distinct, previously unfeatured áo dài portrait", async () => {
-  const html = await readFile(INVITATION_PATH, "utf8");
+  const html = normalize(await readFile(INVITATION_PATH, "utf8"));
   const events = between(
     html,
     '<section id="events"',

@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
+import { normalize, voidTag } from "./html-normalize.mjs";
+
 test("Vercel serves the static invitation and keeps admin on the backend", async () => {
   const [
     configSource,
@@ -53,13 +55,21 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
   assert.match(publicInvitation, /\bdata-introdove="1"/);
   assert.match(
     publicInvitation,
-    /<link rel="preload" as="image" href="\.\/assets\/decor\/dove-flight\.webp" type="image\/webp">/,
+    voidTag("link", {
+      rel: "preload",
+      as: "image",
+      href: "./assets/decor/dove-flight.webp",
+      type: "image/webp",
+    }),
   );
   assert.match(publicInvitation, /<picture\b[^>]*\bintro-picture\b/i);
   assert.match(publicInvitation, /LBS02087-mobile-640\.webp\s+640w/i);
   assert.match(publicInvitation, /LBS02087-mobile-841\.webp\s+841w/i);
   assert.match(publicInvitation, /\bintro-open-arrow\b/i);
-  assert.match(publicInvitation, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
+  assert.match(
+    normalize(publicInvitation),
+    /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/,
+  );
   assert.match(publicInvitation, /2026-08-07T11:00:00\+07:00/);
   assert.match(publicInvitation, /\.\/assets\/audio\/nhac\.mp3/);
   assert.match(publicInvitation, /data-screen-label="04 Featured album"/);

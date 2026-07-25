@@ -2,14 +2,20 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
+import {
+  between,
+  jsonPropDefault,
+  LOGIC_SCRIPT_PATTERN,
+  normalize,
+  playfairFont,
+} from "./html-normalize.mjs";
+
 const INVITATION_PATH = "Thiep Cuoi 57 v2.dc.html";
 const MUSIC_PATH = "./assets/audio/nhac.mp3";
 
 async function loadInvitation() {
   const html = await readFile(INVITATION_PATH, "utf8");
-  const match = html.match(
-    /<script type="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
-  );
+  const match = html.match(LOGIC_SCRIPT_PATTERN);
   assert.ok(match, "invitation logic script should exist");
 
   const Logic = new Function(
@@ -22,14 +28,6 @@ async function loadInvitation() {
   );
 
   return { html, Logic };
-}
-
-function between(source, start, end) {
-  const from = source.indexOf(start);
-  assert.notEqual(from, -1, `missing section start: ${start}`);
-  const to = source.indexOf(end, from + start.length);
-  assert.notEqual(to, -1, `missing section end: ${end}`);
-  return source.slice(from, to);
 }
 
 function makeButton() {
@@ -79,8 +77,10 @@ test("bride-family celebration is the canonical invitation date", async () => {
     readFile("README.md", "utf8"),
   ]);
 
+  const doc = normalize(html);
+
   const hero = between(
-    html,
+    doc,
     '<section data-screen-label="01 Hero"',
     '<nav class="invite-nav"',
   );
@@ -88,20 +88,17 @@ test("bride-family celebration is the canonical invitation date", async () => {
   assert.match(hero, /<span data-heroanim="1"[^>]*>Thứ sáu<\/span>/);
   assert.match(hero, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
   assert.doesNotMatch(hero, /08\.08\.2026/);
-  assert.match(
-    html,
-    /\.hero-date b\{font:italic 400 34px\/1 'Playfair Display',serif/,
-  );
+  assert.match(html, playfairFont("34px/1", ".hero-date b"));
 
   const story = between(
-    html,
+    doc,
     '<section data-screen-label="03 Our story"',
     '<div class="love-marquee"',
   );
-  assert.match(story, /class="date-seal">07 · 08<br>2026</);
+  assert.match(story, /class="date-seal">07 · 08<br\s*\/?>2026</);
 
   const marquee = between(
-    html,
+    doc,
     '<div class="love-marquee"',
     '<section id="album"',
   );
@@ -112,7 +109,7 @@ test("bride-family celebration is the canonical invitation date", async () => {
   assert.doesNotMatch(marquee, /08\.08\.2026/);
 
   const events = between(
-    html,
+    doc,
     '<section id="events"',
     '<section data-screen-label="07 Countdown"',
   );
@@ -130,37 +127,33 @@ test("bride-family celebration is the canonical invitation date", async () => {
   );
   assert.match(groomEvent, />08\.08\.2026</);
   assert.match(groomEvent, />Thứ bảy · 11:00</);
+  assert.match(groomEvent, />Nhằm ngày 26 tháng 06 năm Bính Ngọ</);
 
   const countdown = between(
-    html,
+    doc,
     '<section data-screen-label="07 Countdown"',
     '<section id="rsvp"',
   );
   assert.match(countdown, />11:00 · 07\.08\.2026</);
 
   const finalInvitation = between(
-    html,
+    doc,
     '<section data-screen-label="11 Final invitation"',
     "<footer ",
   );
-  assert.match(
-    finalInvitation,
-    /font:italic 400 36px\/1\.1 'Playfair Display',serif[^>]*>07\.08\.2026</,
-  );
+  assert.match(finalInvitation, playfairFont("36px/1.1"));
+  assert.match(finalInvitation, />07\.08\.2026</);
 
-  const intro = between(html, '<div data-introroot="1"', "</sc-if>");
+  const intro = between(doc, '<div data-introroot="1"', "</sc-if>");
   assert.match(
     intro,
     /<div class="intro-date"><span>Thứ sáu<\/span><b>07\.08\.2026<\/b><\/div>/,
   );
-  assert.match(
-    html,
-    /\.intro-date b\{font:italic 400 23px\/1 'Playfair Display',serif/,
-  );
+  assert.match(html, playfairFont("23px/1", ".intro-date b"));
 
   assert.match(
     html,
-    /this\.t1 = this\.target\('2026-08-07T11:00:00\+07:00'\)/,
+    /this\.t1 = this\.target\(\s*'2026-08-07T11:00:00\+07:00'\s*\)/,
   );
   assert.equal(
     Date.parse("2026-08-07T11:00:00+07:00"),
@@ -175,12 +168,9 @@ test("bride-family celebration is the canonical invitation date", async () => {
 
 test("music control has a real default track and a safe bottom-left position", async () => {
   const { html } = await loadInvitation();
-  await access("assets/audio/nhac.mp3");
+  await access(MUSIC_PATH.replace(/^\.\//, ""));
 
-  assert.match(
-    html,
-    /&quot;musicSrc&quot;:[\s\S]*?&quot;default&quot;:&quot;\.\/assets\/audio\/nhac\.mp3&quot;/,
-  );
+  assert.match(html, jsonPropDefault("musicSrc", MUSIC_PATH));
 
   const button = html.match(
     /<button\b(?=[^>]*data-music="1")(?=[^>]*aria-label="Phát nhạc nền")[^>]*>/i,
