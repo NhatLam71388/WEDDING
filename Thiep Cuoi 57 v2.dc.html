@@ -214,10 +214,21 @@ h2,h3{font-family:var(--font-editorial)!important}
 .field-control:focus{box-shadow:0 0 0 4px rgba(166,127,100,.1)}
 .primary-action:hover{background:#3b2d26!important;box-shadow:0 10px 24px rgba(39,30,25,.16)}
 .secondary-action:hover{background:#f3e8db!important}
-.editorial-story{position:relative;padding:0 24px 34px;min-height:620px}
-.editorial-main{width:78%;aspect-ratio:2/3;border-radius:180px 180px 16px 16px;overflow:hidden;box-shadow:0 18px 46px rgba(54,38,28,.13)}
-.editorial-inset{position:absolute;right:20px;bottom:0;width:48%;aspect-ratio:2/3;border:9px solid #f8f3ec;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(54,38,28,.16);z-index:3}
-.editorial-main img,.editorial-inset img{width:100%;height:100%;display:block;object-fit:cover}
+.story-stage{position:relative;height:clamp(570px,122vw,640px);margin:0 18px}
+.story-stage:before{content:"";position:absolute;inset:32px 8px 46px;border:1px solid rgba(166,127,100,.16);border-radius:220px 220px 26px 26px;pointer-events:none}
+.story-stage:after{content:"N & M";position:absolute;z-index:0;right:8px;top:46%;font:italic 500 68px/1 var(--font-editorial);letter-spacing:-.06em;color:rgba(166,127,100,.08);pointer-events:none}
+.story-frame{position:absolute;margin:0;aspect-ratio:2/3;overflow:hidden;background:#d8d7dc;box-shadow:0 20px 48px rgba(54,38,28,.16);isolation:isolate;transition:translate 420ms cubic-bezier(.22,1,.36,1),box-shadow 420ms ease}
+.story-frame:after{content:"";position:absolute;z-index:2;inset:7px;border:1px solid rgba(255,250,244,.72);border-radius:inherit;pointer-events:none}
+.story-frame img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#d8d7dc}
+.story-frame--groom{z-index:1;right:0;top:0;width:54%;border-radius:18px 148px 18px 18px}
+.story-frame--bride{z-index:2;left:0;bottom:0;width:62%;border:8px solid var(--paper);border-radius:16px;rotate:-1.4deg;background:var(--paper)}
+.story-frame--bride:after{inset:5px;border-radius:10px}
+.story-label{position:absolute;z-index:3;left:13px;top:16px;display:flex;flex-direction:column;gap:3px;max-width:calc(100% - 26px);padding:8px 10px 7px;border:1px solid rgba(97,73,59,.14);border-radius:2px 12px 12px 12px;background:rgba(255,250,243,.86);color:var(--ink);box-shadow:0 6px 18px rgba(54,38,28,.1);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.story-label small{font:500 7px/1 var(--font-body);letter-spacing:.2em;text-transform:uppercase;color:var(--clay)}
+.story-label b{font:italic 500 17px/1.05 var(--font-editorial)}
+.story-frame--bride .story-label{left:auto;right:13px;top:auto;bottom:15px;text-align:right;border-radius:12px 2px 12px 12px}
+.story-stage .date-seal{right:18px;bottom:14px}
+.story-stage .story-caption{left:auto;right:2px;bottom:108px;width:118px;white-space:normal;text-align:center}
 .love-marquee{overflow:hidden;border-top:1px solid rgba(82,62,50,.12);border-bottom:1px solid rgba(82,62,50,.12);background:#2d241f;color:#ead7c6}
 .love-marquee div{width:max-content;padding:13px 0;font:500 9px/1 var(--font-body);letter-spacing:.28em;text-transform:uppercase;animation:marquee 22s linear infinite}
 .curated-section{background:#fffaf3;padding:80px 0 88px;overflow:hidden}
@@ -225,19 +236,24 @@ h2,h3{font-family:var(--font-editorial)!important}
 .album-index{font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#a67f64}
 .album-heading h2{margin:14px 0 0;font:italic 400 31px/1.3 'Playfair Display',serif;color:#2d241f}
 .album-heading p{max-width:360px;margin:14px auto 0;font:300 12px/1.75 'Be Vietnam Pro',sans-serif;color:#78685e}
-.curated-stage{position:relative;height:630px;margin:38px 18px 0}
-.curated-card{position:absolute;margin:0;overflow:hidden;background:#e8ddd2;box-shadow:0 18px 46px rgba(54,38,28,.15);isolation:isolate}
-.curated-card:after{content:"";position:absolute;inset:8px;border:1px solid rgba(255,250,244,.7);pointer-events:none}
-.curated-card img{display:block;width:100%;height:100%;object-fit:cover;will-change:transform}
-.curated-wide{left:0;right:56px;top:0;aspect-ratio:4/3;border-radius:190px 18px 18px 18px}
-.curated-wide img{object-position:50% 58%}
-.curated-tall{z-index:2;right:0;top:210px;width:47%;aspect-ratio:2/3;border:8px solid #fffaf3;border-radius:120px 120px 16px 16px;rotate:2.5deg}
-.curated-tall:after{inset:5px;border-radius:110px 110px 10px 10px}
-.curated-tall img{object-position:51% 43%}
-.curated-round{z-index:3;left:12px;bottom:0;width:46%;aspect-ratio:1;border:9px solid #fffaf3;border-radius:50%;rotate:-3deg}
-.curated-round:after{inset:5px;border-radius:50%}
-.curated-round img{object-position:50% 43%}
-.curated-note{position:absolute;z-index:4;left:40%;bottom:35px;width:120px;rotate:-6deg;font:500 21px/1.15 var(--font-hand);color:#a67f64;text-align:center}
+.featured-stage{position:relative;height:clamp(570px,121vw,630px);margin:38px 18px 0}
+.featured-stage:before{content:"";position:absolute;inset:24px -10px 36px 18px;border:1px solid rgba(166,127,100,.14);border-radius:24px 190px 24px 24px;pointer-events:none}
+.featured-frame{position:absolute;margin:0;overflow:hidden;background:#e8ddd2;box-shadow:0 20px 48px rgba(54,38,28,.16);isolation:isolate;transition:translate 420ms cubic-bezier(.22,1,.36,1),box-shadow 420ms ease}
+.featured-frame:after{content:"";position:absolute;z-index:2;inset:8px;border:1px solid rgba(255,250,244,.72);border-radius:inherit;pointer-events:none}
+.featured-frame img{display:block;width:100%;height:100%}
+.featured-frame--landscape{z-index:1;left:0;right:0;top:0;aspect-ratio:3/2;border-radius:156px 18px 18px 18px}
+.featured-frame--landscape img{object-fit:cover;object-position:center}
+.featured-frame--twirl{z-index:3;right:0;top:42%;width:46%;aspect-ratio:2/3;border:8px solid var(--ivory);border-radius:15px;rotate:1.5deg;background:#e8e3e0}
+.featured-frame--twirl:after{inset:5px;border-radius:9px}
+.full-subject img{object-fit:contain;object-position:center;background:#e8e3e0}
+.featured-label{position:absolute;z-index:3;display:flex;align-items:center;gap:8px;padding:7px 10px;background:rgba(255,250,243,.9);border:1px solid rgba(97,73,59,.14);color:var(--brown);font:500 7px/1 var(--font-body);letter-spacing:.16em;text-transform:uppercase;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.featured-frame--landscape .featured-label{left:18px;bottom:17px;border-radius:2px 12px 12px 12px}
+.featured-frame--twirl .featured-label{right:10px;top:11px;border-radius:12px 2px 12px 12px}
+.featured-copy{position:absolute;z-index:4;left:10px;bottom:42px;width:42%;color:var(--clay);text-align:center;rotate:-5deg}
+.featured-copy small{display:block;margin-bottom:6px;font:500 7px/1 var(--font-body);letter-spacing:.24em;text-transform:uppercase;color:var(--brown)}
+.featured-copy strong{display:block;font:500 24px/1.05 var(--font-hand)}
+.featured-copy span{display:flex;align-items:center;justify-content:center;gap:7px;margin-top:9px;font:italic 500 10px/1 var(--font-editorial);letter-spacing:.08em;color:var(--brown)}
+.featured-copy span:before,.featured-copy span:after{content:"";width:20px;height:1px;background:rgba(166,127,100,.52)}
 .album-action{display:flex;align-items:center;justify-content:center;gap:10px;min-width:220px;height:50px;margin:34px auto 0;padding:0 24px;border:1px solid rgba(82,62,50,.28);border-radius:999px;background:#fffaf3;color:#61493b;font:500 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
 .countdown-section{background:radial-gradient(circle at 50% 0%,#4b382e 0%,#271e19 54%,#201713 100%)!important}
 .countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:30px}
@@ -254,7 +270,7 @@ h2,h3{font-family:var(--font-editorial)!important}
 @media(hover:hover){
   .event-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px rgba(54,38,28,.2)}
   .event-card:hover .event-photo{transform:scale(1.085)}
-  .curated-card:hover img{transform:scale(1.035)!important}
+  .story-frame:hover,.featured-frame:hover{translate:0 -5px;box-shadow:0 25px 56px rgba(54,38,28,.2)}
 }
 @media(max-width:620px) and (orientation:portrait){
   .intro-stage{width:100vw;background:linear-gradient(180deg,#d1ced4 0 56%,#d9cec6 100%)}
@@ -264,7 +280,9 @@ h2,h3{font-family:var(--font-editorial)!important}
   .family-grid{grid-template-columns:1fr;gap:32px}
   .family-divider{width:54px;height:1px;margin:0 auto;background:linear-gradient(90deg,rgba(82,62,50,0),rgba(82,62,50,.3),rgba(82,62,50,0))}
   .date-seal{right:26px;bottom:54px}
-  .editorial-story{min-height:560px}
+  .story-stage{height:570px;margin-left:12px;margin-right:12px}
+  .story-frame--groom{width:54%}
+  .story-frame--bride{width:62%}
   .hero-name{font-size:56px!important}
   .hero-date b{font-size:30px}
   .hero-photo{top:238px;left:12px;right:12px;bottom:12px}
@@ -278,9 +296,10 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-open-icon{width:32px;height:32px}
   .invite-nav{width:calc(100% - 24px)}
   .invite-nav a{font-size:8px;letter-spacing:.08em}
-  .curated-stage{height:570px;margin-left:12px;margin-right:12px}
-  .curated-tall{top:190px}
-  .curated-note{font-size:19px}
+  .featured-stage{height:570px;margin-left:12px;margin-right:12px}
+  .featured-frame--twirl{top:41%;width:52%}
+  .featured-copy{left:4px;bottom:32px;width:41%}
+  .featured-copy strong{font-size:21px}
 }
 @media(max-width:440px),(max-height:720px){
   .intro-monogram{display:none}
@@ -413,13 +432,15 @@ Xem thông tin
 <div style="font:400 24px/1 'Dancing Script',cursive;color:#a67f64">Chuyện của chúng mình</div>
 <p style="max-width:390px;margin:18px auto 0;font:italic 400 20px/1.65 'Playfair Display',serif;color:#61493b">Từ những điều bình dị, chúng mình đã tìm thấy một người để cùng sẻ chia cả chặng đường dài.</p>
 </div>
-<div class="editorial-story">
-<div data-rv="clip" data-rv-dur="1300ms" data-rv-delay="140" class="editorial-main">
-<img data-zoom="1" src="./assets/photos/LBS01523_1-640.webp" srcset="./assets/photos/LBS01523_1-640.webp 640w, ./assets/photos/LBS01523_1-1280.webp 1280w" sizes="(max-width:520px) 78vw, 405px" alt="Chân dung cô dâu Nhật Mai" decoding="async">
-</div>
-<div data-rv="right" data-rv-delay="420" class="editorial-inset">
-<img data-zoom="1" src="./assets/photos/LBS01726-640.webp" srcset="./assets/photos/LBS01726-640.webp 640w, ./assets/photos/LBS01726-1280.webp 1280w" sizes="(max-width:520px) 48vw, 250px" alt="Ngô Nam và Nhật Mai bên nhau" loading="lazy" decoding="async">
-</div>
+<div class="story-stage portrait-pair" aria-label="Chân dung cô dâu và chú rể">
+<figure data-rv="right" data-rv-dur="1200ms" data-rv-delay="120" class="story-frame story-frame--groom">
+<img src="./assets/photos/LBS02643-640.webp" srcset="./assets/photos/LBS02643-640.webp 640w, ./assets/photos/LBS02643-1280.webp 1280w" sizes="(max-width:520px) 54vw, 281px" width="1280" height="1920" alt="Chú rể Ngô Nam chỉnh đồng hồ giữa vườn hoa" loading="lazy" decoding="async">
+<figcaption class="story-label"><small>Chú rể</small><b>Ngô Nam</b></figcaption>
+</figure>
+<figure data-rv="clip" data-rv-dur="1300ms" data-rv-delay="300" class="story-frame story-frame--bride">
+<img src="./assets/photos/LBS01523_1-640.webp" srcset="./assets/photos/LBS01523_1-640.webp 640w, ./assets/photos/LBS01523_1-1280.webp 1280w" sizes="(max-width:520px) 62vw, 322px" width="1280" height="1920" alt="Cô dâu Nhật Mai mỉm cười và cầm bó hoa" loading="lazy" decoding="async">
+<figcaption class="story-label"><small>Cô dâu</small><b>Nhật Mai</b></figcaption>
+</figure>
 <div data-rv="scale" data-rv-delay="620" class="date-seal">07 · 08<br>2026</div>
 <div data-rv="left" data-rv-delay="720" class="story-caption">Một đời · một người</div>
 </div>
@@ -429,25 +450,24 @@ Xem thông tin
 <div>NGÔ NAM · NHẬT MAI · 07.08.2026 · OUR FOREVER STARTS HERE · NGÔ NAM · NHẬT MAI · 07.08.2026 · OUR FOREVER STARTS HERE ·&nbsp;</div>
 </div>
 
-<section id="album" data-screen-label="04 Curated album" class="curated-section" style="scroll-margin-top:72px">
+<section id="album" data-screen-label="04 Featured album" class="curated-section" style="scroll-margin-top:72px">
 <div data-rv="up" class="album-heading">
 <div class="album-index">Selected moments · 2026</div>
-<h2>Những khung hình chúng mình yêu</h2>
-<p>Ba khoảnh khắc nổi bật được sắp đặt như một trang tạp chí cưới. Toàn bộ ảnh nằm trong album riêng phía dưới.</p>
+<h2>Một vòng xoay, một cái nắm tay</h2>
+<p>Khoảnh khắc Nhật Mai xoay váy như công chúa và cả hai cùng nắm tay bước về phía ngày chung đôi.</p>
 </div>
-<div class="curated-stage" aria-label="Ba ảnh cưới nổi bật của Ngô Nam và Nhật Mai">
-<figure data-rv="clip" data-rv-dur="1200ms" class="curated-card curated-wide">
-<img data-zoom="1" src="./assets/photos/LBS02274-640.webp" srcset="./assets/photos/LBS02274-640.webp 640w, ./assets/photos/LBS02274-1280.webp 1280w" sizes="(max-width:520px) 82vw, 426px" alt="Ngô Nam và Nhật Mai bên vườn hoa" loading="lazy" decoding="async">
+<div class="featured-stage" aria-label="Hai khoảnh khắc xoay váy và nắm tay của Ngô Nam, Nhật Mai">
+<figure data-rv="clip" data-rv-dur="1200ms" class="featured-frame featured-frame--landscape">
+<img src="./assets/photos/LBS02201-640.webp" srcset="./assets/photos/LBS02201-640.webp 640w, ./assets/photos/LBS02201-1280.webp 1280w" sizes="(max-width:520px) 93vw, 484px" width="1280" height="854" alt="Ngô Nam và Nhật Mai nắm tay bên khu vườn hoa" loading="lazy" decoding="async">
+<figcaption class="featured-label">Hand in hand · 02</figcaption>
 </figure>
-<figure data-rv="right" data-rv-delay="220" class="curated-card curated-tall">
-<img data-zoom="1" src="./assets/photos/LBS02361-640.webp" srcset="./assets/photos/LBS02361-640.webp 640w, ./assets/photos/LBS02361-1280.webp 1280w" sizes="(max-width:520px) 44vw, 230px" alt="Cặp đôi vui đùa giữa hoa" loading="lazy" decoding="async">
+<figure data-rv="right" data-rv-delay="260" class="featured-frame featured-frame--twirl full-subject">
+<img src="./assets/photos/LBS01781-640.webp" srcset="./assets/photos/LBS01781-640.webp 640w, ./assets/photos/LBS01781-1280.webp 1280w" sizes="(max-width:520px) 52vw, 223px" width="1280" height="1920" alt="Ngô Nam nâng tay Nhật Mai trong điệu xoay váy cưới công chúa" loading="lazy" decoding="async">
+<figcaption class="featured-label">Little dance · 01</figcaption>
 </figure>
-<figure data-rv="scale" data-rv-delay="420" class="curated-card curated-round">
-<img data-zoom="1" src="./assets/photos/LBS02576-640.webp" srcset="./assets/photos/LBS02576-640.webp 640w, ./assets/photos/LBS02576-1280.webp 1280w" sizes="(max-width:520px) 42vw, 220px" alt="Khoảnh khắc gần gũi của cô dâu chú rể" loading="lazy" decoding="async">
-</figure>
-<div data-rv="up" data-rv-delay="620" class="curated-note">You, me<br>&amp; forever</div>
+<div data-rv="up" data-rv-delay="520" class="featured-copy" aria-hidden="true"><small>Take my hand</small><strong>Xoay một vòng</strong><span>you &amp; me</span></div>
 </div>
-<button class="secondary-action album-action" onClick="{{ openGallery }}">Mở album đầy đủ <span style="font-size:12px">25 ảnh</span></button>
+<button type="button" class="secondary-action album-action" onClick="{{ openGallery }}">Mở album đầy đủ <span style="font-size:12px">25 ảnh</span></button>
 </section>
 
 <section data-screen-label="05 Quote" style="background:#f3e8db;padding:66px 28px;text-align:center;position:relative;overflow:hidden">

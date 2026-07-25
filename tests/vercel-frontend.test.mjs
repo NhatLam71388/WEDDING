@@ -60,6 +60,18 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     publicInvitation,
     /\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3/,
   );
+  assert.match(publicInvitation, /data-screen-label="04 Featured album"/);
+  for (const basename of [
+    "LBS02643",
+    "LBS01523_1",
+    "LBS01781",
+    "LBS02201",
+  ]) {
+    assert.match(
+      publicInvitation,
+      new RegExp(`src="\\./assets/photos/${basename}-640\\.webp"`),
+    );
+  }
   assert.deepEqual(publicDove, sourceDove);
   assert.deepEqual(publicMobile640, sourceMobile640);
   assert.deepEqual(publicMobile841, sourceMobile841);

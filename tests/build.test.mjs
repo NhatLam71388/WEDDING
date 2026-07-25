@@ -12,6 +12,10 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/assets/photos/LBS02087-mobile-640.webp"),
     access("dist/client/assets/photos/LBS02087-mobile-841.webp"),
     access("dist/client/assets/audio/wedding-01-francisco-alvear.mp3"),
+    access("dist/client/assets/photos/LBS02643-640.webp"),
+    access("dist/client/assets/photos/LBS01523_1-640.webp"),
+    access("dist/client/assets/photos/LBS01781-640.webp"),
+    access("dist/client/assets/photos/LBS02201-640.webp"),
     access("dist/.openai/hosting.json"),
   ]);
 
@@ -57,6 +61,18 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     invitation,
     /\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3/,
   );
+  assert.match(invitation, /data-screen-label="04 Featured album"/);
+  for (const basename of [
+    "LBS02643",
+    "LBS01523_1",
+    "LBS01781",
+    "LBS02201",
+  ]) {
+    assert.match(
+      invitation,
+      new RegExp(`src="\\./assets/photos/${basename}-640\\.webp"`),
+    );
+  }
   assert.deepEqual(builtDove, sourceDove);
   assert.deepEqual(builtMobile640, sourceMobile640);
   assert.deepEqual(builtMobile841, sourceMobile841);
