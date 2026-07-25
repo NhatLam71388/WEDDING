@@ -1,6 +1,7 @@
 # Thiệp cưới Ngô Nam & Nhật Mai
 
-Website thiệp cưới tương tác cho ngày 08/08/2026, có guestbook, xác nhận
+Website thiệp cưới tương tác, ưu tiên tiệc nhà gái lúc 11:00 thứ Sáu
+07/08/2026, có guestbook, xác nhận
 tham dự và khu vực quản trị.
 
 ## Chạy cục bộ

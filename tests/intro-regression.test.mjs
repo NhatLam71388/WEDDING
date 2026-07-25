@@ -130,8 +130,21 @@ function createIntroFixture(Logic, { reduced }) {
   invitation.introOpening = false;
   invitation._bodyOverflowBeforeMount = "";
   invitation._scrollWasLocked = true;
+  invitation._introWasOn = true;
   invitation._wasGift = false;
   invitation._wasGallery = false;
+  invitation.startMusicFromGesture = () => {};
+  const motionCalls = [];
+  invitation.startInvitationMotion = () => {
+    if (invitation.motionStarted) return;
+    invitation.motionStarted = true;
+    invitation.heroStarted = true;
+    invitation.revealStarted = true;
+    motionCalls.push("started");
+    heroes.forEach((hero) => {
+      hero.style.animationPlayState = "running";
+    });
+  };
   invitation.setState = (update) => {
     const patch =
       typeof update === "function" ? update(invitation.state) : update;
@@ -144,6 +157,7 @@ function createIntroFixture(Logic, { reduced }) {
     button,
     heroes,
     invitation,
+    motionCalls,
     document: {
       body: { style: { overflow: "hidden" } },
       querySelector: (selector) => nodes.get(selector) ?? null,
@@ -283,6 +297,63 @@ test("intro open control is an animated accessible pill", async () => {
   assert.match(reducedMotion, /\.intro-open-arrow/i);
 });
 
+test("invitation motion is prepared on mount and starts once at the intro close edge", async () => {
+  const { html, Logic } = await loadInvitation();
+  assert.match(html, /\bprepareReveal\s*\(\)/);
+  assert.match(html, /\bactivateReveal\s*\(\)/);
+  assert.match(html, /\bstartInvitationMotion\s*\(\)/);
+  assert.doesNotMatch(html, /\bheroStartTimer\b/);
+
+  const mountSection = html.slice(
+    html.indexOf("componentDidMount()"),
+    html.indexOf("componentWillUnmount()"),
+  );
+  assert.match(mountSection, /\bthis\.prepareReveal\s*\(\)/);
+  assert.doesNotMatch(mountSection, /\bthis\.activateReveal\s*\(\)/);
+  assert.doesNotMatch(mountSection, /\bthis\.sparkle\s*\(\)/);
+
+  const heroes = [{ style: {} }, { style: {} }];
+  const invitation = new Logic();
+  let revealCalls = 0;
+  let sparkleCalls = 0;
+  invitation.motionStarted = false;
+  invitation.heroStarted = false;
+  invitation.revealStarted = false;
+  invitation.activateReveal = () => {
+    invitation.revealStarted = true;
+    revealCalls += 1;
+  };
+  invitation.sparkle = () => {
+    sparkleCalls += 1;
+  };
+
+  const previousDocument = globalThis.document;
+  globalThis.document = {
+    querySelectorAll: (selector) =>
+      selector === "[data-heroanim]" ? heroes : [],
+  };
+
+  try {
+    invitation.startInvitationMotion();
+    invitation.startInvitationMotion();
+
+    assert.equal(invitation.motionStarted, true);
+    assert.equal(invitation.heroStarted, true);
+    assert.equal(invitation.revealStarted, true);
+    assert.equal(revealCalls, 1);
+    assert.equal(sparkleCalls, 1);
+    for (const hero of heroes) {
+      assert.equal(hero.style.animationPlayState, "running");
+    }
+  } finally {
+    if (previousDocument === undefined) {
+      delete globalThis.document;
+    } else {
+      globalThis.document = previousDocument;
+    }
+  }
+});
+
 test("intro preloads its artwork and exposes accessible interaction hooks", async () => {
   const { html } = await loadInvitation();
   await access("assets/decor/dove-flight.webp");
@@ -340,10 +411,11 @@ test("opening animation is idempotent and keeps scroll locked until it finishes"
     assert.equal(document.body.style.overflow, "hidden");
     assert.equal(fixture.invitation.state.introOn, true);
     assert.equal(fixture.animations.length, 3);
-    assert.deepEqual(
-      scheduled.map(({ delay }) => delay),
-      [520, 1580],
-    );
+    assert.deepEqual(scheduled.map(({ delay }) => delay), [1580]);
+    assert.equal(fixture.motionCalls.length, 0);
+    for (const hero of fixture.heroes) {
+      assert.notEqual(hero.style.animationPlayState, "running");
+    }
     assert.equal(fixture.root.classList.contains("is-opening"), true);
     assert.equal(fixture.button.attributes.get("aria-busy"), "true");
     assert.equal(fixture.button.attributes.get("aria-disabled"), "true");
@@ -356,22 +428,19 @@ test("opening animation is idempotent and keeps scroll locked until it finishes"
     );
     assert.equal(
       scheduled.length,
-      2,
+      1,
       "a second click must not create duplicate timers",
     );
     assert.equal(document.body.style.overflow, "hidden");
-
-    scheduled.find(({ delay }) => delay === 520).callback();
-    assert.equal(fixture.invitation.state.introOn, true);
-    assert.equal(document.body.style.overflow, "hidden");
-    for (const hero of fixture.heroes) {
-      assert.equal(hero.style.animationPlayState, "running");
-    }
 
     scheduled.find(({ delay }) => delay === 1580).callback();
     assert.equal(fixture.invitation.state.introOn, false);
     assert.equal(document.body.style.overflow, "");
     assert.equal(fixture.invitation._scrollWasLocked, false);
+    assert.equal(fixture.motionCalls.length, 1);
+    for (const hero of fixture.heroes) {
+      assert.equal(hero.style.animationPlayState, "running");
+    }
   } finally {
     if (previousDocument === undefined) {
       delete globalThis.document;
@@ -403,6 +472,7 @@ test("reduced motion skips Web Animations and timers before unlocking", async ()
     assert.equal(fixture.animations.length, 0);
     assert.equal(timerCalls, 0);
     assert.equal(document.body.style.overflow, "");
+    assert.equal(fixture.motionCalls.length, 1);
     for (const hero of fixture.heroes) {
       assert.equal(hero.style.animationPlayState, "running");
     }
@@ -441,6 +511,7 @@ test("missing Web Animations support falls back without trapping the guest", asy
     assert.equal(document.body.style.overflow, "");
     assert.equal(fixture.animations.length, 0);
     assert.equal(timerCalls, 0);
+    assert.equal(fixture.motionCalls.length, 1);
     for (const hero of fixture.heroes) {
       assert.equal(hero.style.animationPlayState, "running");
     }

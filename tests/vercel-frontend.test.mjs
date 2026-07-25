@@ -13,6 +13,8 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     publicMobile640,
     sourceMobile841,
     publicMobile841,
+    sourceMusic,
+    publicMusic,
   ] = await Promise.all([
     readFile("vercel.json", "utf8"),
     readFile("Thiep Cuoi 57 v2.dc.html", "utf8"),
@@ -23,6 +25,8 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     readFile(".site-public/assets/photos/LBS02087-mobile-640.webp"),
     readFile("assets/photos/LBS02087-mobile-841.webp"),
     readFile(".site-public/assets/photos/LBS02087-mobile-841.webp"),
+    readFile("assets/audio/wedding-01-francisco-alvear.mp3"),
+    readFile(".site-public/assets/audio/wedding-01-francisco-alvear.mp3"),
   ]);
   const config = JSON.parse(configSource);
 
@@ -50,7 +54,14 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
   assert.match(publicInvitation, /LBS02087-mobile-640\.webp\s+640w/i);
   assert.match(publicInvitation, /LBS02087-mobile-841\.webp\s+841w/i);
   assert.match(publicInvitation, /\bintro-open-arrow\b/i);
+  assert.match(publicInvitation, /THỨ SÁU · 07\.08\.2026/);
+  assert.match(publicInvitation, /2026-08-07T11:00:00\+07:00/);
+  assert.match(
+    publicInvitation,
+    /\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3/,
+  );
   assert.deepEqual(publicDove, sourceDove);
   assert.deepEqual(publicMobile640, sourceMobile640);
   assert.deepEqual(publicMobile841, sourceMobile841);
+  assert.deepEqual(publicMusic, sourceMusic);
 });

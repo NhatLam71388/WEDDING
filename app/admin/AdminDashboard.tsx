@@ -235,7 +235,7 @@ export default function AdminDashboard() {
       <main className="admin-page admin-login-page">
         <section className="admin-login-card">
           <div className="admin-login-art" aria-hidden="true">
-            <span className="admin-art-date">08 · 08 · 2026</span>
+            <span className="admin-art-date">07 · 08 · 2026</span>
             <div className="admin-monogram">N<span>&</span>M</div>
             <p>Ngô Nam & Nhật Mai</p>
           </div>
@@ -291,7 +291,7 @@ export default function AdminDashboard() {
           <span className="admin-brand-mark">N<span>&</span>M</span>
           <span>
             <strong>Wedding desk</strong>
-            <small>08.08.2026</small>
+            <small>07.08.2026</small>
           </span>
         </Link>
         <div className="admin-top-actions">

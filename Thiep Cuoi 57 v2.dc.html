@@ -42,6 +42,21 @@ button,a{-webkit-tap-highlight-color:transparent}
 button{transition:transform 180ms ease,box-shadow 220ms ease,background-color 220ms ease,opacity 220ms ease}
 button:active{transform:scale(.975)}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #a67f64;outline-offset:3px}
+.music-control{position:fixed;left:max(16px,calc(50% - 244px));bottom:max(16px,calc(env(safe-area-inset-bottom) + 8px));z-index:90;width:46px;height:46px;padding:0;border:1px solid rgba(97,73,59,.28);border-radius:50%;display:grid;place-items:center;overflow:visible;background:rgba(255,250,243,.92);color:#61493b;box-shadow:0 8px 24px rgba(39,30,25,.2),inset 0 1px 0 rgba(255,255,255,.9);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;transition:opacity 220ms ease,transform 220ms ease,background 220ms ease,box-shadow 220ms ease}
+.music-control:hover{transform:translateY(-2px);box-shadow:0 11px 28px rgba(39,30,25,.25),inset 0 1px 0 rgba(255,255,255,.94)}
+.music-control:active{transform:translateY(1px) scale(.95)}
+.music-control[aria-pressed="true"]{background:#61493b;color:#fffaf4;border-color:rgba(255,250,243,.44);box-shadow:0 10px 28px rgba(39,30,25,.3),inset 0 1px 0 rgba(255,255,255,.16)}
+.music-control-note{position:relative;z-index:2;display:block;font:500 17px/1 var(--font-editorial);transform-origin:50% 58%}
+.music-control.is-playing .music-control-note{animation:musicNoteSway 2.4s ease-in-out infinite}
+.music-control-ring{position:absolute;inset:-1px;border:1px solid rgba(97,73,59,.42);border-radius:50%;opacity:0;pointer-events:none}
+.music-control.is-playing .music-control-ring{border-color:rgba(209,173,143,.8);animation:pulseRing 2s ease-out infinite}
+.music-control-eq{position:absolute;right:6px;bottom:7px;z-index:3;height:10px;display:flex;align-items:flex-end;gap:1.5px;opacity:0;transition:opacity 180ms ease}
+.music-control-eq i{display:block;width:2px;height:4px;border-radius:2px;background:currentColor;transform-origin:bottom}
+.music-control.is-playing .music-control-eq{opacity:.82}
+.music-control.is-playing .music-control-eq i:nth-child(1){animation:musicBar 760ms ease-in-out infinite alternate}
+.music-control.is-playing .music-control-eq i:nth-child(2){animation:musicBar 620ms 120ms ease-in-out infinite alternate}
+.music-control.is-playing .music-control-eq i:nth-child(3){animation:musicBar 840ms 60ms ease-in-out infinite alternate}
+.music-control.is-unavailable{opacity:.55}
 ::selection{background:#e3cdb8;color:#2d241f}
 [style*="'Dancing Script'"]{font-family:var(--font-hand)!important;font-weight:500!important}
 [style*="'Great Vibes'"]{font-family:var(--font-script)!important;font-weight:400!important}
@@ -135,6 +150,8 @@ h2,h3{font-family:var(--font-editorial)!important}
 @keyframes drawX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulseRing{0%{transform:scale(1);opacity:.55}75%{transform:scale(1.55);opacity:0}100%{opacity:0}}
+@keyframes musicNoteSway{0%,100%{transform:translateY(0) rotate(-7deg)}50%{transform:translateY(-2px) rotate(9deg)}}
+@keyframes musicBar{from{transform:scaleY(.45)}to{transform:scaleY(1.45)}}
 @keyframes tickIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 @keyframes beat{0%,100%{transform:scale(1)}8%{transform:scale(1.08)}16%{transform:scale(1)}24%{transform:scale(1.05)}32%{transform:scale(1)}}
 @keyframes sheetUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -300,6 +317,7 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-dove-layer,.intro-dust{display:none!important}
   .intro-backdrop,.intro-photo,.intro-stage{animation:none!important;transform:none!important}
   .intro-monogram:before,.intro-open-button,.intro-open-button:before,.intro-open-icon,.intro-open-arrow{animation:none!important}
+  .music-control,.music-control *{animation:none!important}
 }
 </style>
 </helmet>
@@ -309,9 +327,10 @@ h2,h3{font-family:var(--font-editorial)!important}
 
 <div class="scroll-progress" aria-hidden="true"><span data-progress="1"></span></div>
 
-<button data-music="1" aria-label="Phát nhạc nền" style="position:fixed;top:max(16px,env(safe-area-inset-top));right:max(16px,calc(50% - 244px));z-index:100;width:44px;height:44px;border-radius:50%;background:rgba(255,250,243,.88);border:1px solid rgba(97,73,59,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;cursor:pointer;color:#61493b;padding:0;opacity:.88;box-shadow:0 6px 18px rgba(39,30,25,.12)">
-<span style="font-size:17px;line-height:1;display:block">♪</span>
-<span data-musicring="1" style="position:absolute;inset:-1px;border-radius:50%;border:1px solid rgba(97,73,59,.42);opacity:0;pointer-events:none"></span>
+<button data-music="1" type="button" class="music-control" aria-label="Phát nhạc nền" aria-pressed="false" title="Nhạc nền: Wedding 01">
+<span data-musicnote="1" class="music-control-note" aria-hidden="true">♪</span>
+<span class="music-control-eq" aria-hidden="true"><i></i><i></i><i></i></span>
+<span data-musicring="1" class="music-control-ring" aria-hidden="true"></span>
 </button>
 
 <section data-screen-label="01 Hero" style="position:relative;height:100svh;min-height:700px;overflow:hidden;background:#eee9e3">
@@ -341,7 +360,7 @@ h2,h3{font-family:var(--font-editorial)!important}
 </div>
 
 <div style="position:absolute;bottom:34px;left:0;right:0;text-align:center">
-<div data-heroanim="1" style="font:500 13px/1 'Playfair Display',serif;letter-spacing:.16em;color:#fffaf4;animation:hDate 1s 1.5s ease-out both;animation-play-state:paused">THỨ BẢY · 08.08.2026</div>
+<div data-heroanim="1" style="font:500 13px/1 'Playfair Display',serif;letter-spacing:.16em;color:#fffaf4;animation:hDate 1s 1.5s ease-out both;animation-play-state:paused">THỨ SÁU · 07.08.2026</div>
 <a data-heroanim="1" href="#events" aria-label="Xem thông tin lễ cưới" style="margin-top:16px;display:inline-flex;flex-direction:column;align-items:center;gap:8px;color:#fffaf4;font:500 8.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.18em;text-transform:uppercase;animation:hFade 900ms 1.9s ease-out both;animation-play-state:paused">
 Xem thông tin
 <span style="display:inline-block;width:1px;height:28px;background:linear-gradient(180deg,rgba(255,250,244,.85),rgba(255,250,244,0));animation:bob 2.6s ease-in-out infinite"></span>
@@ -390,13 +409,13 @@ Xem thông tin
 <div data-rv="right" data-rv-delay="420" class="editorial-inset">
 <img data-zoom="1" src="./assets/photos/LBS01726-640.webp" srcset="./assets/photos/LBS01726-640.webp 640w, ./assets/photos/LBS01726-1280.webp 1280w" sizes="(max-width:520px) 48vw, 250px" alt="Ngô Nam và Nhật Mai bên nhau" loading="lazy" decoding="async">
 </div>
-<div data-rv="scale" data-rv-delay="620" class="date-seal">08 · 08<br>2026</div>
+<div data-rv="scale" data-rv-delay="620" class="date-seal">07 · 08<br>2026</div>
 <div data-rv="left" data-rv-delay="720" class="story-caption">Một đời · một người</div>
 </div>
 </section>
 
 <div class="love-marquee" aria-hidden="true">
-<div>NGÔ NAM · NHẬT MAI · 08.08.2026 · OUR FOREVER STARTS HERE · NGÔ NAM · NHẬT MAI · 08.08.2026 · OUR FOREVER STARTS HERE ·&nbsp;</div>
+<div>NGÔ NAM · NHẬT MAI · 07.08.2026 · OUR FOREVER STARTS HERE · NGÔ NAM · NHẬT MAI · 07.08.2026 · OUR FOREVER STARTS HERE ·&nbsp;</div>
 </div>
 
 <section id="album" data-screen-label="04 Curated album" class="curated-section" style="scroll-margin-top:72px">
@@ -476,7 +495,7 @@ Xem thông tin
 </sc-if>
 <sc-if value="{{ counting }}" hint-placeholder-val="{{ true }}">
 <div data-rv="up" style="text-align:center;font:400 22px/1 'Dancing Script',cursive;color:#d1ad8f">Còn lại đến ngày chung đôi</div>
-<div data-rv="up" data-rv-delay="80" style="margin-top:13px;text-align:center;font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;opacity:.62">11:00 · 08.08.2026</div>
+<div data-rv="up" data-rv-delay="80" style="margin-top:13px;text-align:center;font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;opacity:.62">11:00 · 07.08.2026</div>
 <div data-rv="up" data-rv-delay="140" class="countdown-grid">
 <div class="countdown-unit">
 <div style="font:400 38px/1 'Playfair Display',serif;height:40px;overflow:hidden">{{ cd1d }}</div>
@@ -613,7 +632,7 @@ Xem thông tin
 </div>
 <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.18) 0%,rgba(30,20,16,.34) 42%,rgba(30,20,16,.7) 100%);pointer-events:none"></div>
 <div style="position:relative;text-align:center;padding:100px 28px 70px;color:#fffaf4;align-self:end">
-<div data-rv="up" style="font:400 10px/1 'Playfair Display',serif;letter-spacing:.24em;opacity:.8">08 · 08 · 2026</div>
+<div data-rv="up" style="font:400 10px/1 'Playfair Display',serif;letter-spacing:.24em;opacity:.8">07 · 08 · 2026</div>
 <div data-rv="up" data-rv-delay="100" style="margin-top:20px;font:500 10px/1.8 'Be Vietnam Pro',sans-serif;letter-spacing:.22em;text-transform:uppercase">Cảm ơn bạn đã cùng sẻ chia</div>
 <div data-rv="up" data-rv-delay="180" class="closing-script" style="margin-top:18px">Niềm vui của chúng mình</div>
 <div data-rv="linex" data-rv-delay="320" style="width:54px;height:1px;background:rgba(255,250,244,.55);margin:26px auto"></div>
@@ -702,7 +721,7 @@ Xem thông tin
 <small>và</small>
 <span>Nhật Mai</span>
 </div>
-<div class="intro-date"><span>Thứ bảy</span><b>08 · 08 · 2026</b></div>
+<div class="intro-date"><span>Thứ sáu</span><b>07 · 08 · 2026</b></div>
 <div class="intro-open-zone">
 <p>Chạm để mở lời mời</p>
 <button data-intro-open="1" type="button" class="intro-open-button" onClick="{{ openInvite }}" aria-label="Mở thiệp cưới">
@@ -719,9 +738,10 @@ Xem thông tin
 </div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;musicSrc&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Nhạc nền&quot;},&quot;mapTone&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sepia&quot;,&quot;grayscale&quot;,&quot;none&quot;],&quot;default&quot;:&quot;sepia&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Bản đồ&quot;},&quot;heartBurst&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:6,&quot;max&quot;:20,&quot;step&quot;:1,&quot;default&quot;:12,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Bắn tim&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;musicSrc&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;./assets/audio/wedding-01-francisco-alvear.mp3&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Nhạc nền&quot;},&quot;mapTone&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;sepia&quot;,&quot;grayscale&quot;,&quot;none&quot;],&quot;default&quot;:&quot;sepia&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Bản đồ&quot;},&quot;heartBurst&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:6,&quot;max&quot;:20,&quot;step&quot;:1,&quot;default&quot;:12,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Bắn tim&quot;}}">
 const EASE = 'cubic-bezier(.22,1,.36,1)';
 const HIDE = { up: 'translateY(22px)', left: 'translateX(-22px)', right: 'translateX(22px)', scale: 'scale(.92)' };
+const DEFAULT_MUSIC_SRC = './assets/audio/wedding-01-francisco-alvear.mp3';
 const GALLERY_PHOTOS = [
   'LBS01523_1','LBS01554_1','LBS01613','LBS01634','LBS01643',
   'LBS01674','LBS01681','LBS01690','LBS01726','LBS01781',
@@ -749,18 +769,23 @@ class Component extends DCLogic {
   componentDidMount() {
     this.unmounted = false;
     this.introOpening = false;
+    this.motionStarted = false;
+    this.heroStarted = false;
+    this.revealStarted = false;
+    this.revealElements = [];
+    this.revealTimers = new Set();
     this._bodyOverflowBeforeMount = document.body.style.overflow;
     this._scrollWasLocked = Boolean(this.state.introOn || this.state.giftOpen || this.state.galleryOpen);
     this._introWasOn = Boolean(this.state.introOn);
     this._wasGift = false;
     this._wasGallery = false;
     this.reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    this.setupReveal();
+    this.prepareReveal();
     this.setupClock();
     this.setupScroll();
     this.setupSectionNav();
     this.setupButtons();
-    this.sparkle();
+    this.prepareMusic();
     this.setIntroBackgroundInert(Boolean(this.state.introOn));
     document.body.style.overflow = this._scrollWasLocked ? 'hidden' : (this._bodyOverflowBeforeMount || '');
     if (this.state.introOn) {
@@ -789,6 +814,7 @@ class Component extends DCLogic {
     this.messagesTimer = setInterval(() => {
       if (!document.hidden) this.loadMessages();
     }, 10000);
+    if (!this.state.introOn) this.startInvitationMotion();
   }
 
   componentWillUnmount() {
@@ -796,8 +822,12 @@ class Component extends DCLogic {
     clearInterval(this.tick);
     clearInterval(this.messagesTimer);
     clearTimeout(this.introOpenTimer);
-    clearTimeout(this.heroStartTimer);
     clearTimeout(this.introFocusTimer);
+    clearTimeout(this.petalTimer);
+    if (this.revealTimers) {
+      this.revealTimers.forEach((timer) => clearTimeout(timer));
+      this.revealTimers.clear();
+    }
     if (this.io) this.io.disconnect();
     if (this.mapIo) this.mapIo.disconnect();
     if (this.navIo) this.navIo.disconnect();
@@ -808,7 +838,13 @@ class Component extends DCLogic {
     document.removeEventListener('focusout', this.onFieldBlur);
     this.setIntroBackgroundInert(false);
     document.body.style.overflow = this._bodyOverflowBeforeMount || '';
-    if (this.audio) { this.audio.pause(); this.audio = null; }
+    if (this.audio) {
+      if (this.onAudioPlay && this.audio.removeEventListener) this.audio.removeEventListener('play', this.onAudioPlay);
+      if (this.onAudioPause && this.audio.removeEventListener) this.audio.removeEventListener('pause', this.onAudioPause);
+      if (this.onAudioError && this.audio.removeEventListener) this.audio.removeEventListener('error', this.onAudioError);
+      this.audio.pause();
+      this.audio = null;
+    }
   }
 
   componentDidUpdate() {
@@ -816,6 +852,7 @@ class Component extends DCLogic {
       this.setIntroBackgroundInert(false);
       const invitation = document.querySelector('[data-invite-shell]');
       if (invitation) invitation.focus({ preventScroll: true });
+      this.startInvitationMotion();
     }
     const wasOpen = this._wasGift;
     if (this.state.giftOpen && !wasOpen) {
@@ -838,6 +875,28 @@ class Component extends DCLogic {
     this._introWasOn = this.state.introOn;
   }
 
+  startInvitationMotion() {
+    if (this.motionStarted || this.unmounted) return;
+    this.motionStarted = true;
+    this.startHero();
+    this.activateReveal();
+    this.sparkle();
+  }
+
+  startHero() {
+    if (this.heroStarted || this.unmounted) return;
+    this.heroStarted = true;
+    document.querySelectorAll('[data-heroanim]').forEach((el) => {
+      if (this.reduced) {
+        el.style.animation = 'none';
+        el.style.opacity = '1';
+        el.style.transform = 'none';
+        el.style.filter = 'none';
+      }
+      el.style.animationPlayState = 'running';
+    });
+  }
+
   /* ---------- intro (mở thiệp) ---------- */
   setIntroBackgroundInert(on) {
     if (!document.querySelectorAll) return;
@@ -855,26 +914,22 @@ class Component extends DCLogic {
   openInvite() {
     if (this.introOpening) return;
     this.introOpening = true;
+    this.startMusicFromGesture();
     const root = document.querySelector('[data-introroot]');
     const card = document.querySelector('[data-introcard]');
     const L = document.querySelector('[data-curtain="left"]');
     const R = document.querySelector('[data-curtain="right"]');
     const openButton = document.querySelector('[data-intro-open]');
-    const startHero = () => {
-      document.querySelectorAll('[data-heroanim]').forEach((el) => { el.style.animationPlayState = 'running'; });
-    };
     const reduceMotion = this.reduced || (typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     if (openButton) {
       openButton.setAttribute('aria-busy', 'true');
       openButton.setAttribute('aria-disabled', 'true');
     }
     if (reduceMotion || !root) {
-      startHero();
       this.setState({ introOn: false });
       return;
     }
     if (!card || !L || !R || typeof card.animate !== 'function' || typeof L.animate !== 'function' || typeof R.animate !== 'function') {
-      startHero();
       this.setState({ introOn: false });
       return;
     }
@@ -888,11 +943,9 @@ class Component extends DCLogic {
       L.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-101%)' }], Object.assign({ delay: 330 }, o));
       R.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(101%)' }], Object.assign({ delay: 330 }, o));
     } catch (error) {
-      startHero();
       this.setState({ introOn: false });
       return;
     }
-    this.heroStartTimer = setTimeout(startHero, 520);
     this.introOpenTimer = setTimeout(() => this.setState({ introOn: false }), 1580);
   }
 
@@ -937,19 +990,42 @@ class Component extends DCLogic {
   }
 
   /* ---------- scroll reveal ---------- */
-  setupReveal() {
-    const els = Array.prototype.slice.call(document.querySelectorAll('[data-rv]'));
-    if (!els.length) return;
+  prepareReveal() {
+    this.revealElements = Array.prototype.slice.call(document.querySelectorAll('[data-rv]'));
+    if (!this.revealElements.length) return;
+    if (this.reduced) {
+      this.revealElements.forEach((el) => this.showRevealFinal(el));
+      return;
+    }
+    this.revealElements.forEach((el) => this.hideEl(el));
+  }
+
+  activateReveal() {
+    if (this.revealStarted || this.unmounted) return;
+    this.revealStarted = true;
+    const els = this.revealElements || [];
+    if (!els.length || this.reduced) return;
+    if (typeof IntersectionObserver !== 'function') {
+      els.forEach((el) => this.showRevealFinal(el));
+      return;
+    }
     this.io = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) { this.reveal(e.target); this.io.unobserve(e.target); } });
     }, { threshold: 0.18, rootMargin: '0px 0px -8% 0px' });
-    els.forEach((el) => { this.hideEl(el); this.io.observe(el); });
+    els.forEach((el) => this.io.observe(el));
+  }
+
+  showRevealFinal(el, keepWillChange) {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+    el.style.filter = 'none';
+    if (!keepWillChange) el.style.willChange = 'auto';
+    if (el.dataset.rv === 'clip') el.style.clipPath = 'inset(0 0 0 0)';
   }
 
   hideEl(el) {
     const kind = el.dataset.rv;
     el.style.willChange = 'opacity, transform';
-    if (this.reduced) { el.style.opacity = '0'; return; }
     el.style.opacity = (kind === 'linex' || kind === 'liney') ? '1' : '0';
     if (kind === 'clip') { el.style.clipPath = 'inset(14% 0 14% 0)'; el.style.transform = 'scale(1.05)'; }
     else if (kind === 'liney') el.style.transform = 'scaleY(0)';
@@ -958,17 +1034,21 @@ class Component extends DCLogic {
   }
 
   reveal(el) {
-    const delay = this.reduced ? 0 : parseInt(el.dataset.rvDelay || '0', 10);
-    const dur = this.reduced ? '150ms' : (el.dataset.rvDur || '900ms');
-    setTimeout(() => {
-      el.style.transition = this.reduced ? 'opacity 150ms linear'
-        : ['opacity', 'transform', 'clip-path', 'filter'].map((p) => p + ' ' + dur + ' ' + EASE).join(', ');
-      el.style.opacity = '1';
-      el.style.transform = 'none';
-      el.style.filter = 'none';
+    const delay = parseInt(el.dataset.rvDelay || '0', 10);
+    const dur = el.dataset.rvDur || '900ms';
+    const showTimer = setTimeout(() => {
+      this.revealTimers.delete(showTimer);
+      if (this.unmounted) return;
+      el.style.transition = ['opacity', 'transform', 'clip-path', 'filter'].map((p) => p + ' ' + dur + ' ' + EASE).join(', ');
+      this.showRevealFinal(el, true);
       if (el.dataset.rv === 'clip') el.style.clipPath = 'inset(0 0 0 0)';
-      setTimeout(() => { el.style.willChange = 'auto'; }, 1500);
+      const cleanupTimer = setTimeout(() => {
+        this.revealTimers.delete(cleanupTimer);
+        if (!this.unmounted) el.style.willChange = 'auto';
+      }, 1500);
+      this.revealTimers.add(cleanupTimer);
     }, delay);
+    this.revealTimers.add(showTimer);
   }
 
   /* ---------- sticky quick navigation ---------- */
@@ -1029,7 +1109,7 @@ class Component extends DCLogic {
   }
 
   setupClock() {
-    this.t1 = this.target('2026-08-08T11:00:00+07:00');
+    this.t1 = this.target('2026-08-07T11:00:00+07:00');
     if (this.t1 <= Date.now()) {
       this.setState({ married: true });
       return;
@@ -1123,38 +1203,96 @@ class Component extends DCLogic {
     if (btn && !btn.dataset.bound) { btn.dataset.bound = '1'; btn.addEventListener('click', () => this.toggleMusic(btn)); }
     const hb = document.querySelector('[data-hearts]');
     if (hb && !hb.dataset.bound) { hb.dataset.bound = '1'; hb.addEventListener('click', () => this.burst(hb)); }
+    const floatingControls = [btn, hb].filter(Boolean);
     this.onFieldFocus = (e) => {
-      if (!hb || !/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
-      hb.style.opacity = '0';
-      hb.style.transform = 'translateY(14px) scale(.9)';
-      hb.style.pointerEvents = 'none';
+      if (!/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+      floatingControls.forEach((control) => {
+        control.style.opacity = '0';
+        control.style.transform = 'translateY(14px) scale(.9)';
+        control.style.pointerEvents = 'none';
+      });
     };
     this.onFieldBlur = () => {
-      if (!hb) return;
       setTimeout(() => {
-        hb.style.opacity = '1';
-        hb.style.transform = 'none';
-        hb.style.pointerEvents = '';
+        floatingControls.forEach((control) => {
+          control.style.opacity = '1';
+          control.style.transform = 'none';
+          control.style.pointerEvents = '';
+        });
       }, 120);
     };
     document.addEventListener('focusin', this.onFieldFocus);
     document.addEventListener('focusout', this.onFieldBlur);
   }
 
-  toggleMusic(btn) {
-    const src = this.props.musicSrc || '';
-    const next = !this.state.playing;
-    if (src) {
-      if (!this.audio) { this.audio = new Audio(src); this.audio.loop = true; this.audio.volume = 0.6; }
-      if (next) { const p = this.audio.play(); if (p && p.catch) p.catch(() => {}); } else this.audio.pause();
+  prepareMusic() {
+    if (this.audio || typeof Audio === 'undefined') return this.audio || null;
+    const src = this.props.musicSrc || DEFAULT_MUSIC_SRC;
+    if (!src) return null;
+    try {
+      this.audio = new Audio(src);
+      this.audio.loop = true;
+      this.audio.volume = 0.42;
+      this.audio.preload = 'auto';
+      this.onAudioPlay = () => this.setMusicState(true);
+      this.onAudioPause = () => this.setMusicState(false);
+      this.onAudioError = () => this.setMusicState(false, null, true);
+      if (this.audio.addEventListener) {
+        this.audio.addEventListener('play', this.onAudioPlay);
+        this.audio.addEventListener('pause', this.onAudioPause);
+        this.audio.addEventListener('error', this.onAudioError);
+      }
+      if (this.audio.load) this.audio.load();
+    } catch (error) {
+      this.audio = null;
     }
-    this.setState({ playing: next });
-    btn.setAttribute('aria-label', next ? 'Tạm dừng nhạc nền' : 'Phát nhạc nền');
-    btn.style.opacity = next ? '1' : '.82';
-    const note = btn.querySelector('span');
-    if (note) note.style.animation = next && !this.reduced ? 'spin 7s linear infinite' : 'none';
-    const ring = btn.querySelector('[data-musicring]');
-    if (ring) ring.style.animation = next && !this.reduced ? 'pulseRing 2s ease-out infinite' : 'none';
+    return this.audio;
+  }
+
+  setMusicState(playing, btn, unavailable) {
+    if (this.unmounted) return;
+    if (this.state.playing !== playing) this.setState({ playing });
+    const control = btn || document.querySelector('[data-music]');
+    if (!control) return;
+    control.setAttribute('aria-label', playing ? 'Tạm dừng nhạc nền' : 'Phát nhạc nền');
+    control.setAttribute('aria-pressed', playing ? 'true' : 'false');
+    control.classList.toggle('is-playing', playing);
+    control.classList.toggle('is-unavailable', Boolean(unavailable));
+  }
+
+  startMusicFromGesture(btn) {
+    const audio = this.prepareMusic();
+    if (!audio || typeof audio.play !== 'function') {
+      this.setMusicState(false, btn, true);
+      return Promise.resolve(false);
+    }
+    let result;
+    try {
+      result = audio.play();
+    } catch (error) {
+      this.setMusicState(false, btn, true);
+      return Promise.resolve(false);
+    }
+    if (result && typeof result.then === 'function') {
+      return result.then(() => {
+        this.setMusicState(true, btn, false);
+        return true;
+      }).catch(() => {
+        this.setMusicState(false, btn, true);
+        return false;
+      });
+    }
+    this.setMusicState(true, btn, false);
+    return Promise.resolve(true);
+  }
+
+  toggleMusic(btn) {
+    if (this.state.playing && this.audio) {
+      this.audio.pause();
+      this.setMusicState(false, btn, false);
+      return Promise.resolve(false);
+    }
+    return this.startMusicFromGesture(btn);
   }
 
   burst(btn) {

@@ -11,6 +11,7 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/assets/decor/dove-flight.webp"),
     access("dist/client/assets/photos/LBS02087-mobile-640.webp"),
     access("dist/client/assets/photos/LBS02087-mobile-841.webp"),
+    access("dist/client/assets/audio/wedding-01-francisco-alvear.mp3"),
     access("dist/.openai/hosting.json"),
   ]);
 
@@ -22,6 +23,8 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     builtMobile640,
     sourceMobile841,
     builtMobile841,
+    sourceMusic,
+    builtMusic,
   ] = await Promise.all([
     readFile("dist/client/invitation.html", "utf8"),
     readFile("assets/decor/dove-flight.webp"),
@@ -30,6 +33,8 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     readFile("dist/client/assets/photos/LBS02087-mobile-640.webp"),
     readFile("assets/photos/LBS02087-mobile-841.webp"),
     readFile("dist/client/assets/photos/LBS02087-mobile-841.webp"),
+    readFile("assets/audio/wedding-01-francisco-alvear.mp3"),
+    readFile("dist/client/assets/audio/wedding-01-francisco-alvear.mp3"),
   ]);
   assert.match(invitation, /Ngô Nam/);
   assert.match(invitation, /Nhật Mai/);
@@ -46,7 +51,14 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.match(invitation, /LBS02087-mobile-640\.webp\s+640w/i);
   assert.match(invitation, /LBS02087-mobile-841\.webp\s+841w/i);
   assert.match(invitation, /\bintro-open-arrow\b/i);
+  assert.match(invitation, /THỨ SÁU · 07\.08\.2026/);
+  assert.match(invitation, /2026-08-07T11:00:00\+07:00/);
+  assert.match(
+    invitation,
+    /\.\/assets\/audio\/wedding-01-francisco-alvear\.mp3/,
+  );
   assert.deepEqual(builtDove, sourceDove);
   assert.deepEqual(builtMobile640, sourceMobile640);
   assert.deepEqual(builtMobile841, sourceMobile841);
+  assert.deepEqual(builtMusic, sourceMusic);
 });
