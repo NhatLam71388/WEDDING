@@ -41,7 +41,7 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.match(invitation, /\/api\/messages/);
   assert.match(invitation, /\/api\/rsvp/);
   assert.match(invitation, /destination=12\.7941667%2C107\.9155833/);
-  assert.match(invitation, /destination=12\.7947442%2C107\.9132805/);
+  assert.match(invitation, /destination=12\.795142%2C107\.913681/);
   assert.match(
     invitation,
     /<link rel="preload" as="image" href="\.\/assets\/decor\/dove-flight\.webp" type="image\/webp">/,
@@ -51,7 +51,7 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
   assert.match(invitation, /LBS02087-mobile-640\.webp\s+640w/i);
   assert.match(invitation, /LBS02087-mobile-841\.webp\s+841w/i);
   assert.match(invitation, /\bintro-open-arrow\b/i);
-  assert.match(invitation, /THỨ SÁU · 07\.08\.2026/);
+  assert.match(invitation, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
   assert.match(invitation, /2026-08-07T11:00:00\+07:00/);
   assert.match(
     invitation,

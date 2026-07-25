@@ -67,6 +67,11 @@ h2,h3{font-family:var(--font-editorial)!important}
 .scroll-progress span{display:block;width:100%;height:100%;background:linear-gradient(90deg,#c99591,#d9bd9f,#a67f64);transform:scaleX(0);transform-origin:left center;will-change:transform}
 .hero-script{font-family:var(--font-hand)!important;font-size:24px!important;font-weight:500!important;line-height:1.15!important;color:#a67f64!important}
 .hero-name{font-family:var(--font-script)!important;font-size:60px!important;font-style:normal!important;font-weight:400!important;line-height:.94!important;letter-spacing:.01em!important;color:#3a2b23!important;text-rendering:optimizeLegibility;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.hero-date{display:flex;flex-direction:column;align-items:center;gap:11px;color:#fffaf4}
+.hero-date span{display:flex;align-items:center;gap:13px;font:500 8.5px/1 var(--font-body);letter-spacing:.34em;text-transform:uppercase;color:rgba(255,250,244,.84)}
+.hero-date span:before,.hero-date span:after{content:"";display:block;width:26px;height:1px;background:linear-gradient(90deg,transparent,rgba(255,250,244,.66))}
+.hero-date span:after{transform:scaleX(-1)}
+.hero-date b{font:italic 400 34px/1 'Playfair Display',serif;letter-spacing:.02em;text-shadow:0 6px 26px rgba(20,12,8,.44)}
 .hero-photo{position:absolute;top:248px;left:18px;right:18px;bottom:18px;overflow:hidden;border-radius:260px 260px 18px 18px;box-shadow:0 20px 48px rgba(54,38,28,.18)}
 .hero-photo:before{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(238,233,227,.34) 0%,rgba(238,233,227,0) 25%,rgba(39,30,25,.08) 65%,rgba(39,30,25,.28) 100%);pointer-events:none}
 .hero-photo:after{content:"";position:absolute;z-index:3;inset:10px;border:1px solid rgba(255,250,244,.64);border-radius:250px 250px 12px 12px;pointer-events:none}
@@ -106,9 +111,9 @@ h2,h3{font-family:var(--font-editorial)!important}
 .intro-display-names small{display:flex;align-items:center;gap:9px;margin:7px 0 9px;font:italic 500 14px/1 var(--font-editorial);color:var(--intro-gold);animation:introSoftIn 800ms 900ms ease-out both}
 .intro-display-names small:before,.intro-display-names small:after{content:"";display:block;width:28px;height:1px;background:linear-gradient(90deg,transparent,rgba(217,181,143,.72))}
 .intro-display-names small:after{transform:scaleX(-1)}
-.intro-date{display:inline-flex;align-items:center;gap:12px;margin-top:19px;padding:9px 14px;border:1px solid rgba(255,248,239,.24);border-radius:999px;background:rgba(31,19,14,.24);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);animation:introDateIn 900ms 1.2s ease-out both}
-.intro-date span{font:500 8px/1 var(--font-body);letter-spacing:.2em;color:rgba(255,248,239,.72)}
-.intro-date b{font:500 10px/1 var(--font-editorial);letter-spacing:.22em;color:var(--intro-ivory)}
+.intro-date{display:flex;flex-direction:column;align-items:center;gap:7px;margin-top:16px;color:var(--intro-ivory);animation:introDateIn 900ms 1.2s ease-out both}
+.intro-date span{font:500 8px/1 var(--font-body);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,248,239,.7)}
+.intro-date b{font:italic 400 23px/1 'Playfair Display',serif;letter-spacing:.02em;color:var(--intro-ivory)}
 .intro-open-zone{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:auto;animation:introSoftIn 900ms 1.45s ease-out both}
 .intro-open-zone>p{margin:0 0 12px;font:500 8px/1 var(--font-body);letter-spacing:.24em;color:rgba(255,248,239,.82)}
 .intro-open-button{position:relative;width:194px;height:58px;min-height:58px;padding:0 13px 0 10px;border:1px solid rgba(209,165,127,.86);border-radius:999px;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;overflow:hidden;background:linear-gradient(110deg,rgba(255,252,247,.98),rgba(250,236,222,.96) 58%,rgba(255,249,242,.98));color:#3b2820;box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 12px 32px rgba(29,17,13,.32);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;isolation:isolate;transition:transform 220ms ease,box-shadow 220ms ease,background-color 220ms ease;animation:introButtonFloat 3.2s ease-in-out infinite,introButtonHalo 2.6s ease-in-out .4s infinite}
@@ -146,7 +151,7 @@ h2,h3{font-family:var(--font-editorial)!important}
 @keyframes kbSlow{0%{transform:scale(1) translate(0,0)}100%{transform:scale(1.09) translate(1%,-1.5%)}}
 @keyframes hIn{from{opacity:0;transform:translateY(26px);filter:blur(7px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
 @keyframes hFade{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-@keyframes hDate{from{opacity:0;letter-spacing:.42em}to{opacity:1;letter-spacing:.2em}}
+@keyframes hDate{from{opacity:0;letter-spacing:.26em;transform:translateY(9px)}to{opacity:1;letter-spacing:.02em;transform:translateY(0)}}
 @keyframes drawX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes pulseRing{0%{transform:scale(1);opacity:.55}75%{transform:scale(1.55);opacity:0}100%{opacity:0}}
@@ -261,6 +266,7 @@ h2,h3{font-family:var(--font-editorial)!important}
   .date-seal{right:26px;bottom:54px}
   .editorial-story{min-height:560px}
   .hero-name{font-size:56px!important}
+  .hero-date b{font-size:30px}
   .hero-photo{top:238px;left:12px;right:12px;bottom:12px}
   .hero-photo-layer{top:238px;left:12px;right:12px;bottom:12px}
   .intro-names{font-size:58px!important}
@@ -287,7 +293,8 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-display-names{margin-top:4px}
   .intro-display-names>span{font-size:48px}
   .intro-display-names small{margin:5px 0 7px}
-  .intro-date{margin-top:11px;padding:7px 12px}
+  .intro-date{margin-top:11px;gap:6px}
+  .intro-date b{font-size:21px}
   .intro-open-zone>p{margin-bottom:9px}
   .intro-open-button{width:176px;height:54px;min-height:54px}
   .intro-open-icon{width:32px;height:32px}
@@ -296,7 +303,8 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-kicker:after{height:12px}
   .intro-whisper{margin-top:6px}
   .intro-display-names>span{font-size:43px}
-  .intro-date{margin-top:7px}
+  .intro-date{margin-top:7px;gap:5px}
+  .intro-date b{font-size:19px}
 }
 @media(max-height:480px){
   .intro-content{padding:14px 18px}
@@ -360,7 +368,10 @@ h2,h3{font-family:var(--font-editorial)!important}
 </div>
 
 <div style="position:absolute;bottom:34px;left:0;right:0;text-align:center">
-<div data-heroanim="1" style="font:500 13px/1 'Playfair Display',serif;letter-spacing:.16em;color:#fffaf4;animation:hDate 1s 1.5s ease-out both;animation-play-state:paused">THỨ SÁU · 07.08.2026</div>
+<div class="hero-date">
+<span data-heroanim="1" style="animation:hFade 900ms 1.5s ease-out both;animation-play-state:paused">Thứ sáu</span>
+<b data-heroanim="1" style="animation:hDate 1.1s 1.66s ease-out both;animation-play-state:paused">07.08.2026</b>
+</div>
 <a data-heroanim="1" href="#events" aria-label="Xem thông tin lễ cưới" style="margin-top:16px;display:inline-flex;flex-direction:column;align-items:center;gap:8px;color:#fffaf4;font:500 8.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.18em;text-transform:uppercase;animation:hFade 900ms 1.9s ease-out both;animation-play-state:paused">
 Xem thông tin
 <span style="display:inline-block;width:1px;height:28px;background:linear-gradient(180deg,rgba(255,250,244,.85),rgba(255,250,244,0));animation:bob 2.6s ease-in-out infinite"></span>
@@ -479,7 +490,7 @@ Xem thông tin
 <div style="width:36px;height:1px;background:rgba(255,250,244,.55);margin:22px auto"></div>
 <div style="font:400 17px/1.55 'Playfair Display',serif">Tư gia nhà trai</div>
 <div style="margin-top:7px;font:300 12px/1.75 'Be Vietnam Pro',sans-serif;opacity:.86">Thôn 12, Xã Ea Wer, Tỉnh Đắk Lắk</div>
-<a href="https://www.google.com/maps/dir/?api=1&amp;destination=12.7947442%2C107.9132805" target="_blank" rel="noreferrer" aria-label="Xem chỉ đường đến tư gia nhà trai trên Google Maps" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;margin-top:24px;border:1px solid rgba(255,250,244,.7);border-radius:999px;color:#fffaf4;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase">Xem chỉ đường</a>
+<a href="https://www.google.com/maps/dir/?api=1&amp;destination=12.795142%2C107.913681" target="_blank" rel="noreferrer" aria-label="Xem chỉ đường đến tư gia nhà trai trên Google Maps" style="display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 22px;margin-top:24px;border:1px solid rgba(255,250,244,.7);border-radius:999px;color:#fffaf4;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase">Xem chỉ đường</a>
 </div>
 </article>
 </div>
@@ -721,7 +732,7 @@ Xem thông tin
 <small>và</small>
 <span>Nhật Mai</span>
 </div>
-<div class="intro-date"><span>Thứ sáu</span><b>07 · 08 · 2026</b></div>
+<div class="intro-date"><span>Thứ sáu</span><b>07.08.2026</b></div>
 <div class="intro-open-zone">
 <p>Chạm để mở lời mời</p>
 <button data-intro-open="1" type="button" class="intro-open-button" onClick="{{ openInvite }}" aria-label="Mở thiệp cưới">

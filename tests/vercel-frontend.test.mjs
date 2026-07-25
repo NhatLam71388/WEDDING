@@ -54,7 +54,7 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
   assert.match(publicInvitation, /LBS02087-mobile-640\.webp\s+640w/i);
   assert.match(publicInvitation, /LBS02087-mobile-841\.webp\s+841w/i);
   assert.match(publicInvitation, /\bintro-open-arrow\b/i);
-  assert.match(publicInvitation, /THỨ SÁU · 07\.08\.2026/);
+  assert.match(publicInvitation, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
   assert.match(publicInvitation, /2026-08-07T11:00:00\+07:00/);
   assert.match(
     publicInvitation,

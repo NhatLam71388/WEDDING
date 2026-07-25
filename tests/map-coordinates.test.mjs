@@ -11,7 +11,7 @@ test("wedding direction buttons use the exact family coordinates", async () => {
   );
   assert.match(
     html,
-    /Lễ thành hôn · Nhà trai[\s\S]*?destination=12\.7947442%2C107\.9132805[\s\S]*?aria-label="Xem chỉ đường đến tư gia nhà trai trên Google Maps"/,
+    /Lễ thành hôn · Nhà trai[\s\S]*?destination=12\.795142%2C107\.913681[\s\S]*?aria-label="Xem chỉ đường đến tư gia nhà trai trên Google Maps"/,
   );
   assert.doesNotMatch(html, /maps\/search\/\?api=1&query=/);
 });

@@ -84,8 +84,14 @@ test("bride-family celebration is the canonical invitation date", async () => {
     '<section data-screen-label="01 Hero"',
     '<nav class="invite-nav"',
   );
-  assert.match(hero, /THỨ SÁU · 07\.08\.2026/);
-  assert.doesNotMatch(hero, /THỨ BẢY · 08\.08\.2026/);
+  assert.match(hero, /<div class="hero-date">/);
+  assert.match(hero, /<span data-heroanim="1"[^>]*>Thứ sáu<\/span>/);
+  assert.match(hero, /<b data-heroanim="1"[^>]*>07\.08\.2026<\/b>/);
+  assert.doesNotMatch(hero, /08\.08\.2026/);
+  assert.match(
+    html,
+    /\.hero-date b\{font:italic 400 34px\/1 'Playfair Display',serif/,
+  );
 
   const story = between(
     html,
@@ -145,7 +151,11 @@ test("bride-family celebration is the canonical invitation date", async () => {
   const intro = between(html, '<div data-introroot="1"', "</sc-if>");
   assert.match(
     intro,
-    /<div class="intro-date"><span>Thứ sáu<\/span><b>07 · 08 · 2026<\/b><\/div>/,
+    /<div class="intro-date"><span>Thứ sáu<\/span><b>07\.08\.2026<\/b><\/div>/,
+  );
+  assert.match(
+    html,
+    /\.intro-date b\{font:italic 400 23px\/1 'Playfair Display',serif/,
   );
 
   assert.match(
