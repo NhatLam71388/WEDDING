@@ -1,0 +1,13 @@
+# Original high-resolution source photos
+/30 file ảnh lẻ/
+
+# Local builder metadata
+/.image-slots.state.json
+/.thumbnail
+/uploads/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
