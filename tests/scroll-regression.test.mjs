@@ -28,7 +28,9 @@ test("closing gallery and gift always releases the page scroll lock", async () =
     const invitation = new Logic();
     invitation._wasGift = false;
     invitation._wasGallery = false;
-    invitation._modalWasOpen = false;
+    invitation._scrollWasLocked = false;
+    invitation._bodyOverflowBeforeMount = "";
+    invitation.state.introOn = false;
 
     invitation.state.galleryOpen = true;
     invitation.componentDidUpdate();
