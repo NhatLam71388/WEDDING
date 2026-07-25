@@ -164,7 +164,7 @@ test("story and featured album show the five requested image roles", async () =>
   );
 });
 
-test("the two handholding landscapes form one equal responsive pair", async () => {
+test("the two handholding landscapes stack as equal full-width rows", async () => {
   const html = await readFile(INVITATION_PATH, "utf8");
   const story = storySection(html);
   const featured = between(
@@ -236,8 +236,28 @@ test("the two handholding landscapes form one equal responsive pair", async () =
 
   const handholdingRule = cssRule(html, ".featured-frame--handholding");
   assert.match(handholdingRule, /\baspect-ratio\s*:\s*3\s*\/\s*2/i);
+  assert.match(
+    handholdingRule,
+    /\bwidth\s*:\s*100%/i,
+    "each handholding frame should fill its row",
+  );
   const pairRule = cssRule(html, ".featured-handholding-pair");
-  assert.match(pairRule, /\bdisplay\s*:\s*(?:grid|flex)/i);
+  const isOneColumnGrid =
+    /\bdisplay\s*:\s*grid\b/i.test(pairRule) &&
+    /\bgrid-template-columns\s*:\s*(?:1fr|minmax\(\s*0\s*,\s*1fr\s*\)|repeat\(\s*1\s*,)/i.test(
+      pairRule,
+    );
+  const isColumnFlex =
+    /\bdisplay\s*:\s*flex\b/i.test(pairRule) &&
+    /\bflex-direction\s*:\s*column\b/i.test(pairRule);
+  assert.ok(
+    isOneColumnGrid || isColumnFlex,
+    "the handholding pair should stack in one column, one image per row",
+  );
+  assert.doesNotMatch(
+    pairRule,
+    /\bgrid-template-columns\s*:\s*repeat\(\s*2\b/i,
+  );
   const twirlRule = cssRule(html, ".featured-frame--twirl");
   assert.match(twirlRule, /\baspect-ratio\s*:\s*2\s*\/\s*3/i);
 
@@ -245,6 +265,35 @@ test("the two handholding landscapes form one equal responsive pair", async () =
     html,
     /@media\s*\(max-width\s*:[^)]+\)[^{]*\{[\s\S]*?\.featured-handholding-pair/i,
     "the handholding pair should adapt at a mobile breakpoint",
+  );
+});
+
+test("featured image frames have no overlaid captions or labels", async () => {
+  const html = await readFile(INVITATION_PATH, "utf8");
+  const featured = between(
+    html,
+    sectionTag(html, "04 Featured album"),
+    sectionTag(html, "05 Quote"),
+  );
+  const imageFigures = elementsWithClass(featured, "figure", "featured-frame");
+
+  assert.equal(imageFigures.length, 3);
+  for (const figure of imageFigures) {
+    assert.doesNotMatch(
+      figure,
+      /<figcaption\b/i,
+      "featured image figures should remain visually clean",
+    );
+  }
+
+  assert.doesNotMatch(
+    featured,
+    /\bclass="[^"]*\b(?:featured-label|handholding-caption)\b[^"]*"/i,
+  );
+  assert.doesNotMatch(
+    html,
+    /\.(?:featured-label|handholding-caption)\b/i,
+    "obsolete overlay-caption selectors should be removed",
   );
 });
 
