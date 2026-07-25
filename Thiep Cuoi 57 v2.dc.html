@@ -11,7 +11,8 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="image" href="./assets/photos/LBS01690-1280.webp" type="image/webp">
-<link rel="preload" as="image" href="./assets/photos/LBS02087-1280.webp" imagesrcset="./assets/photos/LBS02087-640.webp 640w, ./assets/photos/LBS02087-1280.webp 1280w" imagesizes="(max-width:520px) 100vw, 520px" type="image/webp">
+<link rel="preload" as="image" href="./assets/photos/LBS02087-mobile-841.webp" imagesrcset="./assets/photos/LBS02087-mobile-640.webp 640w, ./assets/photos/LBS02087-mobile-841.webp 841w" imagesizes="100vw" media="(max-width: 620px) and (orientation: portrait)" type="image/webp">
+<link rel="preload" as="image" href="./assets/photos/LBS02087-1280.webp" imagesrcset="./assets/photos/LBS02087-640.webp 640w, ./assets/photos/LBS02087-1280.webp 1280w" imagesizes="(max-width:520px) 100vw, 520px" media="(min-width: 621px), (orientation: landscape)" type="image/webp">
 <link rel="preload" as="image" href="./assets/decor/dove-flight.webp" type="image/webp">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=Dancing+Script:wght@400;500;600&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&display=swap" rel="stylesheet">
 <script src="./image-slot.js"></script>
@@ -68,8 +69,9 @@ h2,h3{font-family:var(--font-editorial)!important}
 .intro-curtain:after{content:"";position:absolute;top:0;bottom:0;width:1px;background:linear-gradient(180deg,transparent 5%,rgba(217,181,143,.5) 28%,rgba(217,181,143,.16) 72%,transparent 95%)}
 .intro-curtain--left{left:0}.intro-curtain--left:after{right:0}
 .intro-curtain--right{right:0;background:linear-gradient(215deg,#34231c 0%,#1d130f 48%,#120c0a 100%)}.intro-curtain--right:after{left:0}
-.intro-stage{position:relative;z-index:5;width:min(100vw,520px);width:min(100vw,520px,calc(100svh * .667));height:100vh;height:100svh;overflow:hidden;isolation:isolate;background:linear-gradient(180deg,#2a1c17 0%,#766158 45%,#211511 100%);box-shadow:0 0 0 1px rgba(217,181,143,.24),0 30px 100px rgba(0,0,0,.48);animation:introStageIn 1.15s cubic-bezier(.22,1,.36,1) both;will-change:transform,opacity,filter}
-.intro-photo{position:absolute;z-index:0;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;filter:saturate(.9) contrast(1.03);animation:introPhotoReveal 4.5s ease-out 1 both;will-change:transform}
+.intro-stage{position:relative;z-index:5;width:min(100vw,520px);width:min(100vw,520px,calc(100svh * .667));height:100vh;height:100svh;overflow:hidden;isolation:isolate;background:linear-gradient(180deg,#d1ced4 0 56%,#d9cec6 100%);box-shadow:0 0 0 1px rgba(217,181,143,.24),0 30px 100px rgba(0,0,0,.48);animation:introStageIn 1.15s cubic-bezier(.22,1,.36,1) both;will-change:transform,opacity,filter}
+.intro-picture{position:absolute;z-index:0;inset:0;display:block}
+.intro-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:center;filter:saturate(.9) contrast(1.03);animation:introPhotoReveal 4.5s ease-out 1 both;will-change:opacity,filter}
 .intro-scrim{position:absolute;z-index:1;inset:0;background:linear-gradient(180deg,rgba(27,17,13,.91) 0%,rgba(35,22,17,.76) 27%,rgba(35,22,17,.16) 52%,rgba(26,16,12,.1) 67%,rgba(20,12,9,.72) 100%);pointer-events:none}
 .intro-frame{position:absolute;z-index:2;inset:max(12px,1.8vmin);border:1px solid rgba(255,248,239,.56);pointer-events:none}
 .intro-frame:before,.intro-frame:after{content:"";position:absolute;width:54px;height:54px;border-color:rgba(217,181,143,.82);border-style:solid;pointer-events:none}
@@ -93,14 +95,22 @@ h2,h3{font-family:var(--font-editorial)!important}
 .intro-date span{font:500 8px/1 var(--font-body);letter-spacing:.2em;color:rgba(255,248,239,.72)}
 .intro-date b{font:500 10px/1 var(--font-editorial);letter-spacing:.22em;color:var(--intro-ivory)}
 .intro-open-zone{position:relative;display:flex;flex-direction:column;align-items:center;margin-top:auto;animation:introSoftIn 900ms 1.45s ease-out both}
-.intro-open-zone>p{margin:0 0 13px;font:500 8px/1 var(--font-body);letter-spacing:.26em;color:rgba(255,248,239,.75)}
-.intro-open-button{position:relative;width:88px;height:88px;padding:0;border:1px solid rgba(255,248,239,.72);border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 36% 30%,#bd8c72 0%,#8d5a49 42%,#62382f 100%);color:#fffaf3;box-shadow:inset 0 0 0 6px rgba(68,34,28,.12),0 14px 35px rgba(18,10,8,.38);cursor:pointer;isolation:isolate;transition:transform 240ms ease,box-shadow 240ms ease}
-.intro-open-button:before{content:"";position:absolute;inset:-10px;border:1px dashed rgba(255,248,239,.52);border-radius:50%;animation:introSealOrbit 4.8s ease-out 1 both}
-.intro-open-button:after{content:"";position:absolute;inset:-1px;border-radius:50%;box-shadow:0 0 0 0 rgba(229,197,170,.42);animation:introSealPulse 2.5s ease-out 1.5s 2}
-.intro-open-button span{position:relative;z-index:1;font:500 9px/1.45 var(--font-body);letter-spacing:.18em;text-transform:uppercase}
-.intro-open-button:hover{transform:translateY(-2px) scale(1.04);box-shadow:inset 0 0 0 6px rgba(68,34,28,.12),0 18px 42px rgba(18,10,8,.48)}
-.intro-open-button:focus-visible{outline:2px solid #fff8ef;outline-offset:7px}
+.intro-open-zone>p{margin:0 0 12px;font:500 8px/1 var(--font-body);letter-spacing:.24em;color:rgba(255,248,239,.82)}
+.intro-open-button{position:relative;width:194px;height:58px;min-height:58px;padding:0 13px 0 10px;border:1px solid rgba(209,165,127,.86);border-radius:999px;display:grid;grid-template-columns:38px 1fr 20px;align-items:center;gap:8px;overflow:hidden;background:linear-gradient(110deg,rgba(255,252,247,.98),rgba(250,236,222,.96) 58%,rgba(255,249,242,.98));color:#3b2820;box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 12px 32px rgba(29,17,13,.32);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);cursor:pointer;isolation:isolate;transition:transform 220ms ease,box-shadow 220ms ease,background-color 220ms ease;animation:introButtonFloat 3.2s ease-in-out infinite,introButtonHalo 2.6s ease-in-out .4s infinite}
+.intro-open-button:before{content:"";position:absolute;z-index:1;top:-80%;bottom:-80%;left:-34%;width:30%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.88),transparent);rotate:14deg;animation:introButtonSheen 3.8s cubic-bezier(.22,1,.36,1) 1.2s infinite;pointer-events:none}
+.intro-open-button:after{content:"";position:absolute;z-index:0;inset:4px;border:1px solid rgba(151,98,71,.16);border-radius:inherit;pointer-events:none}
+.intro-open-button>*{position:relative;z-index:2}
+.intro-open-icon{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:radial-gradient(circle at 35% 28%,#c6947b 0%,#9c6554 55%,#734238 100%);border:1px solid rgba(255,255,255,.72);color:#fff8ef;box-shadow:inset 0 0 0 4px rgba(91,49,40,.12),0 5px 12px rgba(92,50,39,.25);font:400 12px/1 var(--font-editorial);animation:introSealHeartbeat 2.4s ease-in-out .6s infinite}
+.intro-open-label{font:500 10px/1 var(--font-body);letter-spacing:.19em;text-transform:uppercase;white-space:nowrap}
+.intro-open-arrow{display:grid;place-items:center;color:#9b654f;font:400 25px/1 var(--font-editorial);translate:0 -1px;animation:introArrowNudge 1.5s ease-in-out 1s infinite}
+.intro-open-button:active{animation:none;transform:translateY(1px) scale(.965);box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 6px 18px rgba(29,17,13,.28)}
+.intro-open-button:focus-visible{outline:2px solid #fff8ef;outline-offset:6px}
 .intro-open-button[aria-disabled="true"]{pointer-events:none}
+.intro-open-button[aria-busy="true"]{animation:introButtonPress 520ms cubic-bezier(.22,1,.36,1) both}
+.intro-open-button[aria-busy="true"]:before,.intro-open-button[aria-busy="true"] .intro-open-icon,.intro-open-button[aria-busy="true"] .intro-open-arrow{animation:none}
+@media(hover:hover){
+  .intro-open-button:hover{animation:none;transform:translateY(-3px) scale(1.025);box-shadow:inset 0 1px 0 rgba(255,255,255,.98),0 17px 40px rgba(29,17,13,.38)}
+}
 .wedding-shell:focus{outline:none}
 .wedding-shell:focus-visible{outline:2px solid rgba(217,181,143,.9);outline-offset:-4px}
 .intro-dove-layer{position:absolute;z-index:3;inset:0;overflow:hidden;opacity:1;pointer-events:none;transition:opacity 380ms ease}
@@ -137,7 +147,7 @@ h2,h3{font-family:var(--font-editorial)!important}
 @keyframes orbit{to{transform:rotate(360deg)}}
 @keyframes introBackdropDrift{from{transform:scale(1.05) translate3d(-1%,0,0)}to{transform:scale(1.13) translate3d(1%,-1%,0)}}
 @keyframes introStageIn{from{opacity:0;transform:scale(.965);filter:blur(8px)}to{opacity:1;transform:scale(1);filter:blur(0)}}
-@keyframes introPhotoReveal{from{transform:scale(1.025);opacity:.88}to{transform:scale(1);opacity:1}}
+@keyframes introPhotoReveal{from{opacity:.84;filter:saturate(.82) contrast(1)}to{opacity:1;filter:saturate(.9) contrast(1.03)}}
 @keyframes introLetterIn{from{opacity:0;letter-spacing:.7em;transform:translateY(-8px)}to{opacity:1;letter-spacing:.42em;transform:none}}
 @keyframes introLineDraw{from{transform:scaleY(0);opacity:0}to{transform:scaleY(1);opacity:1}}
 @keyframes introMonogramIn{from{opacity:0;transform:scale(.66) rotate(-18deg);filter:blur(5px)}to{opacity:1;transform:scale(1) rotate(0);filter:blur(0)}}
@@ -145,8 +155,12 @@ h2,h3{font-family:var(--font-editorial)!important}
 @keyframes introSoftIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 @keyframes introDateIn{from{opacity:0;transform:scaleX(.75);letter-spacing:.35em}to{opacity:1;transform:scaleX(1)}}
 @keyframes introOrbit{to{transform:rotate(360deg)}}
-@keyframes introSealOrbit{to{transform:rotate(-360deg)}}
-@keyframes introSealPulse{0%{box-shadow:0 0 0 0 rgba(229,197,170,.42);opacity:1}70%,100%{box-shadow:0 0 0 22px rgba(229,197,170,0);opacity:0}}
+@keyframes introButtonFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes introButtonHalo{0%,100%{box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 12px 32px rgba(29,17,13,.32),0 0 0 0 rgba(225,190,157,0)}50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 15px 36px rgba(29,17,13,.35),0 0 0 8px rgba(225,190,157,.16)}}
+@keyframes introButtonSheen{0%,58%{transform:translateX(-30px);opacity:0}67%{opacity:.9}84%,100%{transform:translateX(300px);opacity:0}}
+@keyframes introSealHeartbeat{0%,72%,100%{transform:scale(1)}78%{transform:scale(1.08)}84%{transform:scale(.98)}90%{transform:scale(1.05)}}
+@keyframes introArrowNudge{0%,100%{transform:translateX(0)}45%{transform:translateX(4px)}}
+@keyframes introButtonPress{0%{transform:translateY(0) scale(1);filter:brightness(1)}42%{transform:translateY(1px) scale(.95);filter:brightness(1.08)}100%{transform:translateY(-2px) scale(1.025);filter:brightness(1.12)}}
 @keyframes introTwinkle{0%,100%{opacity:0;transform:scale(.55)}45%{opacity:.9;transform:scale(1.25)}}
 @keyframes introDoveWing{from{transform:rotate(-1.5deg) scaleY(.92)}to{transform:rotate(1.5deg) scaleY(1.035)}}
 @keyframes introDoveOne{0%{opacity:0;transform:translate3d(-140px,76vh,0) rotate(-16deg) scale(.56)}9%{opacity:.94}55%{opacity:.92;transform:translate3d(clamp(180px,48vw,260px),28vh,0) rotate(-5deg) scale(.84)}100%{opacity:0;transform:translate3d(clamp(500px,118vw,660px),-15vh,0) rotate(8deg) scale(1.02)}}
@@ -220,6 +234,10 @@ h2,h3{font-family:var(--font-editorial)!important}
   .event-card:hover .event-photo{transform:scale(1.085)}
   .curated-card:hover img{transform:scale(1.035)!important}
 }
+@media(max-width:620px) and (orientation:portrait){
+  .intro-stage{width:100vw;background:linear-gradient(180deg,#d1ced4 0 56%,#d9cec6 100%)}
+  .intro-photo{object-fit:cover;object-position:center top}
+}
 @media(max-width:389px){
   .family-grid{grid-template-columns:1fr;gap:32px}
   .family-divider{width:54px;height:1px;margin:0 auto;background:linear-gradient(90deg,rgba(82,62,50,0),rgba(82,62,50,.3),rgba(82,62,50,0))}
@@ -233,7 +251,8 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-display-names>span{font-size:52px}
   .intro-whisper{font-size:18px}
   .intro-monogram{width:60px;height:60px}
-  .intro-open-button{width:82px;height:82px}
+  .intro-open-button{width:174px;height:54px;min-height:54px}
+  .intro-open-icon{width:32px;height:32px}
   .invite-nav{width:calc(100% - 24px)}
   .invite-nav a{font-size:8px;letter-spacing:.08em}
   .curated-stage{height:570px;margin-left:12px;margin-right:12px}
@@ -253,7 +272,8 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-display-names small{margin:5px 0 7px}
   .intro-date{margin-top:11px;padding:7px 12px}
   .intro-open-zone>p{margin-bottom:9px}
-  .intro-open-button{width:72px;height:72px}
+  .intro-open-button{width:176px;height:54px;min-height:54px}
+  .intro-open-icon{width:32px;height:32px}
 }
 @media(max-height:590px){
   .intro-kicker:after{height:12px}
@@ -267,7 +287,10 @@ h2,h3{font-family:var(--font-editorial)!important}
   .intro-display-names{margin-top:0}
   .intro-display-names>span{font-size:40px}
   .intro-display-names small{margin:3px 0 5px}
-  .intro-open-button{width:66px;height:66px}
+  .intro-open-button{width:158px;height:48px;min-height:48px;grid-template-columns:30px 1fr 17px;gap:6px;padding-left:8px;padding-right:10px}
+  .intro-open-icon{width:28px;height:28px;font-size:10px}
+  .intro-open-label{font-size:9px;letter-spacing:.14em}
+  .intro-open-arrow{font-size:21px}
 }
 @media (prefers-reduced-motion:reduce){
   html{scroll-behavior:auto}
@@ -276,7 +299,7 @@ h2,h3{font-family:var(--font-editorial)!important}
   .date-seal:before{animation:none!important}
   .intro-dove-layer,.intro-dust{display:none!important}
   .intro-backdrop,.intro-photo,.intro-stage{animation:none!important;transform:none!important}
-  .intro-monogram:before,.intro-open-button:before,.intro-open-button:after{animation:none!important}
+  .intro-monogram:before,.intro-open-button,.intro-open-button:before,.intro-open-icon,.intro-open-arrow{animation:none!important}
 }
 </style>
 </helmet>
@@ -658,7 +681,10 @@ Xem thông tin
 <div data-curtain="left" class="intro-curtain intro-curtain--left"></div>
 <div data-curtain="right" class="intro-curtain intro-curtain--right"></div>
 <div data-introcard="1" class="intro-stage">
+<picture class="intro-picture">
+<source media="(max-width: 620px) and (orientation: portrait)" srcSet="./assets/photos/LBS02087-mobile-640.webp 640w, ./assets/photos/LBS02087-mobile-841.webp 841w" sizes="100vw" type="image/webp">
 <img class="intro-photo" src="./assets/photos/LBS02087-1280.webp" srcSet="./assets/photos/LBS02087-640.webp 640w, ./assets/photos/LBS02087-1280.webp 1280w" sizes="(max-width:520px) 100vw, 520px" alt="Ngô Nam và Nhật Mai trong khu vườn hoa cưới" fetchPriority="high" decoding="async">
+</picture>
 <div class="intro-scrim"></div>
 <div class="intro-dove-layer" aria-hidden="true">
 <span class="intro-dove-flight intro-dove--one"><img data-introdove="1" class="intro-dove" src="./assets/decor/dove-flight.webp" alt="" aria-hidden="true" draggable="false" decoding="async"></span>
@@ -680,7 +706,9 @@ Xem thông tin
 <div class="intro-open-zone">
 <p>Chạm để mở lời mời</p>
 <button data-intro-open="1" type="button" class="intro-open-button" onClick="{{ openInvite }}" aria-label="Mở thiệp cưới">
-<span>Mở<br>thiệp</span>
+<span class="intro-open-icon" aria-hidden="true">♥</span>
+<span class="intro-open-label">Mở thiệp</span>
+<span class="intro-open-arrow" aria-hidden="true">›</span>
 </button>
 </div>
 </div>

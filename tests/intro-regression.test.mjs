@@ -2,6 +2,60 @@ import assert from "node:assert/strict";
 import { access, readFile } from "node:fs/promises";
 import test from "node:test";
 
+const MOBILE_INTRO_ASSETS = [
+  "assets/photos/LBS02087-mobile-640.webp",
+  "assets/photos/LBS02087-mobile-841.webp",
+];
+
+function readUint24LE(buffer, offset) {
+  return buffer[offset] | (buffer[offset + 1] << 8) | (buffer[offset + 2] << 16);
+}
+
+async function readWebpDimensions(path) {
+  const buffer = await readFile(path);
+  assert.equal(buffer.toString("ascii", 0, 4), "RIFF", `${path} must be RIFF`);
+  assert.equal(buffer.toString("ascii", 8, 12), "WEBP", `${path} must be WebP`);
+
+  let offset = 12;
+  while (offset + 8 <= buffer.length) {
+    const type = buffer.toString("ascii", offset, offset + 4);
+    const size = buffer.readUInt32LE(offset + 4);
+    const dataOffset = offset + 8;
+
+    if (type === "VP8X" && size >= 10) {
+      return {
+        width: readUint24LE(buffer, dataOffset + 4) + 1,
+        height: readUint24LE(buffer, dataOffset + 7) + 1,
+      };
+    }
+
+    if (type === "VP8L" && size >= 5 && buffer[dataOffset] === 0x2f) {
+      const bits = buffer.readUInt32LE(dataOffset + 1);
+      return {
+        width: (bits & 0x3fff) + 1,
+        height: ((bits >>> 14) & 0x3fff) + 1,
+      };
+    }
+
+    if (
+      type === "VP8 " &&
+      size >= 10 &&
+      buffer[dataOffset + 3] === 0x9d &&
+      buffer[dataOffset + 4] === 0x01 &&
+      buffer[dataOffset + 5] === 0x2a
+    ) {
+      return {
+        width: buffer.readUInt16LE(dataOffset + 6) & 0x3fff,
+        height: buffer.readUInt16LE(dataOffset + 8) & 0x3fff,
+      };
+    }
+
+    offset = dataOffset + size + (size % 2);
+  }
+
+  assert.fail(`Could not read dimensions from ${path}`);
+}
+
 async function loadInvitation() {
   const html = await readFile("Thiep Cuoi 57 v2.dc.html", "utf8");
   const match = html.match(
@@ -19,6 +73,20 @@ async function loadInvitation() {
   );
 
   return { html, Logic };
+}
+
+function findTag(html, tagName, requiredText) {
+  return (html.match(new RegExp(`<${tagName}\\b[^>]*>`, "gi")) ?? []).find(
+    (tag) => tag.includes(requiredText),
+  );
+}
+
+function keyframesSection(html, name) {
+  const start = html.search(new RegExp(`@keyframes\\s+${name}\\b`, "i"));
+  assert.notEqual(start, -1, `${name} keyframes should exist`);
+  const next = html.slice(start + 1).search(/@keyframes\s+/i);
+  const end = next === -1 ? html.indexOf("</style>", start) : start + 1 + next;
+  return html.slice(start, end);
 }
 
 function createIntroFixture(Logic, { reduced }) {
@@ -85,6 +153,135 @@ function createIntroFixture(Logic, { reduced }) {
     root,
   };
 }
+
+test("intro art-directs expanded mobile photos without zooming the reveal", async () => {
+  const { html } = await loadInvitation();
+  const dimensions = await Promise.all(
+    MOBILE_INTRO_ASSETS.map((path) => readWebpDimensions(path)),
+  );
+
+  for (const [index, { width, height }] of dimensions.entries()) {
+    assert.ok(width > 0 && height > 0);
+    assert.ok(
+      height / width >= 2,
+      `${MOBILE_INTRO_ASSETS[index]} should be expanded to a phone aspect ratio`,
+    );
+  }
+
+  const picture = html.match(
+    /<picture\b[^>]*class="[^"]*\bintro-picture\b[^"]*"[^>]*>([\s\S]*?)<\/picture>/i,
+  );
+  assert.ok(picture, "intro photo should use a responsive picture element");
+
+  const mobileSource = findTag(picture[1], "source", "LBS02087-mobile-");
+  assert.ok(mobileSource, "picture should provide an expanded mobile source");
+  assert.match(
+    mobileSource,
+    /\bmedia="\(\s*max-width\s*:\s*620px\s*\)\s+and\s+\(\s*orientation\s*:\s*portrait\s*\)"/i,
+  );
+  assert.match(mobileSource, /LBS02087-mobile-640\.webp\s+640w/i);
+  assert.match(mobileSource, /LBS02087-mobile-841\.webp\s+841w/i);
+  assert.match(mobileSource, /\btype="image\/webp"/i);
+
+  const desktopFallback = findTag(picture[1], "img", "intro-photo");
+  assert.ok(desktopFallback, "picture should retain an img fallback");
+  assert.match(desktopFallback, /\bsrc="\.\/assets\/photos\/LBS02087-1280\.webp"/i);
+  assert.match(
+    desktopFallback,
+    /LBS02087-640\.webp\s+640w[\s\S]*LBS02087-1280\.webp\s+1280w/i,
+  );
+
+  const linkTags = html.match(/<link\b[^>]*>/gi) ?? [];
+  const mobilePreload = linkTags.find((tag) =>
+    tag.includes("LBS02087-mobile-"),
+  );
+  assert.ok(mobilePreload, "expanded mobile intro should be preloaded");
+  assert.match(mobilePreload, /\brel="preload"/i);
+  assert.match(mobilePreload, /\bas="image"/i);
+  assert.match(
+    mobilePreload,
+    /\bmedia="\(\s*max-width\s*:\s*620px\s*\)\s+and\s+\(\s*orientation\s*:\s*portrait\s*\)"/i,
+  );
+  assert.match(mobilePreload, /LBS02087-mobile-640\.webp\s+640w/i);
+  assert.match(mobilePreload, /LBS02087-mobile-841\.webp\s+841w/i);
+
+  const desktopPreload = linkTags.find(
+    (tag) =>
+      tag.includes('href="./assets/photos/LBS02087-1280.webp"') &&
+      !tag.includes("LBS02087-mobile-"),
+  );
+  assert.ok(desktopPreload, "desktop intro should retain its own preload");
+  assert.match(
+    desktopPreload,
+    /\bmedia="[^"]*(?:min-width\s*:\s*621px|orientation\s*:\s*landscape)[^"]*"/i,
+  );
+
+  assert.doesNotMatch(
+    keyframesSection(html, "introPhotoReveal"),
+    /\b(?:transform\s*:[^;}]*scale\s*\(|scale\s*:)/i,
+    "intro reveal must not zoom the photo to hide an aspect-ratio mismatch",
+  );
+});
+
+test("intro open control is an animated accessible pill", async () => {
+  const { html } = await loadInvitation();
+  const button = html.match(
+    /(<button\b(?=[^>]*data-intro-open="1")(?=[^>]*class="[^"]*\bintro-open-button\b)[^>]*>)([\s\S]*?)<\/button>/i,
+  );
+  assert.ok(button, "intro should render the pill open button");
+  assert.match(button[1], /\btype="button"/i);
+  assert.match(button[1], /\baria-label="Mở thiệp cưới"/i);
+  assert.match(button[2], /class="[^"]*\bintro-open-icon\b[^"]*"/i);
+  assert.match(button[2], /class="[^"]*\bintro-open-label\b[^"]*"/i);
+  assert.match(
+    button[2],
+    /class="[^"]*\bintro-open-arrow\b[^"]*"[^>]*aria-hidden="true"/i,
+  );
+  assert.doesNotMatch(button[2], /<br\b/i, "pill label should remain on one line");
+
+  const buttonRule = html.match(/\.intro-open-button\s*\{([^}]*)\}/i);
+  assert.ok(buttonRule, "intro pill should have a base CSS rule");
+  assert.match(buttonRule[1], /\bborder-radius\s*:\s*999px\b/i);
+  assert.match(
+    buttonRule[1],
+    /(?:\bmin-width\s*:|\bpadding\s*:\s*[^;]*\s+\d)/i,
+    "pill should have horizontal room for its label and arrow",
+  );
+
+  const animationNames = [
+    "introButtonFloat",
+    "introButtonHalo",
+    "introButtonSheen",
+    "introSealHeartbeat",
+    "introArrowNudge",
+    "introButtonPress",
+  ];
+  for (const name of animationNames) {
+    assert.match(html, new RegExp(`@keyframes\\s+${name}\\b`, "i"));
+    assert.match(
+      html,
+      new RegExp(`animation(?:-name)?\\s*:[^;}]*\\b${name}\\b`, "i"),
+      `${name} should be applied to the pill or one of its layers`,
+    );
+  }
+
+  assert.match(html, /\.intro-open-button:active\s*\{[^}]+\}/i);
+  assert.match(html, /\.intro-open-button:focus-visible\s*\{[^}]+\}/i);
+
+  const reducedMotionStart = html.search(
+    /@media\s*\(prefers-reduced-motion\s*:\s*reduce\)/i,
+  );
+  assert.notEqual(reducedMotionStart, -1);
+  const reducedMotion = html.slice(
+    reducedMotionStart,
+    html.indexOf("</style>", reducedMotionStart),
+  );
+  assert.match(
+    reducedMotion,
+    /\.intro-open-button[\s\S]*?\{[^}]*animation\s*:\s*none\s*!important/i,
+  );
+  assert.match(reducedMotion, /\.intro-open-arrow/i);
+});
 
 test("intro preloads its artwork and exposes accessible interaction hooks", async () => {
   const { html } = await loadInvitation();

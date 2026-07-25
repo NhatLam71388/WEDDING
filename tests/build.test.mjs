@@ -9,13 +9,27 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     access("dist/client/support.js"),
     access("dist/client/image-slot.js"),
     access("dist/client/assets/decor/dove-flight.webp"),
+    access("dist/client/assets/photos/LBS02087-mobile-640.webp"),
+    access("dist/client/assets/photos/LBS02087-mobile-841.webp"),
     access("dist/.openai/hosting.json"),
   ]);
 
-  const [invitation, sourceDove, builtDove] = await Promise.all([
+  const [
+    invitation,
+    sourceDove,
+    builtDove,
+    sourceMobile640,
+    builtMobile640,
+    sourceMobile841,
+    builtMobile841,
+  ] = await Promise.all([
     readFile("dist/client/invitation.html", "utf8"),
     readFile("assets/decor/dove-flight.webp"),
     readFile("dist/client/assets/decor/dove-flight.webp"),
+    readFile("assets/photos/LBS02087-mobile-640.webp"),
+    readFile("dist/client/assets/photos/LBS02087-mobile-640.webp"),
+    readFile("assets/photos/LBS02087-mobile-841.webp"),
+    readFile("dist/client/assets/photos/LBS02087-mobile-841.webp"),
   ]);
   assert.match(invitation, /Ngô Nam/);
   assert.match(invitation, /Nhật Mai/);
@@ -28,5 +42,11 @@ test("build contains the worker, invitation, assets, and hosting metadata", asyn
     /<link rel="preload" as="image" href="\.\/assets\/decor\/dove-flight\.webp" type="image\/webp">/,
   );
   assert.match(invitation, /\bdata-introdove="1"/);
+  assert.match(invitation, /<picture\b[^>]*\bintro-picture\b/i);
+  assert.match(invitation, /LBS02087-mobile-640\.webp\s+640w/i);
+  assert.match(invitation, /LBS02087-mobile-841\.webp\s+841w/i);
+  assert.match(invitation, /\bintro-open-arrow\b/i);
   assert.deepEqual(builtDove, sourceDove);
+  assert.deepEqual(builtMobile640, sourceMobile640);
+  assert.deepEqual(builtMobile841, sourceMobile841);
 });
