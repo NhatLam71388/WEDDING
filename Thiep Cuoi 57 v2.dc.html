@@ -19,6 +19,13 @@
   --font-editorial:'Cormorant Garamond','Playfair Display',serif;
   --font-script:'Great Vibes','Dancing Script',cursive;
   --font-hand:'Dancing Script',cursive;
+  --ink:#2d241f;
+  --brown:#61493b;
+  --clay:#a67f64;
+  --champagne:#d1ad8f;
+  --paper:#f8f3ec;
+  --ivory:#fffaf3;
+  --blush:#f3e8db;
 }
 html,body{margin:0;padding:0}
 html{scroll-behavior:smooth}
@@ -36,10 +43,17 @@ button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible{
 [style*="'Dancing Script'"]{font-family:var(--font-hand)!important;font-weight:500!important}
 [style*="'Great Vibes'"]{font-family:var(--font-script)!important;font-weight:400!important}
 h2,h3{font-family:var(--font-editorial)!important}
+.wedding-shell{isolation:isolate;overflow:clip!important}
+.wedding-shell:after{content:"";position:absolute;z-index:80;inset:0;pointer-events:none;opacity:.17;background-image:repeating-radial-gradient(circle at 20% 30%,rgba(97,73,59,.11) 0 1px,transparent 1px 4px);background-size:7px 7px;mix-blend-mode:multiply}
+.scroll-progress{position:fixed;z-index:180;top:0;left:max(0px,calc(50% - 260px));width:min(100%,520px);height:3px;background:rgba(255,250,243,.18);pointer-events:none}
+.scroll-progress span{display:block;width:100%;height:100%;background:linear-gradient(90deg,#c99591,#d9bd9f,#a67f64);transform:scaleX(0);transform-origin:left center;will-change:transform}
 .hero-script{font-family:var(--font-hand)!important;font-size:24px!important;font-weight:500!important;line-height:1.15!important;color:#a67f64!important}
-.hero-name{font-family:var(--font-script)!important;font-size:60px!important;font-style:normal!important;font-weight:400!important;line-height:.94!important;letter-spacing:.01em!important;color:#3a2b23!important;text-rendering:optimizeLegibility}
-.hero-photo{position:absolute;top:242px;left:0;right:0;bottom:-3%;overflow:hidden}
-.hero-photo:before{content:"";position:absolute;z-index:2;left:0;right:0;top:0;height:70px;background:linear-gradient(180deg,#eee9e3 0%,rgba(238,233,227,0) 100%);pointer-events:none}
+.hero-name{font-family:var(--font-script)!important;font-size:60px!important;font-style:normal!important;font-weight:400!important;line-height:.94!important;letter-spacing:.01em!important;color:#3a2b23!important;text-rendering:optimizeLegibility;text-shadow:0 1px 0 rgba(255,255,255,.5)}
+.hero-photo{position:absolute;top:248px;left:18px;right:18px;bottom:18px;overflow:hidden;border-radius:260px 260px 18px 18px;box-shadow:0 20px 48px rgba(54,38,28,.18)}
+.hero-photo:before{content:"";position:absolute;z-index:2;inset:0;background:linear-gradient(180deg,rgba(238,233,227,.34) 0%,rgba(238,233,227,0) 25%,rgba(39,30,25,.08) 65%,rgba(39,30,25,.28) 100%);pointer-events:none}
+.hero-photo:after{content:"";position:absolute;z-index:3;inset:10px;border:1px solid rgba(255,250,244,.64);border-radius:250px 250px 12px 12px;pointer-events:none}
+.hero-photo image-slot{display:block;width:100%;height:100%;transform:scale(1.025)}
+.hero-photo-layer{position:absolute;top:248px;left:18px;right:18px;bottom:18px;border-radius:260px 260px 18px 18px}
 .intro-names{font-family:var(--font-script)!important;font-size:64px!important;font-style:normal!important;font-weight:400!important;line-height:1!important;letter-spacing:.01em;text-rendering:optimizeLegibility}
 .closing-script{font-family:var(--font-script)!important;font-size:50px!important;font-weight:400!important;line-height:1.15!important}
 .footer-script{font-family:var(--font-script)!important;font-size:34px!important;font-weight:400!important;line-height:1!important}
@@ -59,13 +73,25 @@ h2,h3{font-family:var(--font-editorial)!important}
 @keyframes twinkle{0%,100%{opacity:0;transform:scale(.6)}50%{opacity:.9;transform:scale(1)}}
 @keyframes bob{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(7px);opacity:1}}
 @keyframes floatSoft{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+@keyframes marquee{to{transform:translate3d(-50%,0,0)}}
+@keyframes orbit{to{transform:rotate(360deg)}}
+.invite-nav{position:sticky;z-index:70;top:12px;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;width:calc(100% - 32px);margin:-25px auto 0;padding:5px;border:1px solid rgba(97,73,59,.16);border-radius:999px;background:rgba(255,250,243,.88);box-shadow:0 12px 32px rgba(54,38,28,.12);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.invite-nav a{position:relative;display:flex;align-items:center;justify-content:center;min-height:40px;padding:0 8px;border-radius:999px;color:#78685e;font:500 9px/1 var(--font-body);letter-spacing:.12em;text-transform:uppercase;transition:color 240ms ease,background-color 240ms ease,transform 180ms ease}
+.invite-nav a:active{transform:scale(.97)}
+.invite-nav a.is-active{background:#3a2b23;color:#fffaf4}
+.family-section{background:linear-gradient(180deg,#f2e6d9 0%,#f7eee5 100%)!important;padding-top:86px!important;overflow:hidden}
+.family-card{position:relative;padding:34px 18px 32px;border:1px solid rgba(82,62,50,.14);border-radius:150px 150px 24px 24px;background:rgba(255,250,243,.55);box-shadow:0 18px 48px rgba(54,38,28,.06)}
+.family-card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(166,127,100,.14);border-radius:142px 142px 18px 18px;pointer-events:none}
 .family-grid{display:grid;grid-template-columns:1fr 1px 1fr;gap:20px;align-items:start}
 .family-divider{width:1px;height:118px;background:linear-gradient(180deg,rgba(82,62,50,0),rgba(82,62,50,.3),rgba(82,62,50,0));margin:10px auto 0;position:relative}
-.story-frame{box-shadow:0 18px 48px rgba(54,38,28,.12)}
-.story-frame:after{content:"";position:absolute;inset:10px;border:1px solid rgba(255,250,244,.65);border-radius:182px 182px 11px 11px;z-index:3;pointer-events:none}
 .date-seal{position:absolute;right:34px;bottom:62px;z-index:5;width:78px;height:78px;border-radius:50%;display:grid;place-items:center;text-align:center;background:#fffaf3;color:#61493b;border:1px solid rgba(82,62,50,.18);box-shadow:0 10px 28px rgba(54,38,28,.16);font:500 9px/1.45 'Be Vietnam Pro',sans-serif;letter-spacing:.12em;text-transform:uppercase}
-.event-card{position:relative;min-height:410px;border-radius:22px;overflow:hidden;display:grid;place-items:center;background:#3a2b23;isolation:isolate;box-shadow:0 16px 42px rgba(54,38,28,.14);transition:transform 450ms cubic-bezier(.22,1,.36,1),box-shadow 450ms ease}
-.event-card image-slot{position:absolute;inset:0;transition:transform 900ms cubic-bezier(.22,1,.36,1)}
+.date-seal:before{content:"";position:absolute;inset:-7px;border:1px dashed rgba(166,127,100,.45);border-radius:50%;animation:orbit 20s linear infinite}
+.story-caption{position:absolute;z-index:5;left:13px;bottom:126px;rotate:-8deg;font:500 21px/1 var(--font-hand);color:#a67f64;text-shadow:0 1px 0 #fffaf3;white-space:nowrap}
+.event-card{position:relative;min-height:448px;border-radius:230px 230px 24px 24px;overflow:hidden;display:grid;place-items:center;background:#3a2b23;isolation:isolate;box-shadow:0 16px 42px rgba(54,38,28,.14);transition:transform 450ms cubic-bezier(.22,1,.36,1),box-shadow 450ms ease}
+.event-frame{border-radius:220px 220px 17px 17px!important}
+.event-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform:scale(1.035);transition:transform 1.2s cubic-bezier(.22,1,.36,1),filter 700ms ease}
+.event-photo--bride{object-position:50% 46%}
+.event-photo--groom{object-position:50% 43%}
 .event-chip{display:inline-flex;align-items:center;min-height:30px;padding:0 12px;border-radius:999px;background:rgba(255,250,244,.14);border:1px solid rgba(255,250,244,.3);font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase}
 .choice-card{display:flex;align-items:center;gap:12px;min-height:52px;padding:12px 14px;border:1px solid rgba(82,62,50,.16);border-radius:14px;background:#fffaf3;cursor:pointer;font:300 13px/1.45 'Be Vietnam Pro',sans-serif;color:#2d241f;transition:border-color 220ms ease,background-color 220ms ease,transform 180ms ease}
 .choice-card:has(input:checked){border-color:#a67f64;background:#f8efe4}
@@ -78,26 +104,34 @@ h2,h3{font-family:var(--font-editorial)!important}
 .editorial-story{position:relative;padding:0 24px 34px;min-height:620px}
 .editorial-main{width:78%;aspect-ratio:2/3;border-radius:180px 180px 16px 16px;overflow:hidden;box-shadow:0 18px 46px rgba(54,38,28,.13)}
 .editorial-inset{position:absolute;right:20px;bottom:0;width:48%;aspect-ratio:2/3;border:9px solid #f8f3ec;border-radius:14px;overflow:hidden;box-shadow:0 18px 40px rgba(54,38,28,.16);z-index:3}
-.editorial-main img,.editorial-inset img,.film-card img,.mosaic-card img{width:100%;height:100%;display:block;object-fit:cover}
-.album-section{background:#fffaf3;padding:82px 0 86px;overflow:hidden}
+.editorial-main img,.editorial-inset img{width:100%;height:100%;display:block;object-fit:cover}
+.love-marquee{overflow:hidden;border-top:1px solid rgba(82,62,50,.12);border-bottom:1px solid rgba(82,62,50,.12);background:#2d241f;color:#ead7c6}
+.love-marquee div{width:max-content;padding:13px 0;font:500 9px/1 var(--font-body);letter-spacing:.28em;text-transform:uppercase;animation:marquee 22s linear infinite}
+.curated-section{background:#fffaf3;padding:80px 0 88px;overflow:hidden}
 .album-heading{padding:0 24px;text-align:center}
 .album-index{font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.25em;text-transform:uppercase;color:#a67f64}
 .album-heading h2{margin:14px 0 0;font:italic 400 31px/1.3 'Playfair Display',serif;color:#2d241f}
 .album-heading p{max-width:360px;margin:14px auto 0;font:300 12px/1.75 'Be Vietnam Pro',sans-serif;color:#78685e}
-.filmstrip{display:flex;gap:14px;margin-top:36px;padding:0 24px 18px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;overscroll-behavior-inline:contain}
-.filmstrip::-webkit-scrollbar{display:none}
-.film-card{position:relative;flex:0 0 72%;aspect-ratio:2/3;border-radius:16px;overflow:hidden;background:#eee6dc;scroll-snap-align:center;box-shadow:0 12px 32px rgba(54,38,28,.1)}
-.film-card:nth-child(even){margin-top:28px}
-.film-card span{position:absolute;right:12px;bottom:11px;color:#fffaf4;font:500 8px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-shadow:0 1px 8px rgba(39,30,25,.6)}
-.mosaic-section{background:#f3e8db;padding:82px 18px 88px}
-.mosaic-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:38px}
-.mosaic-card{margin:0;aspect-ratio:2/3;border-radius:12px;overflow:hidden;background:#e8ddd2;box-shadow:0 8px 22px rgba(54,38,28,.08)}
-.mosaic-card.wide{grid-column:1/-1;aspect-ratio:3/2}
-.mosaic-card.tall{aspect-ratio:3/5}
-.mosaic-card img{transition:transform 900ms cubic-bezier(.22,1,.36,1)}
-.mosaic-card:hover img{transform:scale(1.025)}
-.photo-note{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:30px;font:400 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a67f64}
-.photo-note:before,.photo-note:after{content:"";width:34px;height:1px;background:rgba(166,127,100,.4)}
+.curated-stage{position:relative;height:630px;margin:38px 18px 0}
+.curated-card{position:absolute;margin:0;overflow:hidden;background:#e8ddd2;box-shadow:0 18px 46px rgba(54,38,28,.15);isolation:isolate}
+.curated-card:after{content:"";position:absolute;inset:8px;border:1px solid rgba(255,250,244,.7);pointer-events:none}
+.curated-card img{display:block;width:100%;height:100%;object-fit:cover;will-change:transform}
+.curated-wide{left:0;right:56px;top:0;aspect-ratio:4/3;border-radius:190px 18px 18px 18px}
+.curated-wide img{object-position:50% 58%}
+.curated-tall{z-index:2;right:0;top:210px;width:47%;aspect-ratio:2/3;border:8px solid #fffaf3;border-radius:120px 120px 16px 16px;rotate:2.5deg}
+.curated-tall:after{inset:5px;border-radius:110px 110px 10px 10px}
+.curated-tall img{object-position:51% 43%}
+.curated-round{z-index:3;left:12px;bottom:0;width:46%;aspect-ratio:1;border:9px solid #fffaf3;border-radius:50%;rotate:-3deg}
+.curated-round:after{inset:5px;border-radius:50%}
+.curated-round img{object-position:50% 43%}
+.curated-note{position:absolute;z-index:4;left:40%;bottom:35px;width:120px;rotate:-6deg;font:500 21px/1.15 var(--font-hand);color:#a67f64;text-align:center}
+.album-action{display:flex;align-items:center;justify-content:center;gap:10px;min-width:220px;height:50px;margin:34px auto 0;padding:0 24px;border:1px solid rgba(82,62,50,.28);border-radius:999px;background:#fffaf3;color:#61493b;font:500 10px/1 var(--font-body);letter-spacing:.14em;text-transform:uppercase;cursor:pointer}
+.countdown-section{background:radial-gradient(circle at 50% 0%,#4b382e 0%,#271e19 54%,#201713 100%)!important}
+.countdown-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:30px}
+.countdown-unit{padding:18px 4px 16px;border:1px solid rgba(255,250,244,.14);border-radius:60px 60px 14px 14px;background:rgba(255,250,244,.045);text-align:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.06)}
+.rsvp-section{position:relative;overflow:hidden}
+.rsvp-card{position:relative;background:rgba(255,250,243,.86)!important;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px)}
+.rsvp-section:before{content:"08";position:absolute;right:-12px;top:18px;font:400 154px/.8 var(--font-editorial);color:rgba(166,127,100,.07);pointer-events:none}
 .gallery-sheet{position:relative;width:100%;max-width:520px;height:100%;background:#f8f3ec;overflow-y:auto;animation:sheetUp 480ms cubic-bezier(.22,1,.36,1) both}
 .gallery-header{position:sticky;top:0;z-index:4;display:flex;align-items:center;justify-content:space-between;padding:18px 20px;background:rgba(248,243,236,.94);border-bottom:1px solid rgba(82,62,50,.12);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
 .gallery-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 12px 34px}
@@ -106,7 +140,8 @@ h2,h3{font-family:var(--font-editorial)!important}
 .gallery-grid img{display:block;width:100%;height:100%;object-fit:cover}
 @media(hover:hover){
   .event-card:hover{transform:translateY(-4px);box-shadow:0 22px 50px rgba(54,38,28,.2)}
-  .event-card:hover image-slot{transform:scale(1.025)}
+  .event-card:hover .event-photo{transform:scale(1.085)}
+  .curated-card:hover img{transform:scale(1.035)!important}
 }
 @media(max-width:389px){
   .family-grid{grid-template-columns:1fr;gap:32px}
@@ -114,15 +149,28 @@ h2,h3{font-family:var(--font-editorial)!important}
   .date-seal{right:26px;bottom:54px}
   .editorial-story{min-height:560px}
   .hero-name{font-size:56px!important}
-  .hero-photo{top:232px}
+  .hero-photo{top:238px;left:12px;right:12px;bottom:12px}
+  .hero-photo-layer{top:238px;left:12px;right:12px;bottom:12px}
   .intro-names{font-size:58px!important}
+  .invite-nav{width:calc(100% - 24px)}
+  .invite-nav a{font-size:8px;letter-spacing:.08em}
+  .curated-stage{height:570px;margin-left:12px;margin-right:12px}
+  .curated-tall{top:190px}
+  .curated-note{font-size:19px}
 }
-@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation-duration:.001ms!important;animation-iteration-count:1!important}}
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important}
+  .love-marquee div{transform:none!important}
+  .date-seal:before{animation:none!important}
+}
 </style>
 </helmet>
 
 <div style="display:flex;justify-content:center;min-height:100vh;background:radial-gradient(120% 80% at 50% 0%,#3a2b23 0%,#221a15 60%)">
-<div style="width:100%;max-width:520px;background:#f8f3ec;position:relative;box-shadow:0 20px 70px rgba(40,28,22,.28);overflow:hidden">
+<div class="wedding-shell" style="width:100%;max-width:520px;background:#f8f3ec;position:relative;box-shadow:0 20px 70px rgba(40,28,22,.28);overflow:hidden">
+
+<div class="scroll-progress" aria-hidden="true"><span data-progress="1"></span></div>
 
 <button data-music="1" aria-label="Phát nhạc nền" style="position:fixed;top:max(16px,env(safe-area-inset-top));right:max(16px,calc(50% - 244px));z-index:100;width:44px;height:44px;border-radius:50%;background:rgba(255,250,243,.88);border:1px solid rgba(97,73,59,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:grid;place-items:center;cursor:pointer;color:#61493b;padding:0;opacity:.88;box-shadow:0 6px 18px rgba(39,30,25,.12)">
 <span style="font-size:17px;line-height:1;display:block">♪</span>
@@ -135,8 +183,8 @@ h2,h3{font-family:var(--font-editorial)!important}
 <image-slot id="tc57v3-hero" shape="rect" fit="cover" src="./assets/photos/LBS01690-1280.webp" placeholder="Ảnh hero cặp đôi"></image-slot>
 </div>
 </div>
-<div style="position:absolute;top:242px;left:0;right:0;bottom:0;pointer-events:none;background:linear-gradient(180deg,rgba(255,250,243,.08) 0%,rgba(255,250,243,0) 42%,rgba(39,30,25,.32) 100%)"></div>
-<div data-sparkles="1" aria-hidden="true" style="position:absolute;top:242px;left:0;right:0;bottom:0;pointer-events:none"></div>
+<div class="hero-photo-layer" style="pointer-events:none;background:linear-gradient(180deg,rgba(255,250,243,.08) 0%,rgba(255,250,243,0) 42%,rgba(39,30,25,.3) 100%)"></div>
+<div data-sparkles="1" class="hero-photo-layer" aria-hidden="true" style="pointer-events:none"></div>
 
 <div style="position:absolute;top:26px;left:0;right:0;text-align:center;pointer-events:none">
 <div data-heroanim="1" style="font:400 9.5px/1.9 'Be Vietnam Pro',sans-serif;letter-spacing:.3em;color:#61493b;opacity:.82;animation:hFade 800ms 260ms ease-out both;animation-play-state:paused">SAVE THE DATE</div>
@@ -164,10 +212,17 @@ Xem thông tin
 </div>
 </section>
 
-<section data-screen-label="02 Family" style="background:#f3e8db;padding:70px 24px 74px;position:relative">
+<nav class="invite-nav" aria-label="Điều hướng nhanh">
+<a data-jump="events" href="#events">Ngày cưới</a>
+<a data-jump="album" href="#album">Album</a>
+<a data-jump="rsvp" href="#rsvp">Xác nhận</a>
+</nav>
+
+<section data-screen-label="02 Family" class="family-section" style="background:#f3e8db;padding:70px 24px 74px;position:relative">
 <div data-rv="up" style="text-align:center;margin-bottom:38px">
 <span style="font:400 24px/1 'Dancing Script',cursive;color:#a67f64">Hai bên gia đình</span>
 </div>
+<div data-rv="scale" class="family-card">
 <div class="family-grid">
 <div data-rv="left" style="text-align:center">
 <div style="font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:#a67f64">Nhà trai</div>
@@ -183,6 +238,7 @@ Xem thông tin
 <div style="margin-top:14px;font:300 10.5px/1.65 'Be Vietnam Pro',sans-serif;color:#78685e;text-transform:uppercase">Thôn 13 · Xã Ea Wer<br>Tỉnh Đắk Lắk</div>
 </div>
 </div>
+</div>
 </section>
 
 <section data-screen-label="03 Our story" style="background:#f8f3ec;padding:78px 0 82px;position:relative;overflow:hidden">
@@ -192,28 +248,39 @@ Xem thông tin
 </div>
 <div class="editorial-story">
 <div data-rv="clip" data-rv-dur="1300ms" data-rv-delay="140" class="editorial-main">
-<img src="./assets/photos/LBS01523_1-640.webp" srcset="./assets/photos/LBS01523_1-640.webp 640w, ./assets/photos/LBS01523_1-1280.webp 1280w" sizes="(max-width:520px) 78vw, 405px" alt="Chân dung cô dâu Nhật Mai" decoding="async">
+<img data-zoom="1" src="./assets/photos/LBS01523_1-640.webp" srcset="./assets/photos/LBS01523_1-640.webp 640w, ./assets/photos/LBS01523_1-1280.webp 1280w" sizes="(max-width:520px) 78vw, 405px" alt="Chân dung cô dâu Nhật Mai" decoding="async">
 </div>
 <div data-rv="right" data-rv-delay="420" class="editorial-inset">
-<img src="./assets/photos/LBS01726-640.webp" srcset="./assets/photos/LBS01726-640.webp 640w, ./assets/photos/LBS01726-1280.webp 1280w" sizes="(max-width:520px) 48vw, 250px" alt="Ngô Nam và Nhật Mai bên nhau" loading="lazy" decoding="async">
+<img data-zoom="1" src="./assets/photos/LBS01726-640.webp" srcset="./assets/photos/LBS01726-640.webp 640w, ./assets/photos/LBS01726-1280.webp 1280w" sizes="(max-width:520px) 48vw, 250px" alt="Ngô Nam và Nhật Mai bên nhau" loading="lazy" decoding="async">
 </div>
 <div data-rv="scale" data-rv-delay="620" class="date-seal">08 · 08<br>2026</div>
+<div data-rv="left" data-rv-delay="720" class="story-caption">Một đời · một người</div>
 </div>
 </section>
 
-<section data-screen-label="04 First chapter" class="album-section">
+<div class="love-marquee" aria-hidden="true">
+<div>NGÔ NAM · NHẬT MAI · 08.08.2026 · OUR FOREVER STARTS HERE · NGÔ NAM · NHẬT MAI · 08.08.2026 · OUR FOREVER STARTS HERE ·&nbsp;</div>
+</div>
+
+<section id="album" data-screen-label="04 Curated album" class="curated-section" style="scroll-margin-top:72px">
 <div data-rv="up" class="album-heading">
-<div class="album-index">Chapter I · Us</div>
-<h2>Ngày chúng mình chọn nhau</h2>
-<p>Những khoảnh khắc nhỏ, những nụ cười thật và một lời hẹn cho hành trình dài phía trước.</p>
+<div class="album-index">Selected moments · 2026</div>
+<h2>Những khung hình chúng mình yêu</h2>
+<p>Ba khoảnh khắc nổi bật được sắp đặt như một trang tạp chí cưới. Toàn bộ ảnh nằm trong album riêng phía dưới.</p>
 </div>
-<div data-rv="up" data-rv-delay="160" class="filmstrip" aria-label="Album ảnh chân dung cặp đôi">
-<figure class="film-card"><img src="./assets/photos/LBS01554_1-640.webp" srcset="./assets/photos/LBS01554_1-640.webp 640w, ./assets/photos/LBS01554_1-1280.webp 1280w" sizes="72vw" alt="Cô dâu chú rể chụp ảnh chân dung" loading="lazy" decoding="async"><span>01</span></figure>
-<figure class="film-card"><img src="./assets/photos/LBS01613-640.webp" srcset="./assets/photos/LBS01613-640.webp 640w, ./assets/photos/LBS01613-1280.webp 1280w" sizes="72vw" alt="Cặp đôi trao nhau ánh nhìn" loading="lazy" decoding="async"><span>02</span></figure>
-<figure class="film-card"><img src="./assets/photos/LBS01674-640.webp" srcset="./assets/photos/LBS01674-640.webp 640w, ./assets/photos/LBS01674-1280.webp 1280w" sizes="72vw" alt="Khoảnh khắc vui của cặp đôi" loading="lazy" decoding="async"><span>03</span></figure>
-<figure class="film-card"><img src="./assets/photos/LBS01781-640.webp" srcset="./assets/photos/LBS01781-640.webp 640w, ./assets/photos/LBS01781-1280.webp 1280w" sizes="72vw" alt="Cô dâu xoay váy cùng chú rể" loading="lazy" decoding="async"><span>04</span></figure>
+<div class="curated-stage" aria-label="Ba ảnh cưới nổi bật của Ngô Nam và Nhật Mai">
+<figure data-rv="clip" data-rv-dur="1200ms" class="curated-card curated-wide">
+<img data-zoom="1" src="./assets/photos/LBS02274-640.webp" srcset="./assets/photos/LBS02274-640.webp 640w, ./assets/photos/LBS02274-1280.webp 1280w" sizes="(max-width:520px) 82vw, 426px" alt="Ngô Nam và Nhật Mai bên vườn hoa" loading="lazy" decoding="async">
+</figure>
+<figure data-rv="right" data-rv-delay="220" class="curated-card curated-tall">
+<img data-zoom="1" src="./assets/photos/LBS02361-640.webp" srcset="./assets/photos/LBS02361-640.webp 640w, ./assets/photos/LBS02361-1280.webp 1280w" sizes="(max-width:520px) 44vw, 230px" alt="Cặp đôi vui đùa giữa hoa" loading="lazy" decoding="async">
+</figure>
+<figure data-rv="scale" data-rv-delay="420" class="curated-card curated-round">
+<img data-zoom="1" src="./assets/photos/LBS02576-640.webp" srcset="./assets/photos/LBS02576-640.webp 640w, ./assets/photos/LBS02576-1280.webp 1280w" sizes="(max-width:520px) 42vw, 220px" alt="Khoảnh khắc gần gũi của cô dâu chú rể" loading="lazy" decoding="async">
+</figure>
+<div data-rv="up" data-rv-delay="620" class="curated-note">You, me<br>&amp; forever</div>
 </div>
-<div class="photo-note">Vuốt để xem thêm</div>
+<button class="secondary-action album-action" onClick="{{ openGallery }}">Mở album đầy đủ <span style="font-size:12px">25 ảnh</span></button>
 </section>
 
 <section data-screen-label="05 Quote" style="background:#f3e8db;padding:66px 28px;text-align:center;position:relative;overflow:hidden">
@@ -231,10 +298,10 @@ Xem thông tin
 </div>
 <div style="display:flex;flex-direction:column;gap:22px">
 <article data-rv="left" class="event-card">
-<image-slot id="tc57v3-event-bride" shape="rect" fit="cover" src="./assets/photos/LBS02201-1280.webp" placeholder="Ảnh nền sự kiện nhà gái"></image-slot>
+<img class="event-photo event-photo--bride" src="./assets/photos/LBS02087-640.webp" srcset="./assets/photos/LBS02087-640.webp 640w, ./assets/photos/LBS02087-1280.webp 1280w" sizes="(max-width:520px) 92vw, 472px" alt="Cô dâu chú rể bên hoa trong thiệp nhà gái" loading="lazy" decoding="async">
 <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.24),rgba(30,20,16,.7));pointer-events:none"></div>
-<div style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
-<div style="position:relative;text-align:center;padding:44px 28px;color:#fffaf4">
+<div class="event-frame" style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
+<div style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
 <div class="event-chip">Tiệc cưới nhà gái</div>
 <div style="margin-top:22px;font:italic 400 36px/1.1 'Playfair Display',serif">07.08.2026</div>
 <div style="margin-top:10px;font:400 13px/1.6 'Be Vietnam Pro',sans-serif;letter-spacing:.08em">Thứ sáu · 11:00</div>
@@ -246,10 +313,10 @@ Xem thông tin
 </div>
 </article>
 <article data-rv="right" class="event-card">
-<image-slot id="tc57v3-event-groom" shape="rect" fit="cover" src="./assets/photos/LBS02261-1280.webp" placeholder="Ảnh nền sự kiện nhà trai"></image-slot>
+<img class="event-photo event-photo--groom" src="./assets/photos/LBS02178-640.webp" srcset="./assets/photos/LBS02178-640.webp 640w, ./assets/photos/LBS02178-1280.webp 1280w" sizes="(max-width:520px) 92vw, 472px" alt="Cô dâu chú rể bên hoa trong thiệp nhà trai" loading="lazy" decoding="async">
 <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(30,20,16,.22),rgba(30,20,16,.7));pointer-events:none"></div>
-<div style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
-<div style="position:relative;text-align:center;padding:44px 28px;color:#fffaf4">
+<div class="event-frame" style="position:absolute;inset:12px;border:1px solid rgba(255,250,244,.52);border-radius:12px;pointer-events:none"></div>
+<div style="position:relative;text-align:center;padding:64px 28px 48px;color:#fffaf4">
 <div class="event-chip">Lễ thành hôn · Nhà trai</div>
 <div style="margin-top:22px;font:italic 400 36px/1.1 'Playfair Display',serif">08.08.2026</div>
 <div style="margin-top:10px;font:400 13px/1.6 'Be Vietnam Pro',sans-serif;letter-spacing:.08em">Thứ bảy · 11:00</div>
@@ -262,7 +329,7 @@ Xem thông tin
 </div>
 </section>
 
-<section data-screen-label="07 Countdown" style="background:#271e19;color:#fffaf4;padding:64px 24px 68px">
+<section data-screen-label="07 Countdown" class="countdown-section" style="background:#271e19;color:#fffaf4;padding:64px 24px 68px">
 <sc-if value="{{ married }}" hint-placeholder-val="{{ false }}">
 <div data-rv="up" style="text-align:center;padding:8px 16px">
 <div style="font:400 24px/1 'Dancing Script',cursive;color:#d1ad8f">Ngày hạnh phúc đã đến</div>
@@ -273,20 +340,20 @@ Xem thông tin
 <sc-if value="{{ counting }}" hint-placeholder-val="{{ true }}">
 <div data-rv="up" style="text-align:center;font:400 22px/1 'Dancing Script',cursive;color:#d1ad8f">Còn lại đến ngày chung đôi</div>
 <div data-rv="up" data-rv-delay="80" style="margin-top:13px;text-align:center;font:500 9px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.2em;opacity:.62">11:00 · 08.08.2026</div>
-<div data-rv="up" data-rv-delay="140" style="display:grid;grid-template-columns:repeat(4,1fr);margin-top:32px">
-<div style="text-align:center;padding:0 6px">
+<div data-rv="up" data-rv-delay="140" class="countdown-grid">
+<div class="countdown-unit">
 <div style="font:400 38px/1 'Playfair Display',serif;height:40px;overflow:hidden">{{ cd1d }}</div>
 <div style="margin-top:14px;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.68">Ngày</div>
 </div>
-<div style="text-align:center;padding:0 6px;border-left:1px solid rgba(255,250,244,.2)">
+<div class="countdown-unit">
 <div style="font:400 38px/1 'Playfair Display',serif;height:40px;overflow:hidden">{{ cd1h }}</div>
 <div style="margin-top:14px;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.68">Giờ</div>
 </div>
-<div style="text-align:center;padding:0 6px;border-left:1px solid rgba(255,250,244,.2)">
+<div class="countdown-unit">
 <div style="font:400 38px/1 'Playfair Display',serif;height:40px;overflow:hidden">{{ cd1m }}</div>
 <div style="margin-top:14px;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.68">Phút</div>
 </div>
-<div style="text-align:center;padding:0 6px;border-left:1px solid rgba(255,250,244,.2)">
+<div class="countdown-unit">
 <div style="font:400 38px/1 'Playfair Display',serif;height:40px;overflow:hidden">{{ cd1s }}</div>
 <div style="margin-top:14px;font:500 9.5px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.16em;text-transform:uppercase;opacity:.68">Giây</div>
 </div>
@@ -294,23 +361,8 @@ Xem thông tin
 </sc-if>
 </section>
 
-<section data-screen-label="08 In bloom gallery" class="mosaic-section">
-<div data-rv="up" class="album-heading">
-<div class="album-index">Chapter II · In bloom</div>
-<h2>Yêu thương nở hoa</h2>
-<p>Giữa những sắc hoa rực rỡ, chúng mình lưu lại một ngày thật gần gũi, vui vẻ và trọn vẹn.</p>
-</div>
-<div class="mosaic-grid">
-<figure data-rv="clip" class="mosaic-card wide"><img src="./assets/photos/LBS02274-640.webp" srcset="./assets/photos/LBS02274-640.webp 640w, ./assets/photos/LBS02274-1280.webp 1280w" sizes="(max-width:520px) 92vw, 480px" alt="Cặp đôi đứng giữa khu vườn hoa" loading="lazy" decoding="async"></figure>
-<figure data-rv="clip" class="mosaic-card"><img src="./assets/photos/LBS02361-640.webp" srcset="./assets/photos/LBS02361-640.webp 640w, ./assets/photos/LBS02361-1280.webp 1280w" sizes="46vw" alt="Cặp đôi vui đùa cùng bó hoa" loading="lazy" decoding="async"></figure>
-<figure data-rv="clip" class="mosaic-card"><img src="./assets/photos/LBS02533-640.webp" srcset="./assets/photos/LBS02533-640.webp 640w, ./assets/photos/LBS02533-1280.webp 1280w" sizes="46vw" alt="Chân dung chính diện của cặp đôi" loading="lazy" decoding="async"></figure>
-<figure data-rv="clip" class="mosaic-card wide"><img src="./assets/photos/LBS02576-640.webp" srcset="./assets/photos/LBS02576-640.webp 640w, ./assets/photos/LBS02576-1280.webp 1280w" sizes="(max-width:520px) 92vw, 480px" alt="Cặp đôi ngồi bên hoa hướng dương" loading="lazy" decoding="async"></figure>
-</div>
-<button class="secondary-action" onClick="{{ openGallery }}" style="display:flex;align-items:center;justify-content:center;gap:10px;min-width:210px;height:48px;margin:30px auto 0;padding:0 24px;border:1px solid rgba(82,62,50,.28);border-radius:999px;background:#fffaf3;color:#61493b;font:500 10px/1 'Be Vietnam Pro',sans-serif;letter-spacing:.14em;text-transform:uppercase;cursor:pointer">Xem toàn bộ album <span style="font-size:12px">25</span></button>
-</section>
-
-<section data-screen-label="09 RSVP" style="background:#f3e8db;padding:76px 24px 80px">
-<div data-rv="scale" data-rv-dur="950ms" style="background:#fffaf3;border:1px solid rgba(82,62,50,.18);border-radius:24px;padding:32px 22px 28px;box-shadow:0 12px 34px rgba(54,38,28,.08)">
+<section id="rsvp" data-screen-label="08 RSVP" class="rsvp-section" style="background:#f3e8db;padding:76px 24px 80px;scroll-margin-top:72px">
+<div data-rv="scale" data-rv-dur="950ms" class="rsvp-card" style="background:#fffaf3;border:1px solid rgba(82,62,50,.18);border-radius:24px;padding:32px 22px 28px;box-shadow:0 12px 34px rgba(54,38,28,.08)">
 <sc-if value="{{ rsvpSent }}" hint-placeholder-val="{{ false }}">
 <div style="text-align:center;padding:26px 4px">
 <div style="font-size:30px;line-height:1;color:#d5474f;animation:beat 3s ease-in-out infinite">♡</div>
@@ -364,7 +416,7 @@ Xem thông tin
 </div>
 </section>
 
-<section data-screen-label="10 Wishes" style="background:#f8f3ec;padding:78px 24px 84px">
+<section data-screen-label="09 Wishes" style="background:#f8f3ec;padding:78px 24px 84px">
 <div data-rv="up" style="text-align:center">
 <div style="font:400 24px/1 'Dancing Script',cursive;color:#a67f64">Lời chúc yêu thương</div>
 <h2 style="margin:14px 0 0;font:400 31px/1.25 'Playfair Display',serif;letter-spacing:.06em;text-transform:uppercase;color:#2d241f">Gửi lời chúc</h2>
@@ -387,7 +439,7 @@ Xem thông tin
 </div>
 </section>
 
-<section data-screen-label="11 Gift" style="background:#f3e8db;padding:66px 24px;text-align:center">
+<section data-screen-label="10 Gift" style="background:#f3e8db;padding:66px 24px;text-align:center">
 <div data-rv="up" style="max-width:420px;margin:0 auto;border:1px solid rgba(82,62,50,.18);border-radius:22px;padding:36px 24px;background:#fffaf3">
 <div style="font-size:18px;line-height:1;color:#d5474f">♡</div>
 <h2 style="margin:16px 0 0;font:italic 400 25px/1.35 'Playfair Display',serif;color:#2d241f">Gửi lời chúc và quà mừng</h2>
@@ -396,7 +448,7 @@ Xem thông tin
 </div>
 </section>
 
-<section data-screen-label="12 Final invitation" style="position:relative;min-height:86svh;display:grid;place-items:center;overflow:hidden;background:#3a2b23">
+<section data-screen-label="11 Final invitation" style="position:relative;min-height:86svh;display:grid;place-items:center;overflow:hidden;background:#3a2b23">
 <div data-parallax="final" style="position:absolute;inset:-5%">
 <div style="position:absolute;inset:0;animation:kbSlow 30s ease-in-out infinite alternate">
 <image-slot id="tc57v3-final" shape="rect" fit="cover" src="./assets/photos/LBS02492-1280.webp" placeholder="Ảnh cưới toàn khung cho lời cảm ơn"></image-slot>
@@ -520,6 +572,7 @@ class Component extends DCLogic {
     this.setupReveal();
     this.setupClock();
     this.setupScroll();
+    this.setupSectionNav();
     this.setupButtons();
     this.sparkle();
     document.body.style.overflow = 'hidden';
@@ -535,6 +588,7 @@ class Component extends DCLogic {
     clearInterval(this.tick);
     if (this.io) this.io.disconnect();
     if (this.mapIo) this.mapIo.disconnect();
+    if (this.navIo) this.navIo.disconnect();
     window.removeEventListener('scroll', this.onScroll);
     document.removeEventListener('keydown', this.onKey);
     document.removeEventListener('focusin', this.onFieldFocus);
@@ -649,6 +703,28 @@ class Component extends DCLogic {
       if (el.dataset.rv === 'clip') el.style.clipPath = 'inset(0 0 0 0)';
       setTimeout(() => { el.style.willChange = 'auto'; }, 1500);
     }, delay);
+  }
+
+  /* ---------- sticky quick navigation ---------- */
+  setupSectionNav() {
+    const links = Array.prototype.slice.call(document.querySelectorAll('[data-jump]'));
+    if (!links.length) return;
+    const sections = links.map((link) => document.getElementById(link.dataset.jump)).filter(Boolean);
+    const activate = (id) => {
+      links.forEach((link) => {
+        const on = link.dataset.jump === id;
+        link.classList.toggle('is-active', on);
+        if (on) link.setAttribute('aria-current', 'location');
+        else link.removeAttribute('aria-current');
+      });
+    };
+    this.navIo = new IntersectionObserver((entries) => {
+      const visible = entries.filter((entry) => entry.isIntersecting);
+      if (!visible.length) return;
+      visible.sort((a, b) => Math.abs(a.boundingClientRect.top) - Math.abs(b.boundingClientRect.top));
+      activate(visible[0].target.id);
+    }, { rootMargin: '-28% 0px -58% 0px', threshold: 0 });
+    sections.forEach((section) => this.navIo.observe(section));
   }
 
   /* ---------- calendar ---------- */
