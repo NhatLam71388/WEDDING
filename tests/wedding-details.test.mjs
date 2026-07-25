@@ -137,7 +137,10 @@ test("bride-family celebration is the canonical invitation date", async () => {
     '<section data-screen-label="11 Final invitation"',
     "<footer ",
   );
-  assert.match(finalInvitation, />07 · 08 · 2026</);
+  assert.match(
+    finalInvitation,
+    /font:italic 400 36px\/1\.1 'Playfair Display',serif[^>]*>07\.08\.2026</,
+  );
 
   const intro = between(html, '<div data-introroot="1"', "</sc-if>");
   assert.match(
