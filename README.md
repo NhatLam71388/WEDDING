@@ -35,7 +35,8 @@ Production API: `https://ngo-nam-nhat-mai-wedding-api.vanhung71388.workers.dev`
 - `POST /api/messages`: gửi lời chúc.
 - `POST /api/rsvp`: gửi hoặc cập nhật xác nhận tham dự bằng mã phản hồi riêng
   của thiết bị; họ tên không được dùng làm khóa duy nhất.
-- `/admin`: giao diện quản trị nhẹ, không lưu khóa truy cập trong trình duyệt.
+- `/admin`: dashboard quản trị responsive, có biểu đồ, tìm kiếm/lọc và xuất
+  Excel `.xlsx`; khóa truy cập chỉ giữ trong bộ nhớ của tab.
 
 Dữ liệu được lưu trong Cloudflare D1 qua binding `DB`. Production cần hai biến
 môi trường bí mật: `ADMIN_TOKEN` và `RATE_LIMIT_SALT`; không đưa giá trị thật

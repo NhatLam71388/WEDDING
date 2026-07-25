@@ -48,8 +48,12 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      - name: Test API
-        run: node --test tests/api.integration.test.mjs
+      - name: Test API and admin
+        run: >-
+          node --test
+          tests/api.integration.test.mjs
+          tests/admin-ui-regression.test.mjs
+          tests/cloudflare-deploy.test.mjs
 
       - name: Apply D1 migrations
         if: steps.cloudflare.outputs.ready == 'true'

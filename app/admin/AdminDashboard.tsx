@@ -92,6 +92,19 @@ function isoDate(value: number | string): string | undefined {
   return Number.isFinite(date.getTime()) ? date.toISOString() : undefined;
 }
 
+function downloadFilename(response: Response, fallback: string): string {
+  const disposition = response.headers.get("Content-Disposition") ?? "";
+  const encoded = disposition.match(/filename\*=UTF-8''([^;]+)/i);
+  if (encoded) {
+    try {
+      return decodeURIComponent(encoded[1]);
+    } catch {
+      // Use the ASCII fallback below.
+    }
+  }
+  return disposition.match(/filename="([^"]+)"/i)?.[1] ?? fallback;
+}
+
 function StatCard({
   eyebrow,
   value,
@@ -138,6 +151,7 @@ export default function AdminDashboard() {
       setError(apiError.message);
       if (apiError.status === 401) {
         setData(null);
+        setAccessKey("");
       }
       return false;
     } finally {
@@ -253,33 +267,72 @@ export default function AdminDashboard() {
     );
   }
 
-  async function downloadCsv(type: "rsvps" | "messages") {
+  async function downloadWorkbook(type: "rsvps" | "messages") {
     setExporting(type);
     setError("");
+    let objectUrl = "";
+    let anchor: HTMLAnchorElement | null = null;
     try {
-      const response = await fetch(`/api/admin/export?type=${type}`, {
+      const response = await fetch(
+        `/api/admin/export?type=${type}&format=xlsx`,
+        {
         headers: { Authorization: `Bearer ${accessKey}` },
         cache: "no-store",
-      });
+        },
+      );
       if (!response.ok) {
         throw new ApiError(response.status, await readError(response));
       }
 
+      const contentType =
+        response.headers
+          .get("Content-Type")
+          ?.toLocaleLowerCase("en-US")
+          .split(";")[0]
+          .trim() ?? "";
+      if (
+        contentType !==
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+      ) {
+        throw new Error("Máy chủ trả về định dạng file không hợp lệ.");
+      }
       const blob = await response.blob();
-      const objectUrl = URL.createObjectURL(blob);
-      const anchor = document.createElement("a");
+      if (blob.size < 4) {
+        throw new Error("File Excel nhận được đang trống.");
+      }
+      const signature = new Uint8Array(
+        await blob.slice(0, 4).arrayBuffer(),
+      );
+      if (
+        signature[0] !== 0x50 ||
+        signature[1] !== 0x4b ||
+        signature[2] !== 0x03 ||
+        signature[3] !== 0x04
+      ) {
+        throw new Error("File Excel nhận được không hợp lệ.");
+      }
+      objectUrl = URL.createObjectURL(blob);
+      anchor = document.createElement("a");
       anchor.href = objectUrl;
-      anchor.download =
-        type === "rsvps" ? "xac-nhan-tham-du.csv" : "loi-chuc.csv";
+      anchor.download = downloadFilename(
+        response,
+        type === "rsvps" ? "xac-nhan-tham-du.xlsx" : "loi-chuc.xlsx",
+      );
       document.body.appendChild(anchor);
       anchor.click();
-      anchor.remove();
-      URL.revokeObjectURL(objectUrl);
     } catch (caught) {
+      if (caught instanceof ApiError && caught.status === 401) {
+        setData(null);
+        setAccessKey("");
+      }
       setError(
         caught instanceof Error ? caught.message : "Không thể xuất dữ liệu.",
       );
     } finally {
+      if (anchor?.isConnected) anchor.remove();
+      if (objectUrl) {
+        window.setTimeout(() => URL.revokeObjectURL(objectUrl), 1500);
+      }
       setExporting("");
     }
   }
@@ -436,11 +489,11 @@ export default function AdminDashboard() {
             <button
               className="admin-button admin-button--outline"
               type="button"
-              onClick={() => void downloadCsv("rsvps")}
+              onClick={() => void downloadWorkbook("rsvps")}
               disabled={exporting !== ""}
             >
               <span aria-hidden="true">↓</span>
-              {exporting === "rsvps" ? "Đang xuất…" : "Xuất CSV"}
+              {exporting === "rsvps" ? "Đang chuẩn bị…" : "Tải Excel (.xlsx)"}
             </button>
           </div>
           {data.rsvps.length ? (
@@ -512,11 +565,11 @@ export default function AdminDashboard() {
             <button
               className="admin-button admin-button--outline"
               type="button"
-              onClick={() => void downloadCsv("messages")}
+              onClick={() => void downloadWorkbook("messages")}
               disabled={exporting !== ""}
             >
               <span aria-hidden="true">↓</span>
-              {exporting === "messages" ? "Đang xuất…" : "Xuất CSV"}
+              {exporting === "messages" ? "Đang chuẩn bị…" : "Tải Excel (.xlsx)"}
             </button>
           </div>
           {data.messages.length ? (

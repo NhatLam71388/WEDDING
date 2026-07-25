@@ -1,5 +1,12 @@
 import { getRuntimeBindings } from "@/db";
 import { verifyAdminRequest } from "@/lib/admin-auth";
+import {
+  createSpreadsheet,
+  spreadsheetDate,
+  type SpreadsheetCell,
+  type SpreadsheetColumn,
+  type SpreadsheetDateCell,
+} from "@/lib/xlsx";
 
 export const dynamic = "force-dynamic";
 
@@ -34,32 +41,11 @@ function json(payload: unknown, status = 200, headers?: HeadersInit): Response {
   });
 }
 
-function protectSpreadsheetCell(value: unknown): string {
-  let text = String(value ?? "");
-  if (/^[=+\-@\t\r]/.test(text)) {
-    text = `'${text}`;
-  }
-  return `"${text.replaceAll('"', '""')}"`;
-}
-
-const DELIMITER = ",";
-
-// Excel splits a CSV using the list separator from the operating system locale,
-// which is ";" on Vietnamese (and most European) Windows installs. A
-// comma-delimited file therefore lands entirely in column A. The "sep=" line is
-// a spreadsheet directive that pins the delimiter regardless of locale, so the
-// export opens as real columns on any machine.
-const SEPARATOR_HINT = `sep=${DELIMITER}`;
-
-function csvRow(values: unknown[]): string {
-  return values.map(protectSpreadsheetCell).join(DELIMITER);
-}
-
-function dateForCsv(timestamp: number): string {
+function dateForSpreadsheet(timestamp: number): SpreadsheetDateCell | string {
   const date = new Date(Number(timestamp));
   if (!Number.isFinite(date.getTime())) return "";
 
-  return new Intl.DateTimeFormat("vi-VN", {
+  const parts = new Intl.DateTimeFormat("vi-VN", {
     timeZone: "Asia/Ho_Chi_Minh",
     year: "numeric",
     month: "2-digit",
@@ -68,7 +54,33 @@ function dateForCsv(timestamp: number): string {
     minute: "2-digit",
     second: "2-digit",
     hour12: false,
-  }).format(date);
+  }).formatToParts(date);
+  const value = (type: Intl.DateTimeFormatPartTypes): string =>
+    parts.find((part) => part.type === type)?.value ?? "";
+  const display =
+    `${value("day")}/${value("month")}/${value("year")} ` +
+    `${value("hour")}:${value("minute")}:${value("second")}`;
+  return spreadsheetDate(Number(timestamp), display);
+}
+
+const CSV_DELIMITER = ";";
+const MAX_CSV_ROWS = 10_000;
+const MAX_XLSX_ROWS = 250;
+
+function protectCsvCell(value: SpreadsheetCell): string {
+  let text = String(
+    value && typeof value === "object" && value.kind === "date"
+      ? value.display
+      : (value ?? ""),
+  );
+  if (/^[=+\-@\t\r]/.test(text)) {
+    text = `'${text}`;
+  }
+  return `"${text.replaceAll('"', '""')}"`;
+}
+
+function csvRow(values: SpreadsheetCell[]): string {
+  return values.map(protectCsvCell).join(CSV_DELIMITER);
 }
 
 export async function GET(request: Request): Promise<Response> {
@@ -94,17 +106,28 @@ export async function GET(request: Request): Promise<Response> {
 
   const url = new URL(request.url);
   const type = url.searchParams.get("type");
+  const format = url.searchParams.get("format") || "csv";
   if (type !== "rsvps" && type !== "messages") {
     return json(
       { error: "Loại dữ liệu xuất phải là rsvps hoặc messages." },
       400,
     );
   }
+  if (format !== "csv" && format !== "xlsx") {
+    return json(
+      { error: "Định dạng xuất phải là csv hoặc xlsx." },
+      400,
+    );
+  }
 
   try {
     const database = getRuntimeBindings().DB;
-    let csv: string;
-    let filename: string;
+    const exportLimit =
+      format === "xlsx" ? MAX_XLSX_ROWS : MAX_CSV_ROWS;
+    let sheetName: string;
+    let columns: SpreadsheetColumn[];
+    let rows: SpreadsheetCell[][];
+    let filenameBase: string;
 
     if (type === "rsvps") {
       const result = await database
@@ -132,72 +155,82 @@ export async function GET(request: Request): Promise<Response> {
            SELECT id, name, guest_count, attend, side, created_at
            FROM latest_rsvps
            ORDER BY created_at DESC, id DESC
-           LIMIT 10000`,
+           LIMIT ?`,
         )
+        .bind(exportLimit)
         .all<ExportRsvpRow>();
 
-      const rows = [
-        csvRow([
-          "Mã",
-          "Họ tên",
-          "Trạng thái",
-          "Số khách",
-          "Phía gia đình",
-          "Thời gian gửi",
-        ]),
-        ...result.results.map((row: ExportRsvpRow) =>
-          csvRow([
-            row.id,
-            row.name,
-            row.attend === "yes" ? "Tham dự" : "Không tham dự",
-            row.guest_count,
-            row.side === "groom" ? "Nhà trai" : "Nhà gái",
-            dateForCsv(row.created_at),
-          ]),
-        ),
+      rows = result.results.map((row: ExportRsvpRow) => [
+        row.id,
+        row.name,
+        row.attend === "yes" ? "Tham dự" : "Không tham dự",
+        row.guest_count,
+        row.side === "groom" ? "Nhà trai" : "Nhà gái",
+        dateForSpreadsheet(row.created_at),
+      ]);
+      sheetName = "Xác nhận tham dự";
+      columns = [
+        { header: "Mã phản hồi", width: 42 },
+        { header: "Họ tên", width: 28 },
+        { header: "Trạng thái", width: 20 },
+        { header: "Số khách", width: 12 },
+        { header: "Phía gia đình", width: 18 },
+        { header: "Thời gian gửi", width: 24 },
       ];
-
-      csv = rows.join("\r\n");
-      filename = "xac-nhan-tham-du.csv";
+      filenameBase = "xac-nhan-tham-du";
     } else {
       const result = await database
         .prepare(
           `SELECT id, name, body, is_visible, created_at
            FROM messages
            ORDER BY created_at DESC, id DESC
-           LIMIT 10000`,
+           LIMIT ?`,
         )
+        .bind(exportLimit)
         .all<ExportMessageRow>();
 
-      const rows = [
-        csvRow([
-          "Mã",
-          "Họ tên",
-          "Lời chúc",
-          "Hiển thị",
-          "Thời gian gửi",
-        ]),
-        ...result.results.map((row: ExportMessageRow) =>
-          csvRow([
-            row.id,
-            row.name,
-            row.body,
-            Number(row.is_visible) === 1 ? "Có" : "Đã ẩn",
-            dateForCsv(row.created_at),
-          ]),
-        ),
+      rows = result.results.map((row: ExportMessageRow) => [
+        row.id,
+        row.name,
+        row.body,
+        Number(row.is_visible) === 1 ? "Có" : "Đã ẩn",
+        dateForSpreadsheet(row.created_at),
+      ]);
+      sheetName = "Lời chúc";
+      columns = [
+        { header: "Mã lời chúc", width: 42 },
+        { header: "Họ tên", width: 28 },
+        { header: "Lời chúc", width: 60 },
+        { header: "Đang hiển thị", width: 18 },
+        { header: "Thời gian gửi", width: 24 },
       ];
-
-      csv = rows.join("\r\n");
-      filename = "loi-chuc.csv";
+      filenameBase = "loi-chuc";
     }
 
-    return new Response(`\uFEFF${SEPARATOR_HINT}\r\n${csv}`, {
+    if (format === "csv") {
+      const csv = [
+        csvRow(columns.map((column) => column.header)),
+        ...rows.map(csvRow),
+      ].join("\r\n");
+      return new Response(`\uFEFF${csv}`, {
+        status: 200,
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
+          "Content-Disposition": `attachment; filename="${filenameBase}.csv"`,
+          "Content-Type": "text/csv; charset=utf-8",
+          "X-Content-Type-Options": "nosniff",
+        },
+      });
+    }
+
+    const workbook = createSpreadsheet({ sheetName, columns, rows });
+    return new Response(workbook, {
       status: 200,
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, max-age=0",
-        "Content-Disposition": `attachment; filename="${filename}"`,
-        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="${filenameBase}.xlsx"`,
+        "Content-Type":
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
         "X-Content-Type-Options": "nosniff",
       },
     });

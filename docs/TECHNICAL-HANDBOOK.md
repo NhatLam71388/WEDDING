@@ -107,7 +107,7 @@ flowchart LR
 - Xây API RSVP có mã phản hồi riêng; cùng một thiết bị gửi lại sẽ cập nhật phản
   hồi cũ thay vì dựa vào tên.
 - Xây trang quản trị để xem thống kê, ẩn/hiện/xóa lời chúc, xóa RSVP và xuất
-  CSV.
+  Excel.
 
 ### Giai đoạn 5 — Hạ tầng và tự động triển khai
 
@@ -384,7 +384,7 @@ sequenceDiagram
         API->>D1: Tải thống kê và 40 bản ghi mới nhất
         D1-->>API: Messages + RSVP
         API-->>UI: Dashboard
-        Admin->>UI: Ẩn/hiện/xóa/xuất CSV
+        Admin->>UI: Ẩn/hiện/xóa/xuất Excel
         UI->>API: Action có Bearer token
         API->>D1: Cập nhật hoặc xóa
         D1-->>UI: Kết quả mới
@@ -395,11 +395,15 @@ Admin UI hỗ trợ:
 
 - Thống kê tổng lời chúc, đang hiện và đang ẩn.
 - Thống kê RSVP, có/không tham dự, tổng số khách và phía gia đình.
+- Biểu đồ tỷ lệ tham dự, phân bổ khách hai gia đình và trạng thái lời chúc.
 - Hiện 40 lời chúc và 40 RSVP gần nhất.
+- Tìm kiếm và lọc danh sách theo tên, trạng thái và phía gia đình.
 - Ẩn/hiện hoặc xóa lời chúc.
 - Xóa RSVP.
-- Xuất tối đa 10.000 dòng CSV cho từng loại dữ liệu.
-- Chống công thức độc hại khi mở CSV trong Excel.
+- Xuất tối đa 250 dòng gần nhất thành file Excel `.xlsx` có tiêu đề, độ rộng cột,
+  xuống dòng, bộ lọc và hàng đầu được cố định.
+- Dữ liệu do khách nhập được lưu dưới dạng text trong workbook, không chạy như
+  công thức Excel.
 
 Token quản trị chỉ được giữ trong bộ nhớ của tab hiện tại. Trang không lưu token
 vào `localStorage` hoặc `sessionStorage`. Refresh/tab mới sẽ yêu cầu nhập lại.
@@ -428,8 +432,12 @@ vào `localStorage` hoặc `sessionStorage`. Refresh/tab mới sẽ yêu cầu n
 | `GET` | `/admin` | Admin UI nhẹ | Form token trong UI |
 | `GET` | `/api/admin/dashboard` | Thống kê và dữ liệu gần nhất | Bearer token |
 | `POST` | `/api/admin/dashboard` | Ẩn/hiện/xóa dữ liệu | Bearer token |
-| `GET` | `/api/admin/export?type=messages` | Xuất lời chúc CSV | Bearer token |
-| `GET` | `/api/admin/export?type=rsvps` | Xuất RSVP CSV | Bearer token |
+| `GET` | `/api/admin/export?type=messages&format=xlsx` | Xuất lời chúc Excel | Bearer token |
+| `GET` | `/api/admin/export?type=rsvps&format=xlsx` | Xuất RSVP Excel | Bearer token |
+
+Không truyền `format` hoặc dùng `format=csv` sẽ trả file CSV tương thích cũ.
+Dashboard production cho phép chọn Excel hoặc CSV. CSV giữ giới hạn 10.000
+dòng; XLSX giới hạn 250 dòng gần nhất để phù hợp ngân sách CPU của Worker Free.
 
 Các route API hỗ trợ `OPTIONS` khi cần CORS. Method không phù hợp trả `405` kèm
 header `Allow`; route không tồn tại trả JSON `404`.
@@ -664,7 +672,7 @@ Sau đó dùng địa chỉ Wrangler in ra để gọi `/api/health`, `/api/mess
 2. Nhập `ADMIN_TOKEN` đã lưu trong password manager.
 3. Theo dõi thống kê.
 4. Ẩn lời chúc không phù hợp trước; chỉ xóa khi chắc chắn.
-5. Xuất CSV định kỳ.
+5. Xuất Excel định kỳ.
 6. Logout hoặc đóng tab sau khi sử dụng trên máy lạ.
 
 ### Tự tạo khóa quản trị
@@ -739,7 +747,7 @@ Workflow `.github/workflows/deploy-cloudflare.yml`:
 3. Kiểm tra GitHub secret `CLOUDFLARE_API_TOKEN`.
 4. `npm ci`.
 5. Lint.
-6. Chạy API integration test.
+6. Chạy API integration, admin UI regression và deploy contract test.
 7. Áp D1 migration.
 8. Deploy Worker.
 
@@ -833,7 +841,7 @@ Các nhóm test hiện có:
 - Cấu hình frontend Vercel.
 - API integration với Miniflare + D1.
 - Pagination, CORS, validation, rate limit, RSVP upsert, admin auth,
-  moderation, delete và CSV export.
+  moderation, delete và Excel/CSV export.
 
 Checklist kiểm tra thủ công sau deploy:
 
@@ -855,7 +863,8 @@ Checklist kiểm tra thủ công sau deploy:
 
 ### Sao lưu D1
 
-Admin CSV chỉ dùng cho báo cáo, không phải bản backup đầy đủ database.
+File Excel/CSV từ admin chỉ dùng cho báo cáo, không phải bản backup đầy đủ
+database.
 
 Từ thư mục dự án, có thể export D1 production ra ngoài repository:
 
@@ -1050,7 +1059,7 @@ Các điểm nên cân nhắc nếu lượng khách hoặc yêu cầu vận hàn
 ### Định kỳ
 
 - [ ] Export backup D1.
-- [ ] Xuất CSV báo cáo.
+- [ ] Xuất Excel báo cáo.
 - [ ] Kiểm tra log/error rate.
 - [ ] Xóa dữ liệu test.
 - [ ] Rà soát quyền GitHub và Cloudflare token.

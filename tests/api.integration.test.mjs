@@ -25,6 +25,31 @@ function adminPost(miniflare, body) {
   });
 }
 
+function readStoredZip(arrayBuffer) {
+  const archive = Buffer.from(arrayBuffer);
+  const entries = new Map();
+  let offset = 0;
+
+  while (
+    offset + 30 <= archive.length &&
+    archive.readUInt32LE(offset) === 0x04034b50
+  ) {
+    const compression = archive.readUInt16LE(offset + 8);
+    const compressedSize = archive.readUInt32LE(offset + 18);
+    const nameLength = archive.readUInt16LE(offset + 26);
+    const extraLength = archive.readUInt16LE(offset + 28);
+    assert.equal(compression, 0, "XLSX fixtures use stored ZIP entries");
+    const nameStart = offset + 30;
+    const contentsStart = nameStart + nameLength + extraLength;
+    const contentsEnd = contentsStart + compressedSize;
+    const name = archive.subarray(nameStart, nameStart + nameLength).toString();
+    entries.set(name, archive.subarray(contentsStart, contentsEnd).toString());
+    offset = contentsEnd;
+  }
+
+  return { archive, entries };
+}
+
 test("live APIs paginate, persist RSVP identity, moderate, and reject oversized input", async () => {
   await mkdir(".wrangler", { recursive: true });
   await build({
@@ -63,7 +88,17 @@ test("live APIs paginate, persist RSVP identity, moderate, and reject oversized 
       statements.map((statement) => database.prepare(statement)),
     );
 
-    let response = await miniflare.dispatchFetch(
+    let response = await miniflare.dispatchFetch("http://wedding.test/admin");
+    assert.equal(response.status, 200);
+    assert.match(response.headers.get("content-type") ?? "", /^text\/html/);
+    assert.match(
+      response.headers.get("content-security-policy") ?? "",
+      /default-src 'none'/,
+    );
+    assert.match(response.headers.get("cache-control") ?? "", /no-store/);
+    assert.match(await response.text(), /id="attendanceDonut"/);
+
+    response = await miniflare.dispatchFetch(
       "http://wedding.test/api/messages",
       {
         headers: {
@@ -283,13 +318,113 @@ test("live APIs paginate, persist RSVP identity, moderate, and reject oversized 
       { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
     );
     assert.equal(response.status, 200);
-    const csv = await response.text();
-    // Leading BOM + "sep=," directive, then the header row and one data row.
-    // response.text() strips the leading BOM per the Fetch spec, so only the
-    // "sep=," directive is observable here.
-    assert.match(csv, /^﻿?sep=,\r\n/);
-    assert.equal(csv.split("\r\n").length, 3);
+    assert.equal(response.headers.get("content-type"), "text/csv; charset=utf-8");
+    assert.match(
+      response.headers.get("content-disposition") ?? "",
+      /filename="xac-nhan-tham-du\.csv"/,
+    );
+    const csvBytes = Buffer.from(await response.arrayBuffer());
+    assert.deepEqual([...csvBytes.subarray(0, 3)], [0xef, 0xbb, 0xbf]);
+    const csv = csvBytes.subarray(3).toString("utf8");
+    assert.match(csv, /^"Mã phản hồi";"Họ tên";"Trạng thái";/);
+    assert.equal(csv.split("\r\n").length, 2);
     assert.match(csv, /Không tham dự/);
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/export?type=rsvps&format=xlsx",
+      { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
+    );
+    assert.equal(response.status, 200);
+    assert.equal(
+      response.headers.get("content-type"),
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    );
+    assert.match(
+      response.headers.get("content-disposition") ?? "",
+      /filename="xac-nhan-tham-du\.xlsx"/,
+    );
+    const rsvpWorkbook = readStoredZip(await response.arrayBuffer());
+    assert.deepEqual([...rsvpWorkbook.archive.subarray(0, 4)], [
+      0x50, 0x4b, 0x03, 0x04,
+    ]);
+    assert.ok(rsvpWorkbook.entries.has("[Content_Types].xml"));
+    assert.match(
+      rsvpWorkbook.entries.get("xl/workbook.xml") ?? "",
+      /name="Xác nhận tham dự"/,
+    );
+    const rsvpSheet =
+      rsvpWorkbook.entries.get("xl/worksheets/sheet1.xml") ?? "";
+    assert.match(rsvpSheet, /state="frozen"/);
+    assert.match(rsvpSheet, /<autoFilter ref="A1:F2"\/>/);
+    assert.match(rsvpSheet, /Không tham dự/);
+    assert.match(rsvpSheet, /<c r="D2" s="2"><v>0<\/v><\/c>/);
+    assert.match(
+      rsvpSheet,
+      /<c r="F2" s="3"><v>\d+(?:\.\d+)?<\/v><\/c>/,
+    );
+    assert.match(rsvpSheet, /width="42"/);
+    assert.match(
+      rsvpWorkbook.entries.get("xl/styles.xml") ?? "",
+      /<numFmt numFmtId="164" formatCode="dd\/mm\/yyyy hh:mm:ss"\/>/,
+    );
+
+    await database
+      .prepare(
+        `INSERT INTO messages
+           (id, name, body, is_visible, ip_hash, created_at)
+         VALUES (?, ?, ?, 1, ?, ?)`,
+      )
+      .bind(
+        "eeeeeeee-eeee-4eee-beee-eeeeeeeeeeee",
+        "=HYPERLINK(\"https://example.com\")",
+        "Nguyễn Nhật Mai, lời chúc \"đặc biệt\"\nDòng thứ hai\uFFFF",
+        "e".repeat(64),
+        1_700_000_002_000,
+      )
+      .run();
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/export?type=messages&format=csv",
+      { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
+    );
+    assert.equal(response.status, 200);
+    const messageCsvBytes = Buffer.from(await response.arrayBuffer());
+    const messageCsv = messageCsvBytes.subarray(3).toString("utf8");
+    assert.match(messageCsv, /'=HYPERLINK/);
+    assert.match(messageCsv, /15\/11\/2023 05:13:22/);
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/export?type=messages&format=xlsx",
+      { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
+    );
+    assert.equal(response.status, 200);
+    const messageWorkbook = readStoredZip(await response.arrayBuffer());
+    const messageSheet =
+      messageWorkbook.entries.get("xl/worksheets/sheet1.xml") ?? "";
+    assert.match(messageSheet, /=HYPERLINK\(&quot;https:\/\/example\.com&quot;\)/);
+    assert.match(messageSheet, /Nguyễn Nhật Mai, lời chúc &quot;đặc biệt&quot;/);
+    assert.match(messageSheet, /Dòng thứ hai/);
+    assert.doesNotMatch(messageSheet, /\uFFFF/);
+    assert.doesNotMatch(messageSheet, /<f(?:\s|>)/);
+    const formulaCell = messageSheet.match(
+      /<c r="B(\d+)" s="0" t="inlineStr"><is><t xml:space="preserve">=HYPERLINK\(&quot;https:\/\/example\.com&quot;\)<\/t><\/is><\/c>/,
+    );
+    assert.ok(formulaCell, "formula-looking text must stay an inline string");
+    assert.match(
+      messageSheet,
+      new RegExp(
+        `<c r="E${formulaCell[1]}" s="3"><v>45245\\.21761574074<\\/v><\\/c>`,
+      ),
+    );
+    await database
+      .prepare("DELETE FROM messages WHERE id = ?")
+      .bind("eeeeeeee-eeee-4eee-beee-eeeeeeeeeeee")
+      .run();
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/admin/export?type=rsvps&format=pdf",
+      { headers: { authorization: `Bearer ${ADMIN_TOKEN}` } },
+    );
+    assert.equal(response.status, 400);
 
     response = await miniflare.dispatchFetch(
       "http://wedding.test/api/rsvp",
@@ -461,8 +596,8 @@ test("live APIs paginate, persist RSVP identity, moderate, and reject oversized 
     );
     assert.equal(response.status, 200);
     const identityCsv = await response.text();
-    assert.match(identityCsv, /^﻿?sep=,\r\n/);
-    assert.equal(identityCsv.split("\r\n").length, 5);
+    assert.match(identityCsv, /^﻿?"Mã phản hồi";"Họ tên";/);
+    assert.equal(identityCsv.split("\r\n").length, 4);
     assert.equal(identityCsv.split(firstResponseId).length - 1, 1);
     assert.equal(identityCsv.split(secondResponseId).length - 1, 1);
 

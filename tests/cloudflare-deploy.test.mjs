@@ -51,6 +51,7 @@ test("Cloudflare deploy targets the standalone API worker and production D1", as
     workflow,
     /Apply D1 migrations[\s\S]*Deploy Worker/,
   );
+  assert.match(workflow, /tests\/admin-ui-regression\.test\.mjs/);
 
   assert.doesNotMatch(worker, /vinext|ASSETS|IMAGES/);
   assert.match(worker, /adminPageResponse/);
