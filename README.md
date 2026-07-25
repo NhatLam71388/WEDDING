@@ -4,6 +4,12 @@ Website thiệp cưới tương tác, ưu tiên tiệc nhà gái lúc 11:00 th�
 07/08/2026, có guestbook, xác nhận
 tham dự và khu vực quản trị.
 
+## Tài liệu
+
+Xem [tài liệu kỹ thuật và vận hành](docs/TECHNICAL-HANDBOOK.md) để hiểu kiến
+trúc, công nghệ, luồng giao diện/API, mô hình dữ liệu, CI/CD, cách quản trị,
+sao lưu và xử lý sự cố.
+
 ## Chạy cục bộ
 
 Yêu cầu Node.js 22.13 trở lên.
