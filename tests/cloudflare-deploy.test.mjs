@@ -41,7 +41,11 @@ test("Cloudflare deploy targets the standalone API worker and production D1", as
 
   assert.match(workflow, /branches:\s*\n\s*-\s*main/);
   assert.match(workflow, /secrets\.CLOUDFLARE_API_TOKEN/);
-  assert.match(workflow, /secrets\.CLOUDFLARE_ACCOUNT_ID/);
+  assert.match(
+    workflow,
+    /CLOUDFLARE_ACCOUNT_ID:\s*e8045479a2ef8992d1258b748ac5f4c0/,
+  );
+  assert.doesNotMatch(workflow, /secrets\.CLOUDFLARE_ACCOUNT_ID/);
   assert.match(workflow, /steps\.cloudflare\.outputs\.ready == 'true'/);
   assert.match(
     workflow,

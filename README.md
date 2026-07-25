@@ -45,10 +45,9 @@ npm run deploy:worker
 ```
 
 Workflow `.github/workflows/deploy-cloudflare.yml` tự kiểm tra, migrate D1 và
-deploy backend khi push `main`. Repository GitHub cần hai Actions secrets:
-
-- `CLOUDFLARE_ACCOUNT_ID`
-- `CLOUDFLARE_API_TOKEN` có quyền chỉnh sửa Workers và D1
+deploy backend khi push `main`. Account ID không phải thông tin bí mật nên đã
+được cấu hình trực tiếp trong workflow. Repository GitHub chỉ cần Actions secret
+`CLOUDFLARE_API_TOKEN` có quyền chỉnh sửa Workers và D1.
 
 Secret runtime của Worker được cấu hình một lần bằng `wrangler secret put` và
 được Cloudflare giữ lại qua các lần deploy.
