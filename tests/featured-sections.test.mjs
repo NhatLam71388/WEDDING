@@ -164,7 +164,7 @@ test("story and featured album show the five requested image roles", async () =>
   );
 });
 
-test("the two handholding landscapes stack as equal full-width rows", async () => {
+test("the two handholding landscapes form a stacked editorial story", async () => {
   const html = await readFile(INVITATION_PATH, "utf8");
   const story = storySection(html);
   const featured = between(
@@ -199,6 +199,14 @@ test("the two handholding landscapes stack as equal full-width rows", async () =
   );
   assert.ok(firstHandholdingFrame);
   assert.ok(secondHandholdingFrame);
+  assert.match(
+    firstHandholdingFrame,
+    /\bclass="[^"]*\bfeatured-frame--handholding-first\b[^"]*"/i,
+  );
+  assert.match(
+    secondHandholdingFrame,
+    /\bclass="[^"]*\bfeatured-frame--handholding-second\b[^"]*"/i,
+  );
 
   const twirlFrame = tagWithClass(
     featured,
@@ -214,33 +222,46 @@ test("the two handholding landscapes stack as equal full-width rows", async () =
   );
 
   const storyStageRule = cssRule(html, ".story-stage");
+  assert.match(
+    storyStageRule,
+    /\bheight\s*:\s*(?:clamp\(|min\(|max\(|\d+(?:\.\d+)?(?:px|svh|vh|vw))/i,
+    "the portrait story keeps its bounded composition",
+  );
   const featuredStageRule = cssRule(html, ".featured-stage");
-  for (const [name, rule] of [
-    ["story", storyStageRule],
-    ["featured", featuredStageRule],
-  ]) {
-    assert.match(
-      rule,
-      /\bheight\s*:\s*(?:clamp\(|min\(|max\(|\d+(?:\.\d+)?(?:px|svh|vh|vw))/i,
-      `${name} stage should have a bounded explicit height`,
-    );
-    assert.doesNotMatch(
-      rule,
-      /\bmin-height\s*:/i,
-      `${name} stage should not lengthen the page through min-height`,
-    );
-  }
+  assert.match(featuredStageRule, /\bheight\s*:\s*auto\b/i);
+  assert.match(featuredStageRule, /\bpadding-top\s*:\s*clamp\(/i);
+  assert.doesNotMatch(featuredStageRule, /\bmin-height\s*:/i);
 
   const storyFrameRule = cssRule(html, ".story-frame");
   assert.match(storyFrameRule, /\baspect-ratio\s*:\s*2\s*\/\s*3/i);
 
   const handholdingRule = cssRule(html, ".featured-frame--handholding");
-  assert.match(handholdingRule, /\baspect-ratio\s*:\s*3\s*\/\s*2/i);
-  assert.match(
-    handholdingRule,
-    /\bwidth\s*:\s*100%/i,
-    "each handholding frame should fill its row",
+  assert.match(handholdingRule, /\bwidth\s*:\s*100%/i);
+  const photoWindowRule = cssRule(html, ".handholding-photo-window");
+  assert.match(photoWindowRule, /\baspect-ratio\s*:\s*1280\s*\/\s*854/i);
+  const handholdingImageRule = cssRule(
+    html,
+    ".featured-frame--handholding img",
   );
+  assert.match(handholdingImageRule, /\bobject-fit\s*:\s*contain/i);
+
+  const firstFrameRule = cssRule(
+    html,
+    ".featured-frame--handholding-first",
+  );
+  const secondFrameRule = cssRule(
+    html,
+    ".featured-frame--handholding-second",
+  );
+  assert.match(firstFrameRule, /\bborder-radius\s*:\s*112px\s+112px/i);
+  assert.match(secondFrameRule, /\brotate\s*:\s*\.65deg/i);
+  assert.match(secondFrameRule, /\bwidth\s*:\s*100%/i);
+  assert.doesNotMatch(
+    secondFrameRule,
+    /\bwidth\s*:\s*(?:9[0-9]|[1-8][0-9])%/i,
+    "the second landscape should remain full-width on its own row",
+  );
+
   const pairRule = cssRule(html, ".featured-handholding-pair");
   const isOneColumnGrid =
     /\bdisplay\s*:\s*grid\b/i.test(pairRule) &&
@@ -295,6 +316,19 @@ test("featured image frames have no overlaid captions or labels", async () => {
     /\.(?:featured-label|handholding-caption)\b/i,
     "obsolete overlay-caption selectors should be removed",
   );
+
+  const editorial = tagWithClass(
+    featured,
+    "div",
+    "handholding-editorial",
+  );
+  const bridge = tagWithClass(featured, "div", "handholding-bridge");
+  assert.ok(editorial, "the editorial heading should sit outside the photos");
+  assert.ok(bridge, "the handwritten sticker should sit between the photos");
+  assert.match(bridge, /\baria-hidden="true"/i);
+  for (const figure of imageFigures) {
+    assert.doesNotMatch(figure, /handholding-(?:editorial|bridge)/i);
+  }
 });
 
 test("the separate princess frame preserves the original full subject", async () => {
@@ -336,7 +370,8 @@ test("the separate princess frame preserves the original full subject", async ()
     html.match(/\.featured-frame\s+img\s*\{([^}]*)\}/i);
   assert.ok(
     landscapeImageRule,
-    "both handholding landscapes should share the same crop behavior",
+    "both handholding landscapes should preserve the original composition",
   );
-  assert.match(landscapeImageRule[1], /\bobject-fit\s*:\s*cover/i);
+  assert.match(landscapeImageRule[1], /\bobject-fit\s*:\s*contain/i);
+  assert.doesNotMatch(landscapeImageRule[1], /\bobject-fit\s*:\s*cover/i);
 });
