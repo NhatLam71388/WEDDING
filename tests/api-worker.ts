@@ -5,19 +5,29 @@ import {
 import { GET as exportAdminData } from "@/app/api/admin/export/route";
 import {
   GET as getMessages,
+  OPTIONS as optionsMessages,
   POST as postMessage,
 } from "@/app/api/messages/route";
-import { POST as postRsvp } from "@/app/api/rsvp/route";
+import {
+  OPTIONS as optionsRsvp,
+  POST as postRsvp,
+} from "@/app/api/rsvp/route";
 
 const apiWorker = {
   async fetch(request: Request): Promise<Response> {
     const { pathname } = new URL(request.url);
 
+    if (pathname === "/api/messages" && request.method === "OPTIONS") {
+      return optionsMessages(request);
+    }
     if (pathname === "/api/messages" && request.method === "GET") {
-      return getMessages();
+      return getMessages(request);
     }
     if (pathname === "/api/messages" && request.method === "POST") {
       return postMessage(request);
+    }
+    if (pathname === "/api/rsvp" && request.method === "OPTIONS") {
+      return optionsRsvp(request);
     }
     if (pathname === "/api/rsvp" && request.method === "POST") {
       return postRsvp(request);

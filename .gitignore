@@ -19,6 +19,8 @@ Thumbs.db
 /.site-public/
 /.wrangler/
 /.open-next/
+/.vercel/
+/.vercel-static/
 /tmp/
 *.tsbuildinfo
 .env

@@ -54,9 +54,52 @@ test("live APIs persist, deduplicate, moderate, and reject oversized input", asy
 
     let response = await miniflare.dispatchFetch(
       "http://wedding.test/api/messages",
+      {
+        headers: {
+          origin: "https://ngo-nam-nhat-mai-wedding.vercel.app",
+        },
+      },
     );
     assert.equal(response.status, 200);
+    assert.equal(
+      response.headers.get("access-control-allow-origin"),
+      "https://ngo-nam-nhat-mai-wedding.vercel.app",
+    );
     assert.deepEqual((await json(response)).messages, []);
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/rsvp",
+      {
+        method: "OPTIONS",
+        headers: {
+          origin: "https://ngo-nam-nhat-mai-wedding.vercel.app",
+          "access-control-request-method": "POST",
+          "access-control-request-headers": "content-type",
+        },
+      },
+    );
+    assert.equal(response.status, 204);
+    assert.equal(
+      response.headers.get("access-control-allow-origin"),
+      "https://ngo-nam-nhat-mai-wedding.vercel.app",
+    );
+    assert.match(
+      response.headers.get("access-control-allow-methods") ?? "",
+      /POST/,
+    );
+
+    response = await miniflare.dispatchFetch(
+      "http://wedding.test/api/rsvp",
+      {
+        method: "OPTIONS",
+        headers: {
+          origin: "https://untrusted.example",
+          "access-control-request-method": "POST",
+        },
+      },
+    );
+    assert.equal(response.status, 403);
+    assert.equal(response.headers.get("access-control-allow-origin"), null);
 
     response = await miniflare.dispatchFetch(
       "http://wedding.test/api/messages",
@@ -157,6 +200,7 @@ test("live APIs persist, deduplicate, moderate, and reject oversized input", asy
 
     response = await miniflare.dispatchFetch(
       "http://wedding.test/api/messages",
+      { headers: {} },
     );
     assert.deepEqual((await json(response)).messages, []);
 
