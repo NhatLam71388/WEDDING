@@ -55,7 +55,7 @@ test("Vercel serves the static invitation and keeps admin on the backend", async
     /isLocal[\s\S]*?ngo-nam-nhat-mai-wedding-api\.vanhung71388\.workers\.dev/,
   );
   assert.doesNotMatch(invitation, /chatgpt\.site/);
-  assert.equal((invitation.match(/fetch\(this\.apiUrl\(/g) ?? []).length, 1);
+  assert.equal((invitation.match(/fetch\(this\.apiUrl\(/g) ?? []).length, 3);
   assert.match(publicInvitation, /\bdata-introdove="1"/);
   assert.match(
     publicInvitation,

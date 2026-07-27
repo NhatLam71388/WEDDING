@@ -1143,6 +1143,18 @@
               transform: rotate(360deg);
             }
           }
+          @keyframes wishArrive {
+            from {
+              opacity: 0;
+              transform: translateY(-10px) scale(0.985);
+              box-shadow: 0 0 0 rgba(86, 60, 44, 0);
+            }
+            to {
+              opacity: 1;
+              transform: none;
+              box-shadow: 0 12px 30px rgba(86, 60, 44, 0.08);
+            }
+          }
           @keyframes twinkle {
             0%,
             100% {
@@ -1700,6 +1712,78 @@
             text-decoration: underline;
             text-underline-offset: 3px;
             cursor: pointer;
+          }
+          .wishes-list {
+            position: relative;
+          }
+          .wish-card {
+            position: relative;
+            padding: 22px 12px 22px 2px;
+            border-bottom: 1px solid rgba(82, 62, 50, 0.14);
+            transition:
+              background-color 260ms ease,
+              border-color 260ms ease,
+              transform 260ms ease;
+          }
+          .wish-card.is-mine {
+            margin: 8px -10px;
+            padding: 18px 12px;
+            border: 1px solid rgba(166, 127, 100, 0.28);
+            border-radius: 16px;
+            background: linear-gradient(
+              135deg,
+              rgba(255, 250, 243, 0.96),
+              rgba(242, 225, 210, 0.72)
+            );
+            box-shadow: 0 12px 30px rgba(86, 60, 44, 0.08);
+            animation: wishArrive 850ms cubic-bezier(0.22, 1, 0.36, 1) both;
+          }
+          .wish-mine-badge {
+            display: inline-flex;
+            align-items: center;
+            min-height: 22px;
+            margin-left: auto;
+            padding: 0 8px;
+            border: 1px solid rgba(166, 127, 100, 0.26);
+            border-radius: 999px;
+            background: rgba(255, 250, 243, 0.72);
+            font: 500 7.5px/1 var(--font-body);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #846650;
+          }
+          .wish-pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            flex-wrap: wrap;
+            margin-top: 22px;
+          }
+          .wish-page-button {
+            min-height: 42px;
+            padding: 0 17px;
+            border: 1px solid rgba(97, 73, 59, 0.24);
+            border-radius: 999px;
+            background: #fffaf3;
+            color: #61493b;
+            font: 500 9px/1 var(--font-body);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            cursor: pointer;
+          }
+          .wish-page-button:hover {
+            background: #f3e8db;
+          }
+          .wish-page-button:disabled {
+            cursor: wait;
+            opacity: 0.62;
+          }
+          .wish-page-button--quiet {
+            border-color: transparent;
+            background: transparent;
+            text-decoration: underline;
+            text-underline-offset: 4px;
           }
           .story-stage {
             position: relative;
@@ -4385,6 +4469,310 @@
           </section>
 
           <section
+            data-screen-label="09 Wishes"
+            style="background: #f8f3ec; padding: 78px 24px 84px"
+          >
+            <div data-rv="up" style="text-align: center">
+              <div
+                style="
+                  font:
+                    400 24px/1 &quot;Dancing Script&quot;,
+                    cursive;
+                  color: #a67f64;
+                "
+              >
+                Lời chúc yêu thương
+              </div>
+              <h2
+                style="
+                  margin: 14px 0 0;
+                  font:
+                    400 31px/1.25 &quot;Playfair Display&quot;,
+                    serif;
+                  letter-spacing: 0.06em;
+                  text-transform: uppercase;
+                  color: #2d241f;
+                "
+              >
+                Gửi lời chúc
+              </h2>
+            </div>
+            <div data-rv="up" data-rv-delay="160" style="margin-top: 30px">
+              <input
+                class="field-control"
+                value="{{ wName }}"
+                onChange="{{ onWName }}"
+                maxlength="60"
+                aria-label="Tên của bạn"
+                placeholder="Tên của bạn"
+                style="
+                  width: 100%;
+                  height: 46px;
+                  border: 1px solid rgba(82, 62, 50, 0.2);
+                  padding: 0 14px;
+                  font:
+                    400 13.5px/1 &quot;Be Vietnam Pro&quot;,
+                    sans-serif;
+                  color: #2d241f;
+                "
+              />
+              <textarea
+                class="field-control"
+                value="{{ wText }}"
+                onChange="{{ onWText }}"
+                maxlength="400"
+                aria-label="Lời chúc"
+                aria-required="true"
+                placeholder="Viết lời chúc dành cho cô dâu chú rể..."
+                style="
+                  width: 100%;
+                  height: 110px;
+                  margin-top: 12px;
+                  border: 1px solid rgba(82, 62, 50, 0.2);
+                  border-radius: 16px !important;
+                  padding: 14px;
+                  font:
+                    300 13.5px/1.75 &quot;Be Vietnam Pro&quot;,
+                    sans-serif;
+                  color: #2d241f;
+                  resize: none;
+                "
+              ></textarea>
+              <input
+                type="text"
+                name="website"
+                value="{{ wishWebsite }}"
+                onChange="{{ onWishWebsite }}"
+                autocomplete="off"
+                tabindex="-1"
+                aria-hidden="true"
+                style="
+                  position: absolute;
+                  left: -10000px;
+                  width: 1px;
+                  height: 1px;
+                  overflow: hidden;
+                  opacity: 0;
+                  pointer-events: none;
+                "
+              />
+              <sc-if
+                value="{{ wishHasError }}"
+                hint-placeholder-val="{{ false }}"
+              >
+                <div
+                  role="alert"
+                  aria-live="assertive"
+                  style="
+                    margin-top: 10px;
+                    font:
+                      400 11px/1.55 &quot;Be Vietnam Pro&quot;,
+                      sans-serif;
+                    color: #a54a4f;
+                  "
+                >
+                  {{ wishError }}
+                </div>
+              </sc-if>
+              <button
+                class="primary-action"
+                onClick="{{ onWish }}"
+                disabled="{{ wishBusy }}"
+                style="
+                  width: 100%;
+                  height: 50px;
+                  margin-top: 14px;
+                  border: none;
+                  border-radius: 999px;
+                  background: #61493b;
+                  color: #fffaf4;
+                  font:
+                    500 11px/1 &quot;Be Vietnam Pro&quot;,
+                    sans-serif;
+                  letter-spacing: 0.16em;
+                  text-transform: uppercase;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  gap: 10px;
+                "
+              >
+                <sc-if
+                  value="{{ wishBusy }}"
+                  hint-placeholder-val="{{ false }}"
+                >
+                  <span
+                    style="
+                      width: 13px;
+                      height: 13px;
+                      border-radius: 50%;
+                      border: 1.5px solid rgba(255, 250, 244, 0.35);
+                      border-top-color: #fffaf4;
+                      animation: spinner 0.7s linear infinite;
+                      display: block;
+                    "
+                  ></span>
+                </sc-if>
+                {{ wishLabel }}
+              </button>
+              <sc-if value="{{ wishSent }}" hint-placeholder-val="{{ false }}">
+                <div
+                  role="status"
+                  aria-live="polite"
+                  style="
+                    margin-top: 12px;
+                    padding: 10px 12px;
+                    border: 1px solid rgba(140, 164, 124, 0.24);
+                    border-radius: 12px;
+                    background: rgba(140, 164, 124, 0.08);
+                    font:
+                      400 11px/1.55 &quot;Be Vietnam Pro&quot;,
+                      sans-serif;
+                    color: #56664e;
+                  "
+                >
+                  Lời chúc của bạn đã được gửi và đang hiển thị ngay bên dưới.
+                </div>
+              </sc-if>
+            </div>
+            <div class="wishes-list" style="margin-top: 42px">
+              <div
+                role="status"
+                aria-live="polite"
+                style="
+                  display: flex;
+                  align-items: center;
+                  gap: 8px;
+                  margin-bottom: 7px;
+                  font:
+                    500 9px/1 &quot;Be Vietnam Pro&quot;,
+                    sans-serif;
+                  letter-spacing: 0.14em;
+                  text-transform: uppercase;
+                  color: #9b826f;
+                "
+              >
+                <span
+                  style="
+                    width: 5px;
+                    height: 5px;
+                    border-radius: 50%;
+                    background: #8ca47c;
+                    box-shadow: 0 0 0 3px rgba(140, 164, 124, 0.13);
+                    display: block;
+                  "
+                ></span>
+                {{ messagesSummary }}
+              </div>
+              <sc-if
+                value="{{ messagesHasError }}"
+                hint-placeholder-val="{{ false }}"
+              >
+                <div
+                  role="status"
+                  style="
+                    padding: 14px 0;
+                    font:
+                      300 11.5px/1.65 &quot;Be Vietnam Pro&quot;,
+                      sans-serif;
+                    color: #8b6d5c;
+                  "
+                >
+                  {{ messagesError }}
+                </div>
+              </sc-if>
+              <sc-if
+                value="{{ messagesEmpty }}"
+                hint-placeholder-val="{{ false }}"
+              >
+                <div
+                  style="
+                    padding: 22px 0;
+                    border-bottom: 1px solid rgba(82, 62, 50, 0.14);
+                    font:
+                      italic 400 14px/1.7 &quot;Playfair Display&quot;,
+                      serif;
+                    color: #78685e;
+                  "
+                >
+                  Hãy là người đầu tiên gửi lời chúc đến cô dâu và chú rể.
+                </div>
+              </sc-if>
+              <sc-for list="{{ wishes }}" as="w" hint-placeholder-count="3">
+                <div class="{{ w.cardClass }}" data-wish-id="{{ w.id }}">
+                  <div style="display: flex; align-items: center; gap: 9px">
+                    <span
+                      style="
+                        width: 4px;
+                        height: 4px;
+                        background: #d1ad8f;
+                        transform: rotate(45deg);
+                        display: block;
+                      "
+                    ></span>
+                    <span
+                      style="
+                        font:
+                          500 10px/1 &quot;Be Vietnam Pro&quot;,
+                          sans-serif;
+                        letter-spacing: 0.2em;
+                        text-transform: uppercase;
+                        color: #a67f64;
+                      "
+                      >{{ w.name }}</span
+                    >
+                    <sc-if
+                      value="{{ w.isOwn }}"
+                      hint-placeholder-val="{{ false }}"
+                    >
+                      <span class="wish-mine-badge">Lời chúc của bạn</span>
+                    </sc-if>
+                  </div>
+                  <p
+                    style="
+                      margin: 12px 0 0;
+                      font:
+                        300 13.5px/1.8 &quot;Be Vietnam Pro&quot;,
+                        sans-serif;
+                      color: #2d241f;
+                    "
+                  >
+                    {{ w.text }}
+                  </p>
+                </div>
+              </sc-for>
+              <div class="wish-pagination">
+                <sc-if
+                  value="{{ messagesHasMore }}"
+                  hint-placeholder-val="{{ false }}"
+                >
+                  <button
+                    type="button"
+                    class="wish-page-button"
+                    onClick="{{ onLoadMoreMessages }}"
+                    disabled="{{ messagesLoadingMore }}"
+                  >
+                    {{ messagesMoreLabel }}
+                  </button>
+                </sc-if>
+                <sc-if
+                  value="{{ messagesCanCollapse }}"
+                  hint-placeholder-val="{{ false }}"
+                >
+                  <button
+                    type="button"
+                    class="wish-page-button wish-page-button--quiet"
+                    onClick="{{ onCollapseMessages }}"
+                  >
+                    Thu gọn
+                  </button>
+                </sc-if>
+              </div>
+            </div>
+          </section>
+
+          <section
             data-screen-label="11 Final invitation"
             style="
               position: relative;
@@ -4839,7 +5227,9 @@
       const EASE = 'cubic-bezier(.22,1,.36,1)';
       const HIDE = { up: 'translateY(22px)', left: 'translateX(-22px)', right: 'translateX(22px)', scale: 'scale(.92)' };
       const DEFAULT_MUSIC_SRC = './assets/audio/nhac.mp3';
+      const MESSAGE_PAGE_SIZE = 12;
       const RSVP_RESPONSE_STORAGE_KEY = 'ngo-nam-nhat-mai:rsvp-response-id:v1';
+      const WISH_STORAGE_KEY = 'ngo-nam-nhat-mai:last-wish-id:v1';
       const GALLERY_SWIPE_THRESHOLD = 50;
       const GALLERY_PHOTO_NAMES = [
         'LBS01523_1','LBS01554_1','LBS01613','LBS01634','LBS01643',
@@ -4870,15 +5260,26 @@
           married: false,
           fName: '', fCount: '1', attend: 'yes', side: 'groom', rsvpWebsite: '',
           rsvpBusy: false, rsvpSent: false, rsvpSavedOnce: false, rsvpError: '',
-          galleryOpen: false, galleryPhotoOpen: false, galleryPhotoIndex: 0
+          galleryOpen: false, galleryPhotoOpen: false, galleryPhotoIndex: 0,
+          wName: '', wText: '', wishWebsite: '',
+          wishBusy: false, wishSent: false, wishError: '',
+          wishes: [], messagesLoaded: false, messagesError: '',
+          messagesNextCursor: '', messagesFirstPageCursor: '',
+          messagesHasMore: false, messagesFirstPageHasMore: false,
+          messagesLoadingMore: false, messagesPagesLoaded: 1,
+          lastSubmittedMessageId: ''
         };
 
         componentDidMount() {
           this.unmounted = false;
           const storedRsvpResponseId = this.readStoredValue('localStorage', RSVP_RESPONSE_STORAGE_KEY);
           this.rsvpResponseId = this.isRsvpResponseId(storedRsvpResponseId) ? storedRsvpResponseId : '';
-          if (this.rsvpResponseId) {
-            this.setState({ rsvpSavedOnce: true });
+          this.lastSubmittedMessageId = this.readStoredValue('sessionStorage', WISH_STORAGE_KEY);
+          if (this.rsvpResponseId || this.lastSubmittedMessageId) {
+            this.setState({
+              rsvpSavedOnce: Boolean(this.rsvpResponseId),
+              lastSubmittedMessageId: this.lastSubmittedMessageId || ''
+            });
           }
           this.introOpening = false;
           this.motionStarted = false;
@@ -4951,15 +5352,25 @@
             }
           };
           document.addEventListener('keydown', this.onKey);
+          this.loadMessages();
+          this.onVisibilityChange = () => {
+            if (!document.hidden) this.loadMessages();
+          };
+          document.addEventListener('visibilitychange', this.onVisibilityChange);
+          this.messagesTimer = setInterval(() => {
+            if (!document.hidden) this.loadMessages();
+          }, 30000);
           if (!this.state.introOn) this.startInvitationMotion();
         }
 
         componentWillUnmount() {
           this.unmounted = true;
           clearInterval(this.tick);
+          clearInterval(this.messagesTimer);
           clearTimeout(this.introOpenTimer);
           clearTimeout(this.introFocusTimer);
           clearTimeout(this.petalTimer);
+          if (this.messagesAbortController) this.messagesAbortController.abort();
           if (this.revealTimers) {
             this.revealTimers.forEach((timer) => clearTimeout(timer));
             this.revealTimers.clear();
@@ -4969,6 +5380,7 @@
           if (this.navIo) this.navIo.disconnect();
           window.removeEventListener('scroll', this.onScroll);
           document.removeEventListener('keydown', this.onKey);
+          document.removeEventListener('visibilitychange', this.onVisibilityChange);
           document.removeEventListener('focusin', this.onFieldFocus);
           document.removeEventListener('focusout', this.onFieldBlur);
           this.setIntroBackgroundInert(false);
@@ -5671,6 +6083,36 @@
           }, 0);
         }
 
+        normalizeMessage(message) {
+          if (!message || typeof message.id !== 'string' || typeof message.body !== 'string' || !message.body.trim()) return null;
+          return {
+            id: message.id,
+            name: typeof message.name === 'string' && message.name.trim() ? message.name : 'Khách mời',
+            text: message.body,
+            createdAt: typeof message.createdAt === 'string' ? message.createdAt : ''
+          };
+        }
+
+        mergeMessages(first, second) {
+          const seen = new Set();
+          return first.concat(second).filter((message) => {
+            if (!message || !message.id || seen.has(message.id)) return false;
+            seen.add(message.id);
+            return true;
+          }).sort((left, right) => {
+            const byTime = String(right.createdAt || '').localeCompare(String(left.createdAt || ''));
+            return byTime || String(right.id).localeCompare(String(left.id));
+          });
+        }
+
+        decorateMessages(messages, ownId) {
+          const mine = ownId || this.lastSubmittedMessageId || '';
+          return messages.map((message) => Object.assign({}, message, {
+            isOwn: message.id === mine,
+            cardClass: message.id === mine ? 'wish-card is-mine' : 'wish-card'
+          }));
+        }
+
         apiUrl(path) {
           const location = typeof window !== 'undefined' ? window.location : null;
           const host = location ? location.hostname.toLowerCase() : '';
@@ -5744,6 +6186,151 @@
           }
         }
 
+        async loadMessages(options) {
+          const append = Boolean(options && options.append);
+          const cursor = append ? this.state.messagesNextCursor : '';
+          if (append && (!cursor || this.state.messagesLoadingMore || this.messagesLoading)) return;
+          if (!append && this.messagesLoading) return;
+
+          if (this.messagesAbortController) this.messagesAbortController.abort();
+          const controller = typeof AbortController === 'function' ? new AbortController() : null;
+          this.messagesAbortController = controller;
+          const requestVersion = (this.messagesRequestVersion || 0) + 1;
+          this.messagesRequestVersion = requestVersion;
+          this.messagesLoading = true;
+          if (append) this.setState({ messagesLoadingMore: true, messagesError: '' });
+
+          let path = '/api/messages?limit=' + MESSAGE_PAGE_SIZE;
+          if (append) path += '&cursor=' + encodeURIComponent(cursor);
+
+          try {
+            const requestOptions = {
+              method: 'GET',
+              headers: { 'Accept': 'application/json' },
+              cache: 'no-store'
+            };
+            if (controller) requestOptions.signal = controller.signal;
+            const response = await fetch(this.apiUrl(path), requestOptions);
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) {
+              throw new Error(typeof data.error === 'string' ? data.error : 'Không thể cập nhật lời chúc lúc này. Trang sẽ tự thử lại.');
+            }
+            if (requestVersion !== this.messagesRequestVersion || this.unmounted) return;
+
+            const messages = Array.isArray(data.messages)
+              ? data.messages.map((message) => this.normalizeMessage(message)).filter(Boolean)
+              : [];
+            const nextCursor = typeof data.nextCursor === 'string' ? data.nextCursor : '';
+            const hasMore = Boolean(data.hasMore && nextCursor);
+
+            this.setState((previous) => {
+              const ownId = previous.lastSubmittedMessageId || this.lastSubmittedMessageId || '';
+              let merged;
+              if (append) {
+                merged = this.mergeMessages(previous.wishes, messages);
+              } else {
+                const older = previous.messagesPagesLoaded > 1 ? previous.wishes.slice(MESSAGE_PAGE_SIZE) : [];
+                const pinned = ownId ? previous.wishes.filter((message) => message.id === ownId) : [];
+                merged = this.mergeMessages(messages.concat(pinned), older);
+              }
+              return {
+                wishes: this.decorateMessages(merged, ownId),
+                messagesLoaded: true,
+                messagesError: '',
+                messagesLoadingMore: false,
+                messagesPagesLoaded: append ? previous.messagesPagesLoaded + 1 : previous.messagesPagesLoaded,
+                messagesFirstPageCursor: append ? previous.messagesFirstPageCursor : nextCursor,
+                messagesFirstPageHasMore: append ? previous.messagesFirstPageHasMore : hasMore,
+                messagesNextCursor: append || previous.messagesPagesLoaded === 1 ? nextCursor : previous.messagesNextCursor,
+                messagesHasMore: append || previous.messagesPagesLoaded === 1 ? hasMore : previous.messagesHasMore
+              };
+            });
+          } catch (error) {
+            if (error && error.name === 'AbortError') return;
+            if (!this.unmounted && requestVersion === this.messagesRequestVersion) {
+              this.setState({
+                messagesLoaded: true,
+                messagesLoadingMore: false,
+                messagesError: error && error.message ? error.message : 'Không thể cập nhật lời chúc lúc này. Trang sẽ tự thử lại.'
+              });
+            }
+          } finally {
+            if (requestVersion === this.messagesRequestVersion) {
+              this.messagesLoading = false;
+              this.messagesAbortController = null;
+            }
+          }
+        }
+
+        collapseMessages() {
+          this.setState((previous) => ({
+            wishes: previous.wishes.slice(0, MESSAGE_PAGE_SIZE),
+            messagesPagesLoaded: 1,
+            messagesNextCursor: previous.messagesFirstPageCursor,
+            messagesHasMore: previous.messagesFirstPageHasMore,
+            messagesLoadingMore: false
+          }));
+        }
+
+        async addWish() {
+          if (this.wishSubmitting || this.state.wishBusy) return;
+          const body = this.state.wText.trim();
+          const name = this.state.wName.trim() || 'Khách mời';
+          if (!body) {
+            this.setState({ wishError: 'Vui lòng viết lời chúc trước khi gửi.' });
+            return;
+          }
+          this.wishSubmitting = true;
+          this.messagesRequestVersion = (this.messagesRequestVersion || 0) + 1;
+          if (this.messagesAbortController) {
+            this.messagesAbortController.abort();
+            this.messagesAbortController = null;
+          }
+          this.messagesLoading = false;
+          this.setState({ wishBusy: true, wishSent: false, wishError: '' });
+          try {
+            const response = await fetch(this.apiUrl('/api/messages'), {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name: name,
+                body: body,
+                website: this.state.wishWebsite
+              })
+            });
+            const data = await response.json().catch(() => ({}));
+            if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : 'Không thể gửi lời chúc lúc này.');
+            if (!this.unmounted) {
+              const submitted = this.normalizeMessage(data.message);
+              if (submitted) {
+                this.lastSubmittedMessageId = submitted.id;
+                this.writeStoredValue('sessionStorage', WISH_STORAGE_KEY, submitted.id);
+              }
+              this.setState((previous) => {
+                const ownId = submitted ? submitted.id : previous.lastSubmittedMessageId;
+                const merged = submitted
+                  ? this.mergeMessages([submitted], previous.wishes)
+                  : previous.wishes;
+                return {
+                  wName: '', wText: '', wishWebsite: '',
+                  wishBusy: false, wishSent: true, wishError: '',
+                  lastSubmittedMessageId: ownId,
+                  wishes: this.decorateMessages(merged, ownId)
+                };
+              }, () => this.loadMessages());
+            }
+          } catch (error) {
+            if (!this.unmounted) {
+              this.setState({
+                wishBusy: false,
+                wishError: error && error.message ? error.message : 'Không thể kết nối máy chủ. Vui lòng thử lại.'
+              });
+            }
+          } finally {
+            this.wishSubmitting = false;
+          }
+        }
+
         renderVals() {
           const s = this.state;
           const ring = (on) => (on ? 'inset 0 0 0 3.5px #fffaf3, inset 0 0 0 12px #a67f64' : 'none');
@@ -5795,7 +6382,27 @@
             nextGalleryPhoto: () => this.moveGalleryPhoto(1),
             beginGallerySwipe: (event) => this.beginGallerySwipe(event),
             endGallerySwipe: (event) => this.endGallerySwipe(event),
-            cancelGallerySwipe: () => this.cancelGallerySwipe()
+            cancelGallerySwipe: () => this.cancelGallerySwipe(),
+
+            wishes: s.wishes, wName: s.wName, wText: s.wText,
+            wishWebsite: s.wishWebsite, wishBusy: s.wishBusy,
+            wishLabel: s.wishBusy ? 'Đang gửi...' : (s.wishSent ? 'Đã gửi lời chúc ♥' : 'Gửi lời chúc'),
+            wishHasError: !!s.wishError, wishError: s.wishError,
+            messagesHasError: !!s.messagesError, messagesError: s.messagesError,
+            messagesEmpty: s.messagesLoaded && !s.messagesError && s.wishes.length === 0,
+            messagesSummary: s.messagesLoaded
+              ? 'Đang hiển thị ' + s.wishes.length + ' lời chúc'
+              : 'Đang tải lời chúc',
+            messagesHasMore: s.messagesHasMore,
+            messagesLoadingMore: s.messagesLoadingMore,
+            messagesMoreLabel: s.messagesLoadingMore ? 'Đang tải...' : 'Xem thêm 12 lời chúc',
+            messagesCanCollapse: s.messagesPagesLoaded > 1,
+            onLoadMoreMessages: () => this.loadMessages({ append: true }),
+            onCollapseMessages: () => this.collapseMessages(),
+            onWName: (e) => this.setState({ wName: e.target.value, wishSent: false, wishError: '' }),
+            onWText: (e) => this.setState({ wText: e.target.value, wishSent: false, wishError: '' }),
+            onWishWebsite: (e) => this.setState({ wishWebsite: e.target.value }),
+            onWish: () => this.addWish()
           };
         }
       }

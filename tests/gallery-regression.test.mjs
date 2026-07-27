@@ -374,6 +374,7 @@ test("viewer navigation, Escape hierarchy, swipe threshold, and focus restore wo
   invitation.setupSectionNav = () => {};
   invitation.setupButtons = () => {};
   invitation.prepareMusic = () => {};
+  invitation.loadMessages = () => {};
   invitation.startInvitationMotion = () => {};
 
   const galleryTrigger = makeFocusable();
