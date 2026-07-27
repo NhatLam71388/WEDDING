@@ -131,7 +131,6 @@ function createIntroFixture(Logic, { reduced }) {
   invitation._bodyOverflowBeforeMount = "";
   invitation._scrollWasLocked = true;
   invitation._introWasOn = true;
-  invitation._wasGift = false;
   invitation._wasGallery = false;
   invitation.startMusicFromGesture = () => {};
   const motionCalls = [];

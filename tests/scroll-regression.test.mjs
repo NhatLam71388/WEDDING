@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 
-test("closing gallery and gift always releases the page scroll lock", async () => {
+test("closing the gallery always releases the page scroll lock", async () => {
   const html = await readFile("Thiep Cuoi 57 v2.dc.html", "utf8");
   const match = html.match(
     /<script\b[^>]*\btype="text\/x-dc"[^>]*>([\s\S]*?)<\/script>/,
@@ -26,7 +26,6 @@ test("closing gallery and gift always releases the page scroll lock", async () =
 
   try {
     const invitation = new Logic();
-    invitation._wasGift = false;
     invitation._wasGallery = false;
     invitation._scrollWasLocked = false;
     invitation._bodyOverflowBeforeMount = "";
@@ -37,14 +36,6 @@ test("closing gallery and gift always releases the page scroll lock", async () =
     assert.equal(document.body.style.overflow, "hidden");
 
     invitation.state.galleryOpen = false;
-    invitation.componentDidUpdate();
-    assert.equal(document.body.style.overflow, "");
-
-    invitation.state.giftOpen = true;
-    invitation.componentDidUpdate();
-    assert.equal(document.body.style.overflow, "hidden");
-
-    invitation.state.giftOpen = false;
     invitation.componentDidUpdate();
     assert.equal(document.body.style.overflow, "");
   } finally {
